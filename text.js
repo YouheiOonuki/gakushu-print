@@ -2,7 +2,7 @@
 // 学習プリントメーカー — 画面・プリント・読み取りの文言（日本語 ja ／英語 en）
 // 日本語ページ（/gakushu-print/）と英語ページ（/gakushu-print/en/）が同じ calc.js・sheets.js・main.js を使い、
 // 文言だけをここから <html lang> で選ぶ。ページに直接書いた文言（見出し・ラベル）は各 HTML にある
-// 英語で出るのは英語ページで選べる種類（なぞり書き・原稿用紙）の文言。ほかの種類の en は、共有リンクなどで
+// 英語で出るのは英語ページで選べる種類（なぞり書き・漢字・原稿用紙）の文言。ほかの種類の en は、共有リンクなどで
 // 迷い込んだときのための最低限
 // ブラウザでは window.TEXT、Node（テスト）では module.exports で使う
 // ===========================
@@ -35,6 +35,8 @@
       dropped: function (kata, list) { return (kata ? 'カタカナ' : 'ひらがな') + 'でない文字は外しました：' + list.map(function (c) { return '「' + c + '」'; }).join(''); },
       kanjiChars: function (n, s) { return n + ' 字：' + s; },
       kanjiHigher: function (grade, list) { return grade + ' 年生より上の学年の字は外しました：' + list + '。学年を上げると使えます。'; },
+      kanjiHigherItem: function (c, g) { return c + '（' + g + '年）'; },
+      listSep: '、',
       kanjiOutside: function (s) { return '小学校で習う漢字（学年別漢字配当表）にない字は外しました：' + s; },
       kanjiRange: function (st, end, a, b, all) { return st + '〜' + end + ' 番目（' + a + '〜' + b + '）を練習します。全部で ' + all + ' 字。'; },
       seedInfo: function (seed) { return '問題番号 ' + seed + '・'; },
@@ -65,7 +67,7 @@
       backupUnreadable: 'ファイルを読み取れませんでした。',
     },
     en: {
-      typeNames: { arith: 'Addition and subtraction', kuku: 'Times tables', hyaku: '100-square math', clock: 'Telling time', kana: 'Kana tracing', kanji: 'Kanji', maze: 'Maze', genko: 'Genkouyoushi / grid' },
+      typeNames: { arith: 'Addition and subtraction', kuku: 'Times tables', hyaku: '100-square math', clock: 'Telling time', kana: 'Kana tracing', kanji: 'Kanji practice', maze: 'Maze', genko: 'Genkouyoushi / grid' },
       kanaLabels: { a: 'a', ka: 'ka', sa: 'sa', ta: 'ta', na: 'na', ha: 'ha', ma: 'ma', ya: 'ya', ra: 'ra', wa: 'wa', ga: 'ga', za: 'za', da: 'da', ba: 'ba', pa: 'pa', small: 'small' },
       pages: function (n) { return n + (n === 1 ? ' page' : ' pages'); },
       count: function (n) { return n + ' problems'; },
@@ -89,7 +91,9 @@
       dropped: function (kata, list) { return 'Removed (not ' + (kata ? 'katakana' : 'hiragana') + '): ' + list.join(' '); },
       kanjiChars: function (n, s) { return n + ' kanji: ' + s; },
       kanjiHigher: function (grade, list) { return 'Removed (taught after grade ' + grade + '): ' + list; },
-      kanjiOutside: function (s) { return 'Removed (not in the grade-school list): ' + s; },
+      kanjiHigherItem: function (c, g) { return c + ' (grade ' + g + ')'; },
+      listSep: ', ',
+      kanjiOutside: function (s) { return 'Removed (not in the grade 1–6 lists): ' + s; },
       kanjiRange: function (st, end, a, b, all) { return 'Kanji ' + st + '–' + end + ' (' + a + '–' + b + ') of ' + all + '.'; },
       seedInfo: function (seed) { return 'Sheet number ' + seed + ', '; },
       sheetsQA: function (q, a) { return q + ' question + ' + a + ' answer pages'; },
@@ -159,6 +163,9 @@
       genkoTitle: function () { return 'げんこうようし'; },
       gridTitle: function () { return 'れんしゅう ようし'; },
       genkoSub: function (layout, mm) { return layout === 'v' ? '400字（たて書き）' : layout === 'h' ? '400字（よこ書き）' : mm + 'mm'; },
+      kanjiTitle: function () { return 'かん字 れんしゅう'; },
+      kanjiSub: function (grade) { return grade + 'ねんせい'; },
+      seedNo: 'もんだい ばんごう ',
     },
     en: {
       name: 'Name', month: '', day: '', date: 'Date',
@@ -168,6 +175,9 @@
       genkoTitle: function () { return 'Genkouyoushi 原稿用紙'; },
       gridTitle: function () { return 'Handwriting practice grid'; },
       genkoSub: function (layout, mm) { return layout === 'v' ? '400 squares (20 × 20), vertical writing' : layout === 'h' ? '400 squares (20 × 20), horizontal writing' : mm + ' mm squares'; },
+      kanjiTitle: function () { return 'Kanji practice 漢字'; },
+      kanjiSub: function (grade) { return 'Grade ' + grade + ' (Japanese elementary school)'; },
+      seedNo: 'Sheet number ',
     },
   };
 

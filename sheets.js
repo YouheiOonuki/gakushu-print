@@ -44,7 +44,7 @@
       case 'genko':
         return { main: o.layout === 'grid' ? L.gridTitle() : L.genkoTitle(), sub: L.genkoSub(o.layout, o.size) };
       case 'kanji':
-        return { main: 'かん字 れんしゅう', sub: o.grade + 'ねんせい' };
+        return { main: L.kanjiTitle(), sub: L.kanjiSub(o.grade) };
       case 'maze':
         return { main: 'めいろ', sub: { easy: 'かんたん', normal: 'ふつう', hard: 'むずかしい' }[o.level] };
     }
@@ -100,7 +100,7 @@
 
   function footer(state, hasSeed) {
     return '<footer class="sh-foot">' +
-      '<span>' + (hasSeed ? 'もんだい ばんごう ' + Calc.seedLabel(state.seed) : '') + '</span>' +
+      '<span>' + (hasSeed ? esc(L.seedNo) + Calc.seedLabel(state.seed) : '') + '</span>' +
       (state.common.credit ? '<span class="credit">' + esc(L.credit) + '</span>' : '<span></span>') +
       '</footer>';
   }

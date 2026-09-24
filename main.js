@@ -15,7 +15,7 @@
   var T = window.TEXT.ui[LANG];
   function hide(id, v) { var e = $(id); if (e) e.hidden = v; }
   function on(id, ev, fn) { var e = $(id); if (e) e.addEventListener(ev, fn); }
-  // このページで選べる種類・用紙（英語ページはなぞり書き・原稿用紙だけ、日本語ページは A4 だけ）
+  // このページで選べる種類・用紙（英語ページはなぞり書き・漢字・原稿用紙だけ、日本語ページは A4 だけ）
   var PAGE_TYPES = Array.prototype.map.call(document.querySelectorAll('input[name="type"]'), function (r) { return r.value; });
   var PAGE_PAPERS = Array.prototype.map.call(document.querySelectorAll('input[data-k="common.paper"]'), function (r) { return r.value; });
   if (!PAGE_PAPERS.length) PAGE_PAPERS = ['a4'];
@@ -220,7 +220,7 @@
       if (r.hint) h += '<p class="warn">' + S.esc(r.hint) + '</p>';
     } else if (wb.type === 'kanji') {
       if (r.chars.length) h += '<p class="ok">' + T.kanjiChars(r.chars.length, S.esc(r.chars.join(''))) + '</p>';
-      if (r.higher.length) h += '<p class="warn">' + T.kanjiHigher(state.kanji.grade, r.higher.map(function (x) { return S.esc(x.c) + '（' + x.g + '年）'; }).join('、')) + '</p>';
+      if (r.higher.length) h += '<p class="warn">' + T.kanjiHigher(state.kanji.grade, r.higher.map(function (x) { return T.kanjiHigherItem(S.esc(x.c), x.g); }).join(T.listSep)) + '</p>';
       if (r.outside.length) h += '<p class="warn">' + T.kanjiOutside(S.esc(r.outside.join(''))) + '</p>';
     }
     el.innerHTML = h;
@@ -262,7 +262,7 @@
     if (state.type === 'kanji' && state.kanji.source === 'order') {
       var all = Array.from(KANJI[state.kanji.grade]);
       var st = Math.min(state.kanji.start, all.length);
-      var per = C.TRACE_SIZES[state.kanji.size].rows * state.kanji.pages;
+      var per = C.traceRowsPerPage(state.kanji.size, state.common.paper) * state.kanji.pages;
       var end = Math.min(all.length, st + per - 1);
       $('kanji-range').textContent = T.kanjiRange(st, end, all[st - 1], all[end - 1], all.length);
     }
