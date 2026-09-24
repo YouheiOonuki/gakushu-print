@@ -210,7 +210,7 @@ textarea { max-width: 100%; display: block; margin-bottom: 0.4rem; line-height: 
 /* ===========================
    プリント（A4 縦 210×297mm）。画面では縮小して見本に、印刷では原寸で 1 枚ずつ
    =========================== */
-.sheets { --z: 0.4; min-height: 12rem; margin: 0.6rem 0; }
+.sheets { --z: 0.4; min-height: 12rem; margin: 0.6rem 0; overflow-x: auto; }   /* zoom の無い古いブラウザでもページを横にはみ出させない */
 .sheets .sheet { zoom: var(--z); margin: 0 auto 24px; box-shadow: 0 1px 6px rgba(0, 0, 0, 0.25); }
 
 .sheet {
@@ -330,7 +330,7 @@ textarea { max-width: 100%; display: block; margin-bottom: 0.4rem; line-height: 
   #sec-preview > :not(#sheets) { display: none !important; }
   body.tool-page main, #sec-preview { max-width: none; margin: 0; padding: 0; border: none; box-shadow: none; background: none; }
   #sheets > :not(.sheet) { display: none !important; }
-  .sheets { min-height: 0; margin: 0; }
+  .sheets { min-height: 0; margin: 0; overflow: visible; }
   .sheets .sheet { zoom: 1; margin: 0; box-shadow: none; break-after: page; page-break-after: always; height: 296.6mm; }
   .sheets .sheet:last-child { break-after: auto; page-break-after: auto; }
   /* 使い方ページを印刷するときも、広告は出さない */

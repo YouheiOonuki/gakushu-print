@@ -367,6 +367,9 @@
     }, function () { $('backup-msg').textContent = 'ファイルを読み取れませんでした。'; });
   });
 
+  // 開いたままのタブに別の共有リンクを貼ったときは、読み直してそのプリントを出す
+  addEventListener('hashchange', function () { if (C.decodeShare(location.hash)) location.reload(); });
+
   // --- はじめの表示 ---
   if (sharedMode) {
     $('shared-banner').hidden = false;
