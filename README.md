@@ -1,6 +1,6 @@
 # 学習プリントメーカー
 
-公開 URL: **https://yorozu-craft.com/gakushu-print/**
+公開 URL: **https://yorozu-craft.com/gakushu-print/**（英語版 **https://yorozu-craft.com/gakushu-print/en/**）
 
 ひらがな・カタカナ・漢字・計算・百ます・時計・迷路の学習プリントを無料で作成。登録不要、毎回ちがう問題、答えつき。A4 で印刷・PDF 保存。
 yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github.io の README](https://github.com/YouheiOonuki/youheioonuki.github.io) を参照）。企画は yorozu-plans の `docs/10_学習プリント.md`。
@@ -24,6 +24,15 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 - **バックアップ**（D31）: `{ tool: 'gakushu-print', version: 1, exportedAt, data: { settings, presets } }`、`gakushu-print-backup-YYYYMMDD.json`
 - **印刷**: 見本（`#sheets`）がそのまま印刷される（`@media print` でほかを隠す。`beforeprint` でも作り直す）ので、Ctrl+P でも白紙にならない。A4 縦・余白 0 の `@page`、1 枚ごとに改ページ。広告（`ins.adsbygoogle` など）は印刷しない
 - **なぞり書きの字**: 端末に教科書体（UD デジタル 教科書体・游教科書体・Klee）があれば使い、なければ `fonts/` の Klee One（かな約 33KB・漢字約 270KB に絞ったもの。OFL 1.1）を読む。サイト README 9 の例外（2026-09-24 オーナー決定）。詳細は `fonts/README.md`
+
+## 英語版（/en/。日本語学習者向け。yorozu-plans の GLOBAL.md K58）
+
+- 種類は **ひらがな・カタカナのなぞり書き** と **原稿用紙・マス目** だけ。漢字（K57）は読み（音・訓・英語の意味）のデータが無いので出さない
+- 同じ `calc.js`・`sheets.js`・`main.js` を使う。文言は `text.js`（`ui`＝画面、`calc`＝読み取り・お知らせ、`sheet`＝紙。それぞれ `ja`／`en`）から `<html lang>` で選ぶ。出す種類はページにある「種類」のラジオ、用紙はページにある用紙の選択肢で決まる（日本語ページは A4 だけ）。日本語ページの出力は前と同じ（`lang` を省くと日本語）
+- 保存のキーは `gakushu-print_en_settings`・`gakushu-print_en_presets`（日本語ページと混ぜない）。はじめて開いたときはローマ字あり、`navigator.language` が en-US・en-CA なら用紙はレター
+- **ローマ字**（ヘボン式。`calc.js` の `ROMAJI`）: し shi・ち chi・つ tsu・ふ fu・じ／ぢ ji・ず／づ zu・ん n・**を o**（ヘボン式の書き方。Wikipedia "Hepburn romanization" で確認、2026-09-24）。お手本（1 字目）の左上にだけ入れる。**行の練習だけ**で、自分で入れた言葉には付けない（きゃ・っ・ー などで読みが変わるため）。小さい字（ぁ ゃ っ など）は 1 字の読みが無いので付けない。使い方ページの表は `tests/en.test.js` が `ROMAJI` と突き合わせる
+- **原稿用紙**: 400 字詰（20 字 × 20 行。最も一般的な形で、たて書き用・よこ書き用がある — ja.wikipedia「原稿用紙」、2026-09-24 確認）を 1 ページに縮めて描く（ます 10：行間 3 の比。A4 で約 7.0mm（たて）・9.2mm（よこ）、レターで 7.2mm・9.5mm。Chromium で測定）。**練習用のマス目**は 10・12・15・20mm を原寸で、十字の点線の有無を選べる
+- **用紙**: A4／レター（215.9×279.4mm）。レターは `.sheet.paper-letter` と `@page { size: letter }`（`main.js` が入れる）。なぞり書きの行数（`TRACE_SIZES.rowsLetter`）と原稿用紙の本文の大きさ（`PAPERS.*.body`）は Chromium で測ってはみ出さない値にした。PDF のページの大きさ（612×792pt）とページ数は Playwright で確認
 
 ## 問題の作り方（仕様）
 
@@ -56,14 +65,16 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 | `index.html` | ツール本体（設定・見本・印刷・共有・よく使う設定・バックアップ） |
 | `guide.html` | 使い方・種類・印刷のコツ・学年の目安・よくある質問（FAQPage）・出典・ご利用上の注意・更新履歴 |
 | `print/index.html` | 印刷物のクレジットから来た人の着地ページ（`noindex`、sitemap に載せない） |
-| `calc.js` | 問題づくり（乱数・計算・百ます・時計・迷路・なぞり書き・読み取り・ページ分け・共有・正規化・バックアップ）。純粋関数 |
+| `en/index.html` / `en/guide.html` | 英語版（なぞり書き・原稿用紙）と、その使い方・ローマ字の表・よくある質問 |
+| `text.js` | 画面・読み取り・紙の文言（日本語・英語） |
+| `calc.js` | 問題づくり（乱数・計算・百ます・時計・迷路・なぞり書き・ローマ字・原稿用紙・読み取り・ページ分け・共有・正規化・バックアップ）。純粋関数 |
 | `sheets.js` | プリント 1 枚ずつの HTML（問題と答え） |
 | `constants.js` | 学年別漢字配当表（値・出典・確認日） |
 | `main.js` | 画面の制御・保存・共有リンク・印刷 |
 | `style.css` | 見た目（和紙風の配色、ダークモード対応）とプリント（mm 単位）・印刷 |
 | `404.html` | ツール配下の存在しない URL で出るページ（サイト共通のもの） |
 | `favicon.svg` / `apple-touch-icon.png` / `og-image.png` | アイコン / ホーム画面用アイコン / SNS 共有用画像（1200×630） |
-| `sitemap.xml` | サイトマップ（`/` と `guide.html`。robots.txt はドメイン直下で管理） |
+| `sitemap.xml` | サイトマップ（`/`・`guide.html`・`en/`・`en/guide.html`。日英を hreflang で結ぶ。robots.txt はドメイン直下で管理） |
 | `tests/*.test.js` | テスト（`node --test tests/*.test.js`。`.github/workflows/test.yml` で push・PR のたびに自動実行） |
 
 ## ライセンス

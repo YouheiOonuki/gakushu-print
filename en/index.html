@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hiragana &amp; Katakana Practice Sheets, Genkouyoushi Printable (Free PDF) | yorozu-craft</title>
+  <meta name="description" content="Make printable hiragana and katakana tracing sheets with romaji, or practice your own words. Also genkouyoushi (400 squares, vertical or horizontal) and Japanese handwriting practice grids. A4 or US Letter, save as PDF. Free, no sign-up.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/gakushu-print/en/">
+  <link rel="alternate" hreflang="ja" href="https://yorozu-craft.com/gakushu-print/">
+  <link rel="alternate" hreflang="en" href="https://yorozu-craft.com/gakushu-print/en/">
+  <link rel="alternate" hreflang="x-default" href="https://yorozu-craft.com/gakushu-print/">
+
+  <meta property="og:title" content="Hiragana &amp; Katakana Practice Sheets and Genkouyoushi | yorozu-craft">
+  <meta property="og:description" content="Printable kana tracing sheets with romaji, and genkouyoushi grid paper. A4 or US Letter. Free, no sign-up.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/gakushu-print/en/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/gakushu-print/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Hiragana & Katakana Practice Sheets",
+    "description": "Printable hiragana and katakana tracing sheets with romaji, genkouyoushi and Japanese handwriting practice grids. A4 or US Letter. Free, no sign-up.",
+    "url": "https://yorozu-craft.com/gakushu-print/en/",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "en"
+  }
+  </script>
+
+  <!-- Google AdSense（サイト所有確認 + 広告配信スクリプト）。広告は印刷に出さない（style.css の @media print） -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5375267956079717"
+     crossorigin="anonymous"></script>
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<!-- 英語版（README「ツールを追加するとき」23）。日本語版と同じ calc.js・sheets.js・main.js を使い、文言は text.js の en。
+     出す種類はこのページの「種類」のラジオ（なぞり書き・原稿用紙）、用紙は A4／レター。保存のキーは gakushu-print_en_… -->
+<body class="tool-page">
+
+  <header class="app-header">
+    <h1>Hiragana &amp; Katakana Practice Sheets <span lang="ja">ひらがな・カタカナ</span></h1>
+    <p class="subtitle">Printable kana tracing sheets with romaji, and genkouyoushi grid paper. Print on A4 or US Letter, or save as PDF.</p>
+    <p class="lang-switch"><a href="../" hreflang="ja" lang="ja">日本語</a></p>
+  </header>
+
+  <div class="fixbar" id="fixbar" role="status" hidden>
+    <span class="fixbar-type" id="fixbar-type"></span>
+    <button type="button" class="btn" id="fixbar-print">Print</button>
+  </div>
+
+  <main class="app-main">
+
+    <p class="badge">Free, no sign-up. Settings are saved only in this browser.</p>
+
+    <div id="shared-banner" class="notice" role="status" hidden></div>
+    <p id="load-msg" class="notice" role="status" hidden></p>
+
+    <section class="card" id="sec-type" aria-labelledby="h-type">
+      <h2 id="h-type">Sheet type</h2>
+      <div class="types">
+        <label class="tile"><input type="radio" name="type" value="kana" data-k="type" checked><span class="t-ico" aria-hidden="true" lang="ja">あ</span><span class="t-name">Kana tracing</span><span class="t-sub">hiragana, katakana</span></label>
+        <label class="tile"><input type="radio" name="type" value="genko" data-k="type"><span class="t-ico" aria-hidden="true">▦</span><span class="t-name">Genkouyoushi &amp; grids</span><span class="t-sub">blank writing paper</span></label>
+      </div>
+    </section>
+
+    <section class="card" id="sec-opts" aria-labelledby="h-opts">
+      <h2 id="h-opts">Options</h2>
+
+      <div class="panel" data-panel="kana">
+        <fieldset class="field">
+          <legend>Script</legend>
+          <div class="seg">
+            <label><input type="radio" name="kana-script" value="hira" data-k="kana.script" checked> Hiragana</label>
+            <label><input type="radio" name="kana-script" value="kata" data-k="kana.script"> Katakana</label>
+          </div>
+        </fieldset>
+        <fieldset class="field">
+          <legend>Practice</legend>
+          <div class="seg">
+            <label><input type="radio" name="kana-source" value="rows" data-k="kana.source" checked> Kana rows</label>
+            <label><input type="radio" name="kana-source" value="words" data-k="kana.source"> Your own words</label>
+          </div>
+        </fieldset>
+        <fieldset class="field" id="kana-rows-box">
+          <legend>Rows</legend>
+          <div class="chips" id="kana-rows"></div>
+          <label class="inline" id="kana-romaji-box"><input type="checkbox" data-k="kana.romaji" data-t="bool" checked> Romaji on the model character</label>
+        </fieldset>
+        <div class="field" id="kana-words-box" hidden>
+          <label for="kana-words">Words to trace, in kana</label>
+          <textarea id="kana-words" data-k="kana.words" rows="3" placeholder="さくら ねこ" lang="ja"></textarea>
+          <div class="report" id="kana-report" aria-live="polite"></div>
+        </div>
+        <details class="field custom more" data-more="kana">
+          <summary>More settings<span class="more-state" id="more-kana"></span></summary>
+          <fieldset class="field">
+            <legend>Square size</legend>
+            <div class="seg">
+              <label><input type="radio" name="kana-size" value="L" data-k="kana.size" checked> Large (20 mm)</label>
+              <label><input type="radio" name="kana-size" value="M" data-k="kana.size"> Medium (15 mm)</label>
+              <label><input type="radio" name="kana-size" value="S" data-k="kana.size"> Small (12 mm)</label>
+            </div>
+          </fieldset>
+        </details>
+      </div>
+
+      <div class="panel" data-panel="genko" hidden>
+        <fieldset class="field">
+          <legend>Layout</legend>
+          <div class="seg">
+            <label><input type="radio" name="genko-layout" value="v" data-k="genko.layout" checked> 400 squares, vertical</label>
+            <label><input type="radio" name="genko-layout" value="h" data-k="genko.layout"> 400 squares, horizontal</label>
+            <label><input type="radio" name="genko-layout" value="grid" data-k="genko.layout"> Practice grid</label>
+          </div>
+        </fieldset>
+        <div class="grid2" id="genko-grid-box" hidden>
+          <div class="field">
+            <label for="genko-size">Square size</label>
+            <select id="genko-size" data-k="genko.size" data-t="num"><option value="20">20 mm</option><option value="15" selected>15 mm</option><option value="12">12 mm</option><option value="10">10 mm</option></select>
+          </div>
+          <label class="inline field"><input type="checkbox" data-k="genko.guides" data-t="bool" checked> Dotted cross guides</label>
+        </div>
+        <div class="field">
+          <label for="genko-pages">Pages</label>
+          <select id="genko-pages" data-k="genko.pages" data-t="num" class="pages-select"><option value="1">1 page</option></select>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-preview" aria-labelledby="h-preview">
+      <h2 id="h-preview" class="visually-hidden">Print preview</h2>
+      <div class="btn-row print-row" id="print-row">
+        <button type="button" id="print" class="btn">Print / Save as PDF</button>
+        <button type="button" id="reseed" class="btn btn-sub" hidden>New problems</button>
+      </div>
+      <p class="small" id="pv-info" aria-live="polite"></p>
+      <div id="pv-notes" class="warn-box" role="status" hidden></div>
+      <div id="sheets" class="sheets" aria-label="Pages to print"></div>
+    </section>
+
+    <details class="card opt" id="sec-common">
+      <summary>Name, date and paper: <span class="opt-state" id="common-state"></span></summary>
+      <fieldset class="field">
+        <legend>Paper</legend>
+        <div class="seg">
+          <label><input type="radio" name="c-paper" value="a4" data-k="common.paper" checked> A4</label>
+          <label><input type="radio" name="c-paper" value="letter" data-k="common.paper"> US Letter</label>
+        </div>
+        <p class="hint">Print at 100% (actual size).</p>
+      </fieldset>
+      <div class="field">
+        <label for="c-name">Name (optional)</label>
+        <input type="text" id="c-name" data-k="common.name" maxlength="20" placeholder="e.g. Emma">
+      </div>
+      <div class="check-grid field">
+        <label class="inline"><input type="checkbox" data-k="common.nameTrace" data-t="bool" checked> Name in light gray, for tracing</label>
+        <label class="inline"><input type="checkbox" data-k="common.showName" data-t="bool" checked> Name line</label>
+        <label class="inline"><input type="checkbox" data-k="common.showDate" data-t="bool" checked> Date line</label>
+      </div>
+      <label class="inline field"><input type="checkbox" data-k="common.credit" data-t="bool" checked> Print "Made at yorozu-craft.com/gakushu-print/print/" small at the bottom</label>
+    </details>
+
+    <details class="card opt" id="sec-save">
+      <summary>Share, saved settings and backup</summary>
+      <div class="btn-row" id="shared-keep-row" hidden>
+        <button type="button" id="shared-keep" class="btn btn-sub">Keep these settings</button>
+      </div>
+      <h3 class="sub-h">Share the same sheets</h3>
+      <p class="hint">Anyone who opens the link can print the same sheets.</p>
+      <label class="inline field"><input type="checkbox" id="share-name"> Include the name</label>
+      <div class="btn-row">
+        <button type="button" id="share" class="btn">Copy a share link</button>
+      </div>
+      <label for="share-url" class="visually-hidden">Share link</label>
+      <input type="text" id="share-url" class="share-url" readonly hidden>
+      <p id="share-msg" class="small" aria-live="polite"></p>
+
+      <h3 class="sub-h">Saved settings</h3>
+      <div class="inline-row">
+        <label for="preset-name" class="visually-hidden">Name for these settings</label>
+        <input type="text" id="preset-name" maxlength="30" placeholder="e.g. Katakana, small">
+        <button type="button" id="preset-save" class="btn btn-sub">Save current settings</button>
+      </div>
+      <ul id="presets" class="preset-list"></ul>
+      <p id="preset-msg" class="small" aria-live="polite"></p>
+
+      <h3 class="sub-h">Backup</h3>
+      <div class="btn-row">
+        <button type="button" id="backup-export" class="btn btn-sub">Save to a file</button>
+        <button type="button" id="backup-import" class="btn btn-sub">Load from a file</button>
+      </div>
+      <input type="file" id="backup-file" accept=".json,application/json" hidden>
+      <p id="backup-msg" class="small" aria-live="polite"></p>
+    </details>
+
+    <p class="small center"><a href="./guide.html">Guide, romaji chart and FAQ</a></p>
+
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="Footer">
+      <ul>
+        <li><a href="../../en/">yorozu-craft</a></li>
+        <li><a href="./" aria-current="page">Hiragana &amp; Katakana Practice Sheets</a></li>
+        <li><a href="./guide.html">Guide and FAQ</a></li>
+        <li><a href="../../en/about.html">About</a></li>
+        <li><a href="../../en/privacy-policy.html">Privacy policy</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="../constants.js"></script>
+  <script src="../text.js"></script>
+  <script src="../calc.js"></script>
+  <script src="../sheets.js"></script>
+  <script src="../main.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
