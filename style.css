@@ -239,7 +239,7 @@ textarea { max-width: 100%; display: block; margin-bottom: 0.4rem; line-height: 
 .name-trace { color: #b8b8b8; }
 .sh-inst { font-size: 12pt; margin: 3mm 0 1mm; }
 .sh-body { flex: 1; min-height: 0; padding-top: 3mm; }
-.sh-foot { display: flex; justify-content: space-between; font-size: 7.5pt; color: #777; padding-top: 2mm; }
+.sh-foot { display: flex; justify-content: space-between; font-size: 7.5pt; color: #595959; padding-top: 2mm; }
 .ans-fill { color: #c0392b; font-weight: 700; }
 
 /* たし算・ひき算・九九（よこ） */
