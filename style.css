@@ -147,6 +147,39 @@ textarea { max-width: 100%; display: block; margin-bottom: 0.4rem; line-height: 
 }
 .kanji-pick button[aria-pressed="true"] { background: var(--accent); color: var(--card); border-color: var(--accent); }
 
+/* 画面の骨組み（yorozu-plans の docs/SCREEN.md 1.2）: 最小の設定 → 印刷ボタン → 見本 → くわしい設定（折りたたみ） */
+.more-state, .opt-state { color: var(--text); font-weight: normal; }
+.print-row { margin: 0 0 0.4rem; gap: 0.5rem; }   /* 4 章: ボタンの上下に余白。見出しは視覚的に隠している */
+.print-row .btn { min-height: 44px; }
+details.card.opt { padding: 0 1.2rem; }
+details.card.opt > summary {
+  cursor: pointer; display: block; min-height: 44px; padding: 0.6rem 0;
+  color: var(--accent); font-weight: 600; font-size: 0.95rem; list-style: none;
+}
+details.card.opt > summary::-webkit-details-marker { display: none; }
+details.card.opt > summary::before { content: '▸'; margin-right: 0.4rem; }
+details.card.opt[open] > summary::before { content: '▾'; }
+details.card.opt[open] { padding-bottom: 1rem; }
+details.card.opt[open] > summary { border-bottom: 1px solid var(--border); margin-bottom: 0.9rem; }
+details.card.opt > summary:focus-visible, .custom > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.custom > summary { min-height: 44px; display: flex; align-items: center; }
+.panel > details.custom { margin-bottom: 0.2rem; }
+.custom > summary { list-style: none; }
+.custom > summary::-webkit-details-marker { display: none; }
+.custom > summary::before { content: '▸'; margin-right: 0.4rem; }
+.custom[open] > summary::before { content: '▾'; }
+.custom > summary > .more-state { margin-left: 0.2rem; }
+
+/* 固定バー（SCREEN.md 0 章の 3・D59）: 上端に 1 行、高さ 44px。下端は AdSense のアンカー広告が使う */
+.fixbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50; height: 44px;
+  display: flex; align-items: center; justify-content: center; gap: 0.8rem; padding: 0 1rem;
+  background: var(--card); border-bottom: 2px solid var(--accent); box-shadow: 0 2px 8px var(--shadow);
+}
+.fixbar-type { font-size: 0.85rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.fixbar .btn { flex: none; padding: 0.2rem 1.1rem; height: 34px; }
+#sec-preview { scroll-margin-top: 56px; }
+
 /* ボタン */
 .btn {
   display: inline-block;
@@ -212,6 +245,10 @@ textarea { max-width: 100%; display: block; margin-bottom: 0.4rem; line-height: 
    =========================== */
 .sheets { --z: 0.4; min-height: 12rem; margin: 0.6rem 0; overflow-x: auto; }   /* zoom の無い古いブラウザでもページを横にはみ出させない */
 .sheets .sheet { zoom: var(--z); margin: 0 auto 24px; box-shadow: 0 1px 6px rgba(0, 0, 0, 0.25); }
+/* 見本は 1 枚目を縮小で、2 枚目からはさらに小さく横に並べる（SCREEN.md 1.2 の 5「縮小 1 枚」。全部のページは見えるまま） */
+.sheets { text-align: center; }
+.sheets .sheet + .sheet { display: inline-flex; vertical-align: top; zoom: var(--zs, 0.12); margin: 0 12px 12px; text-align: left; }
+.sheets .sheet:first-child { text-align: left; }
 
 .sheet {
   width: 210mm; height: 297mm; overflow: hidden;
@@ -344,8 +381,10 @@ textarea { max-width: 100%; display: block; margin-bottom: 0.4rem; line-height: 
   body.tool-page main, #sec-preview { max-width: none; margin: 0; padding: 0; border: none; box-shadow: none; background: none; }
   #sheets > :not(.sheet) { display: none !important; }
   .sheets { min-height: 0; margin: 0; overflow: visible; }
-  .sheets .sheet { zoom: 1; margin: 0; box-shadow: none; break-after: page; page-break-after: always; height: 296.6mm; }
+  .sheets { text-align: left; }
+  .sheets .sheet, .sheets .sheet + .sheet { display: flex; zoom: 1; margin: 0; box-shadow: none; break-after: page; page-break-after: always; height: 296.6mm; }
   .sheets .sheet:last-child { break-after: auto; page-break-after: auto; }
+  .fixbar { display: none !important; }
   /* 使い方ページを印刷するときも、広告は出さない */
   ins.adsbygoogle, .google-auto-placed, iframe[id^="aswift"], iframe[id^="google_ads"] { display: none !important; }
 }

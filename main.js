@@ -134,7 +134,41 @@
     $('answers-note').textContent = hasAns
       ? '答えは問題のあとに別のページでまとめて出ます。丸つけ用に「答えだけ」をあとから印刷することもできます（問題番号が同じなら同じ答え）。'
       : 'このプリントには答えのページはありません。';
+    updateSummaries(hasAns);
   }
+
+  // --- 折りたたみの summary に今の設定を出す（SCREEN.md 1.2 の 6。開いた状態は保存しない） ---
+  var SIZE_NAMES = { L: '大', M: '中', S: '小' };
+  var ANSWER_NAMES = { q: '問題だけ', qa: '問題と答え', a: '答えだけ' };
+  function setText(id, t) { var e = $(id); if (e && e.textContent !== t) e.textContent = t; }
+  function updateSummaries(hasAns) {
+    setText('more-arith', ': ' + (state.arith.style === 'tate' ? 'たて（筆算）' : 'よこ') + '・' + state.arith.pages + ' 枚');
+    setText('more-clock', ': 分の数字' + (state.clock.guide ? 'あり' : 'なし'));
+    setText('more-kanji', ': ますの大きさ ' + SIZE_NAMES[state.kanji.size]);
+    setText('common-state', (state.common.showName ? 'なまえの欄あり' : 'なまえの欄なし') + '・' +
+      (hasAns ? ANSWER_NAMES[state.common.answers] : '答えのページなし') + '・A4 縦');
+    setText('fixbar-type', TYPE_NAMES[state.type]);
+  }
+
+  // --- 固定バー（SCREEN.md 1.2・D59）: 種類や設定を選んだあと、印刷ボタンが画面の外にあるときだけ上端に「印刷する」 ---
+  // 読み込み時は hidden（位置は fixed なのでレイアウトはずれない）。スクリーンリーダーには最初に出たときの 1 回だけ読ませる
+  var barReady = false, printInView = true, barAnnounced = false;
+  function updateBar() {
+    var show = barReady && !printInView;
+    if (show && !barAnnounced) {
+      barAnnounced = true;
+      setTimeout(function () { $('fixbar').setAttribute('aria-live', 'off'); }, 1000);
+    }
+    $('fixbar').hidden = !show;
+  }
+  if ('IntersectionObserver' in window) {
+    // バーの高さ（44px）の分だけ上を狭めて、バーに隠れている印刷ボタンは「画面の外」とみなす
+    new IntersectionObserver(function (es) {
+      printInView = es[es.length - 1].isIntersecting;
+      updateBar();
+    }, { rootMargin: '-44px 0px 0px 0px' }).observe($('print-row'));
+  }
+  $('fixbar-print').addEventListener('click', function () { $('print').click(); });
 
   // --- 入れたい問題・言葉・漢字の読み取り結果 ---
   function reportList(errors) {
@@ -211,6 +245,7 @@
     var w = box.clientWidth;
     if (!w) return;
     box.style.setProperty('--z', String(Math.min(1, (w - 4) / 794)));
+    box.style.setProperty('--zs', String(Math.min(1, (w - 4) / 794) * 0.3));   // 2 枚目からの小さい見本
   }
   addEventListener('resize', fitPreview);
 
@@ -228,6 +263,8 @@
     updateVisibility();
     save();
     render();
+    barReady = true;
+    updateBar();
   }
   var timer = null;
   document.addEventListener('change', function (e) { if (e.target.closest('[data-k]')) onChange(e); });
@@ -243,6 +280,7 @@
     if (!sharedMode) return;
     sharedMode = false;
     $('shared-banner').hidden = true;
+    $('shared-keep-row').hidden = true;
     try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* 何もしない */ }
   }
 
@@ -378,6 +416,7 @@
   // --- はじめの表示 ---
   if (sharedMode) {
     $('shared-banner').hidden = false;
+    $('shared-keep-row').hidden = false;
     $('shared-seed').textContent = C.seedLabel(state.seed);
   }
   writeForm();

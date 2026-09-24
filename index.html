@@ -51,6 +51,12 @@
     <p class="subtitle">ひらがな・カタカナ・漢字・計算・百ます・時計・迷路。毎回ちがう問題で、答えのページつき。A4 で印刷・PDF 保存。</p>
   </header>
 
+  <!-- 固定バー（SCREEN.md 1.2・D59）: 種類や設定を選んだあと、印刷ボタンが画面の外にあるときだけ上端に出す。読み込み時は無い -->
+  <div class="fixbar" id="fixbar" role="status" hidden>
+    <span class="fixbar-type" id="fixbar-type"></span>
+    <button type="button" class="btn" id="fixbar-print">印刷する</button>
+  </div>
+
   <main class="app-main">
 
     <p class="badge">登録不要・印刷は無料・設定はこの端末のブラウザにだけ保存します</p>
@@ -58,7 +64,6 @@
     <div id="shared-banner" class="notice" role="status" hidden>
       <p><strong>共有されたプリントです</strong>（問題番号 <span id="shared-seed"></span>）。このまま印刷すると、送った人と同じ問題になります。</p>
       <div class="btn-row">
-        <button type="button" id="shared-keep" class="btn btn-sub">この設定を自分用に保存する</button>
         <a href="./" id="shared-new" class="btn btn-sub">自分のプリントを作る</a>
       </div>
       <p class="small">ひらがな・漢字・計算・時計・迷路のプリントを、登録なしで作れます。</p>
@@ -113,23 +118,24 @@
           </div>
           <p class="hint" id="arith-carry-note">「なし」はどの位でもくり上がり・くり下がりが起きない問題だけ、「あり」は必ずどこかで起きる問題だけです（5+5 のように答えが 10 になるものは「あり」）。</p>
         </fieldset>
-        <fieldset class="field">
-          <legend>書き方</legend>
-          <div class="seg">
-            <label><input type="radio" name="arith-style" value="yoko" data-k="arith.style" checked> よこ（7 ＋ 8 ＝）</label>
-            <label><input type="radio" name="arith-style" value="tate" data-k="arith.style"> たて（筆算）</label>
-          </div>
-        </fieldset>
-        <div class="grid2">
-          <div class="field">
-            <label for="arith-count">1 枚の問題数</label>
-            <select id="arith-count" data-k="arith.count" data-t="num"><option value="10">10 問</option><option value="20" selected>20 問</option><option value="30">30 問</option></select>
-          </div>
+        <div class="field">
+          <label for="arith-count">1 枚の問題数</label>
+          <select id="arith-count" data-k="arith.count" data-t="num"><option value="10">10 問</option><option value="20" selected>20 問</option><option value="30">30 問</option></select>
+        </div>
+        <details class="field custom more" data-more="arith">
+          <summary>くわしい設定<span class="more-state" id="more-arith"></span></summary>
+          <fieldset class="field">
+            <legend>書き方</legend>
+            <div class="seg">
+              <label><input type="radio" name="arith-style" value="yoko" data-k="arith.style" checked> よこ（7 ＋ 8 ＝）</label>
+              <label><input type="radio" name="arith-style" value="tate" data-k="arith.style"> たて（筆算）</label>
+            </div>
+          </fieldset>
           <div class="field">
             <label for="arith-pages">枚数</label>
             <select id="arith-pages" data-k="arith.pages" data-t="num" class="pages-select"><option value="1">1 枚</option></select>
           </div>
-        </div>
+        </details>
         <details class="field custom">
           <summary>入れたい問題を足す（任意）</summary>
           <p class="hint">1 行に 1 問（例: 7+8、15-9）。宿題でまちがえた問題などを入れると、作った問題といっしょにまぜて出します。答えは自動で計算します。</p>
@@ -240,7 +246,6 @@
             <label><input type="radio" name="clock-mode" value="draw" data-k="clock.mode"> 針をかく</label>
           </div>
         </fieldset>
-        <label class="inline field"><input type="checkbox" data-k="clock.guide" data-t="bool" checked> 時計の外側に分の数字（5・10・…）を入れる</label>
         <div class="grid2">
           <div class="field">
             <label for="clock-count">1 枚の問題数</label>
@@ -251,6 +256,10 @@
             <select id="clock-pages" data-k="clock.pages" data-t="num" class="pages-select"><option value="1">1 枚</option></select>
           </div>
         </div>
+        <details class="field custom more" data-more="clock">
+          <summary>くわしい設定<span class="more-state" id="more-clock"></span></summary>
+          <label class="inline field"><input type="checkbox" data-k="clock.guide" data-t="bool" checked> 時計の外側に分の数字（5・10・…）を入れる</label>
+        </details>
         <details class="field custom">
           <summary>入れたい時刻を足す（任意）</summary>
           <p class="hint">1 行に 1 つ（例: 7:30、7時30分、8じはん）。起きる時刻や家を出る時刻など、毎日の時刻を入れると身近になります。</p>
@@ -331,7 +340,12 @@
           <div class="report" id="kanji-report" aria-live="polite"></div>
           <div class="kanji-pick" id="kanji-pick" role="group" aria-label="この学年の漢字（タップで選ぶ）"></div>
         </div>
-        <div class="grid2">
+        <div class="field" id="kanji-pages-box">
+          <label for="kanji-pages">枚数</label>
+          <select id="kanji-pages" data-k="kanji.pages" data-t="num" class="pages-select"><option value="1">1 枚</option></select>
+        </div>
+        <details class="field custom more" data-more="kanji">
+          <summary>くわしい設定<span class="more-state" id="more-kanji"></span></summary>
           <fieldset class="field">
             <legend>ますの大きさ</legend>
             <div class="seg">
@@ -340,11 +354,7 @@
               <label><input type="radio" name="kanji-size" value="S" data-k="kanji.size"> 小</label>
             </div>
           </fieldset>
-          <div class="field" id="kanji-pages-box">
-            <label for="kanji-pages">枚数</label>
-            <select id="kanji-pages" data-k="kanji.pages" data-t="num" class="pages-select"><option value="1">1 枚</option></select>
-          </div>
-        </div>
+        </details>
       </div>
 
       <!-- 迷路 -->
@@ -365,9 +375,22 @@
       </div>
     </section>
 
-    <!-- 3. 名前・答え・印刷のしかた -->
-    <section class="card" id="sec-common" aria-labelledby="h-common">
-      <h2 id="h-common">名前・答え・印刷のしかた</h2>
+    <!-- 4. 印刷ボタンと見本（最小の設定の直後） -->
+    <section class="card" id="sec-preview" aria-labelledby="h-preview">
+      <h2 id="h-preview" class="visually-hidden">印刷の見本</h2>
+      <div class="btn-row print-row" id="print-row">
+        <button type="button" id="print" class="btn">印刷する・PDF に保存</button>
+        <button type="button" id="reseed" class="btn btn-sub">べつの問題にする</button>
+      </div>
+      <p class="small" id="pv-info" aria-live="polite"></p>
+      <div id="pv-notes" class="warn-box" role="status" hidden></div>
+      <div id="sheets" class="sheets" aria-label="印刷されるページ"></div>
+      <p class="small">スマホからの印刷は<a href="./guide.html#print">印刷のコツ</a>に。</p>
+    </section>
+
+    <!-- 3. 名前・答えのページ・用紙（くわしい設定。見本の後ろ） -->
+    <details class="card opt" id="sec-common">
+      <summary>名前・答えのページ・用紙: <span class="opt-state" id="common-state"></span></summary>
       <div class="field">
         <label for="c-name">名前（任意）</label>
         <p class="hint">入れると、なまえの欄にうすい字で入ります。</p>
@@ -389,24 +412,14 @@
         <p class="hint" id="answers-note">答えは問題のあとに別のページでまとめて出ます。丸つけ用に「答えだけ」をあとから印刷することもできます（問題番号が同じなら同じ答え）。</p>
       </fieldset>
       <label class="inline field"><input type="checkbox" data-k="common.credit" data-t="bool" checked> ページの下に「yorozu-craft.com/gakushu-print/print/ で作成」と小さく入れる</label>
-    </section>
-
-    <!-- 4. 見本と印刷 -->
-    <section class="card" id="sec-preview" aria-labelledby="h-preview">
-      <h2 id="h-preview">印刷の見本</h2>
-      <div class="btn-row">
-        <button type="button" id="print" class="btn">印刷する・PDF に保存</button>
-        <button type="button" id="reseed" class="btn btn-sub">べつの問題にする</button>
-      </div>
-      <p class="small" id="pv-info" aria-live="polite"></p>
-      <div id="pv-notes" class="warn-box" role="status" hidden></div>
-      <div id="sheets" class="sheets" aria-label="印刷されるページ"></div>
-      <p class="small">スマホからの印刷は<a href="./guide.html#print">印刷のコツ</a>に。</p>
-    </section>
+    </details>
 
     <!-- 5. 共有・よく使う設定・バックアップ -->
-    <section class="card" id="sec-save" aria-labelledby="h-save">
-      <h2 id="h-save">共有・よく使う設定・バックアップ</h2>
+    <details class="card opt" id="sec-save">
+      <summary>共有・よく使う設定・バックアップ</summary>
+      <div class="btn-row" id="shared-keep-row" hidden>
+        <button type="button" id="shared-keep" class="btn btn-sub">この設定を自分用に保存する</button>
+      </div>
       <h3 class="sub-h">同じプリントを共有する</h3>
       <p class="hint">リンクを開いた人は、同じ問題のプリントを印刷できます。</p>
       <label class="inline field"><input type="checkbox" id="share-name"> 名前もリンクに入れる</label>
@@ -435,7 +448,7 @@
       <input type="file" id="backup-file" accept=".json,application/json" hidden>
       <p id="backup-msg" class="small" aria-live="polite"></p>
       <p class="small">ファイルには、いまの設定とよく使う設定が入ります。</p>
-    </section>
+    </details>
 
     <p class="small center"><a href="./guide.html">使い方・印刷のコツ・学年の目安・よくある質問</a></p>
 
