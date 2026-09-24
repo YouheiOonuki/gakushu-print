@@ -57,6 +57,7 @@ a { color: var(--accent); }
 }
 .app-header h1 { font-size: 1.45rem; color: var(--accent); line-height: 1.4; }
 .app-header .subtitle { font-size: 0.88rem; color: var(--muted); margin-top: 0.3rem; }
+.lang-switch { font-size: 0.82rem; margin-top: 0.3rem; }
 
 /* レイアウト */
 .app-main { max-width: 720px; margin: 0 auto; padding: 1rem; }
@@ -103,6 +104,7 @@ textarea { max-width: 100%; display: block; margin-bottom: 0.4rem; line-height: 
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
 .inline { display: flex; align-items: flex-start; gap: 0.4rem; font-size: 0.9rem; font-weight: 400; }
 .inline input { margin-top: 0.35rem; flex: none; }
+.field > label.inline { display: flex; font-weight: 400; font-size: 0.9rem; }   /* チェックの行は太字にしない（.field > label より優先） */
 .check-grid { display: grid; gap: 0.2rem; }
 .inline-row { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
 .inline-row input[type="text"] { flex: 1 1 12rem; }
@@ -131,6 +133,13 @@ textarea { max-width: 100%; display: block; margin-bottom: 0.4rem; line-height: 
 .t-ico { grid-row: 1 / span 2; font-size: 1.3rem; text-align: center; color: var(--accent); font-weight: 700; }
 .t-name { font-weight: 600; font-size: 0.9rem; line-height: 1.3; }
 .t-sub { font-size: 0.72rem; color: var(--muted); line-height: 1.3; }
+
+/* 補足の説明（WRITING.md の画面の字数に入れないよう、折りたたむ） */
+.hint-more { margin: 0.2rem 0 0.3rem; }
+.hint-more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); min-height: 32px; display: inline-flex; align-items: center; }
+.hint-more > summary::before { content: '▸'; margin-right: 0.3rem; }
+.hint-more[open] > summary::before { content: '▾'; }
+.hint-more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* 入れたい問題 */
 .custom summary { cursor: pointer; font-weight: 600; font-size: 0.95rem; color: var(--accent); }
@@ -272,6 +281,7 @@ details.card.opt > summary:focus-visible, .custom > summary:focus-visible { outl
 .box.name { min-width: 52mm; position: relative; }
 .box.sm { min-width: 12mm; }
 .box.xs { min-width: 8mm; }
+.box.date { min-width: 30mm; }
 .name-trace, .name-dark { position: absolute; left: 1.5mm; bottom: 0.5mm; font-size: 16pt; }
 .name-trace { color: #b8b8b8; }
 .sh-inst { font-size: 12pt; margin: 3mm 0 1mm; }
@@ -360,6 +370,22 @@ details.card.opt > summary:focus-visible, .custom > summary:focus-visible { outl
 .tc-dark { color: #111; }
 .tc-light { color: #c4c4c4; }
 .tc-gap { background: none; border-color: #bbb; }
+/* お手本のローマ字（英語ページ）。マスの左上に小さく */
+.tc .ro {
+  position: absolute; left: 0.6mm; top: 0.4mm; line-height: 1;
+  font-size: max(2.6mm, calc(var(--cell) * 0.19)); color: #555;
+  font-family: "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* 原稿用紙・マス目 */
+.gk-wrap { height: 100%; display: flex; justify-content: center; align-items: flex-start; }
+.gk-fit { width: 100%; height: 100%; }
+.gk-line { fill: none; stroke: #777; stroke-width: 0.3; }
+.gk-frame { fill: none; stroke: #555; stroke-width: 0.8; }
+.gk-guide { fill: none; stroke: #b4b4b4; stroke-width: 0.2; }
+
+/* 用紙がレター（215.9×279.4mm。英語ページ） */
+.sheet.paper-letter { width: 215.9mm; height: 279.4mm; }
 
 /* 迷路 */
 .mz-wrap { height: 100%; display: flex; align-items: center; justify-content: center; }
@@ -384,6 +410,7 @@ details.card.opt > summary:focus-visible, .custom > summary:focus-visible { outl
   .sheets { text-align: left; }
   .sheets .sheet, .sheets .sheet + .sheet { display: flex; zoom: 1; margin: 0; box-shadow: none; break-after: page; page-break-after: always; height: 296.6mm; }
   .sheets .sheet:last-child { break-after: auto; page-break-after: auto; }
+  .sheets .sheet.paper-letter { height: 279mm; }
   .fixbar { display: none !important; }
   /* 使い方ページを印刷するときも、広告は出さない */
   ins.adsbygoogle, .google-auto-placed, iframe[id^="aswift"], iframe[id^="google_ads"] { display: none !important; }

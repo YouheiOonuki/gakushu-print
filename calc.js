@@ -10,6 +10,9 @@
   'use strict';
 
   var TOOL = 'gakushu-print';
+  // 文言（日本語・英語）は text.js。lang を省くと日本語
+  var TX = root.TEXT || (typeof require !== 'undefined' ? require('./text.js') : null);
+  function msg(lang) { return TX.calc[lang === 'en' ? 'en' : 'ja']; }
 
   // ---------------------------------------------------------------
   // 乱数（seed つき）
@@ -466,12 +469,38 @@
   function isHira(c) { return /^[ぁ-ゖー]$/.test(c); }
   function isKata(c) { return /^[ァ-ヺー]$/.test(c); }
 
+  // ローマ字（ヘボン式）。英語ページの「お手本にローマ字」で、行（1 字ずつ）の練習にだけ使う
+  // し shi・ち chi・つ tsu・ふ fu・じ／ぢ ji・ず／づ zu・を o（ヘボン式。助詞の「を」は o と書く）・ん n
+  // 小さい字（ぁ ゃ っ など）は前の字と合わせて読む（きゃ kya）ので、1 字だけのローマ字は持たない
+  var ROMAJI = {
+    'あ': 'a', 'い': 'i', 'う': 'u', 'え': 'e', 'お': 'o',
+    'か': 'ka', 'き': 'ki', 'く': 'ku', 'け': 'ke', 'こ': 'ko',
+    'さ': 'sa', 'し': 'shi', 'す': 'su', 'せ': 'se', 'そ': 'so',
+    'た': 'ta', 'ち': 'chi', 'つ': 'tsu', 'て': 'te', 'と': 'to',
+    'な': 'na', 'に': 'ni', 'ぬ': 'nu', 'ね': 'ne', 'の': 'no',
+    'は': 'ha', 'ひ': 'hi', 'ふ': 'fu', 'へ': 'he', 'ほ': 'ho',
+    'ま': 'ma', 'み': 'mi', 'む': 'mu', 'め': 'me', 'も': 'mo',
+    'や': 'ya', 'ゆ': 'yu', 'よ': 'yo',
+    'ら': 'ra', 'り': 'ri', 'る': 'ru', 'れ': 're', 'ろ': 'ro',
+    'わ': 'wa', 'を': 'o', 'ん': 'n',
+    'が': 'ga', 'ぎ': 'gi', 'ぐ': 'gu', 'げ': 'ge', 'ご': 'go',
+    'ざ': 'za', 'じ': 'ji', 'ず': 'zu', 'ぜ': 'ze', 'ぞ': 'zo',
+    'だ': 'da', 'ぢ': 'ji', 'づ': 'zu', 'で': 'de', 'ど': 'do',
+    'ば': 'ba', 'び': 'bi', 'ぶ': 'bu', 'べ': 'be', 'ぼ': 'bo',
+    'ぱ': 'pa', 'ぴ': 'pi', 'ぷ': 'pu', 'ぺ': 'pe', 'ぽ': 'po',
+  };
+  /** 1 字のローマ字（ひらがな・カタカナ）。持っていない字は '' */
+  function romajiOf(c) {
+    var h = String(c).replace(/[ァ-ヶ]/g, function (x) { return String.fromCharCode(x.charCodeAt(0) - 0x60); });
+    return ROMAJI[h] || '';
+  }
+
   /**
    * 「なぞる言葉」を読む。区切りは空白・改行・、。・
    * ひらがなのプリントにはひらがな（と のばす棒「ー」・小さい字）だけ、カタカナにはカタカナだけを残す
    * @returns {{words: string[], dropped: string[], hint: string}} dropped は外した文字（重なりなし）
    */
-  function parseKanaWords(text, script) {
+  function parseKanaWords(text, script, lang) {
     var ok = script === 'kata' ? isKata : isHira;
     var dropped = [], words = [], otherScript = 0;
     String(text || '').split(/[\s　、。,.・]+/).forEach(function (w) {
@@ -483,9 +512,7 @@
       });
       if (kept.replace(/ー/g, '')) words.push(kept.slice(0, 20));   // のばす棒だけの言葉は使わない
     });
-    var hint = !otherScript ? '' : script === 'kata'
-      ? 'ひらがなが入っています。ひらがなのプリントに切り替えると使えます。'
-      : 'カタカナが入っています。カタカナのプリントに切り替えると使えます。';
+    var hint = !otherScript ? '' : script === 'kata' ? msg(lang).kanaHintKata : msg(lang).kanaHintHira;
     return { words: words.slice(0, 40), dropped: dropped.slice(0, 20), hint: hint };
   }
 
@@ -514,12 +541,29 @@
     return { chars: chars.slice(0, 200), higher: higher.slice(0, 30), outside: outside.slice(0, 30) };
   }
 
-  // マスの大きさ（mm）と、A4 縦 1 ページに入る列・行の数、1 文字のときのなぞる回数
+  // マスの大きさ（mm）と、A4 縦 1 ページに入る列・行の数、1 文字のときのなぞる回数。rowsLetter はレター（英語ページ）
   var TRACE_SIZES = {
-    L: { mm: 20, cols: 9, rows: 11, trace: 3 },
-    M: { mm: 15, cols: 12, rows: 15, trace: 4 },
-    S: { mm: 12, cols: 15, rows: 19, trace: 5 },
+    L: { mm: 20, cols: 9, rows: 11, rowsLetter: 10, trace: 3 },
+    M: { mm: 15, cols: 12, rows: 15, rowsLetter: 14, trace: 4 },
+    S: { mm: 12, cols: 15, rows: 19, rowsLetter: 18, trace: 5 },
   };
+
+  // 用紙（mm）。body は原稿用紙のページの本文（見出し・ページの下を除く）に使える大きさ（Chromium で測った値から少し引いた。
+  // A4 245.5・レター 227.9。2026-09-24）。rowsLetter も同じく測って、はみ出さない行数にした
+  var PAPERS = {
+    a4: { w: 210, h: 297, body: { w: 186, h: 245 } },
+    letter: { w: 215.9, h: 279.4, body: { w: 191.9, h: 227 } },
+  };
+
+  // 原稿用紙: 400 字詰（20 字 × 20 行）のたて書き・よこ書きと、ますの大きさを選ぶ練習用のマス目
+  // 400 字詰はマス 10・行間（ふりがなの欄）3 の比で描き、本文の大きさに合わせて縮める（sheets.js）
+  var GENKO_SIZES = [20, 15, 12, 10];
+  function genkoPage(o, paper, index) {
+    if (o.layout !== 'grid') return { kind: 'genko', index: index, layout: o.layout, cols: 20, rows: 20, cell: 10, gap: 3 };
+    var b = PAPERS[paper].body;
+    return { kind: 'genko', index: index, layout: 'grid', size: o.size, guides: o.guides,
+      cols: Math.floor(b.w / o.size), rows: Math.floor(b.h / o.size) };
+  }
 
   /**
    * 1 つの文字・言葉のマスの並び（行の配列）を作る。マスは {ch, kind}、kind は
@@ -582,7 +626,7 @@
   // ---------------------------------------------------------------
   // 設定（保存・共有・ファイル）の形をそろえる
   // ---------------------------------------------------------------
-  var TYPES = ['arith', 'kuku', 'hyaku', 'clock', 'kana', 'kanji', 'maze'];
+  var TYPES = ['arith', 'kuku', 'hyaku', 'clock', 'kana', 'kanji', 'maze', 'genko'];
   var MAX_PAGES = 10;
   var COUNTS = { yoko: [10, 20, 30], tate: [12, 16, 20] };
 
@@ -590,14 +634,15 @@
     return {
       type: 'arith',
       seed: 1,
-      common: { name: '', nameTrace: true, showName: true, showDate: true, showScore: true, answers: 'qa', credit: true },
+      common: { name: '', nameTrace: true, showName: true, showDate: true, showScore: true, answers: 'qa', credit: true, paper: 'a4' },
       arith: { op: 'add', level: 'd1', carry: 'any', count: 20, style: 'yoko', pages: 1, custom: '', customMode: 'mix' },
       kuku: { dans: [2], order: 'random', count: 20, pages: 1, custom: '', customMode: 'mix' },
       hyaku: { op: 'add', size: 10, hand: 'right', pages: 1 },
       clock: { level: 'half', mode: 'read', count: 6, guide: true, pages: 1, custom: '', customMode: 'mix' },
-      kana: { script: 'hira', rows: ['a', 'ka'], source: 'rows', words: '', size: 'L' },
+      kana: { script: 'hira', rows: ['a', 'ka'], source: 'rows', words: '', size: 'L', romaji: false },
       kanji: { grade: 1, source: 'order', start: 1, size: 'L', pages: 1, custom: '' },
       maze: { level: 'normal', pages: 1 },
+      genko: { layout: 'v', size: 15, guides: true, pages: 1 },
     };
   }
 
@@ -640,6 +685,7 @@
         return {
           script: oneOf(o.script, ['hira', 'kata'], d.script), rows: rows.length ? rows : d.rows.slice(),
           source: oneOf(o.source, ['rows', 'words'], d.source), words: str(o.words, 600), size: oneOf(o.size, ['L', 'M', 'S'], d.size),
+          romaji: o.romaji === undefined ? d.romaji : !!o.romaji,
         };
       }
       case 'kanji':
@@ -649,6 +695,9 @@
         };
       case 'maze':
         return { level: oneOf(o.level, Object.keys(MAZE_LEVELS), d.level), pages: pages };
+      case 'genko':
+        return { layout: oneOf(o.layout, ['v', 'h', 'grid'], d.layout), size: oneOf(Number(o.size), GENKO_SIZES, d.size),
+          guides: o.guides === undefined ? d.guides : !!o.guides, pages: pages };
     }
     return d;
   }
@@ -659,7 +708,7 @@
     return {
       name: str(o.name, 20).replace(/[\r\n\t]/g, ' '), nameTrace: b('nameTrace'),
       showName: b('showName'), showDate: b('showDate'), showScore: b('showScore'),
-      answers: oneOf(o.answers, ['q', 'qa', 'a'], d.answers), credit: b('credit'),
+      answers: oneOf(o.answers, ['q', 'qa', 'a'], d.answers), credit: b('credit'), paper: oneOf(o.paper, Object.keys(PAPERS), d.paper),
     };
   }
 
@@ -673,7 +722,7 @@
 
   // 「よく使う設定」（子どもごとの設定など）。問題の種は持たない（呼び出すたびに新しい問題になる）
   var MAX_PRESETS = 30;
-  function normalizePresets(v) {
+  function normalizePresets(v, lang) {
     var ids = {};
     return (Array.isArray(v) ? v : []).slice(0, MAX_PRESETS).map(function (p, i) {
       var o = obj(p);
@@ -682,7 +731,7 @@
       var id = str(o.id, 20).replace(/[^A-Za-z0-9_-]/g, '') || ('p' + i);
       while (ids[id]) id += 'x';
       ids[id] = true;
-      return { id: id, name: str(o.name, 30).replace(/[\r\n\t]/g, ' ').trim() || '名前なし', state: st };
+      return { id: id, name: str(o.name, 30).replace(/[\r\n\t]/g, ' ').trim() || msg(lang).presetNoName, state: st };
     });
   }
 
@@ -737,7 +786,7 @@
    * @returns {{type: string, pages: object[], notes: string[], custom: object|null, hasAnswers: boolean}}
    *   pages はページごとの中身。notes は画面に出すお知らせ。custom は「入れたい問題」の読み取り結果
    */
-  function buildWorkbook(state, kanjiByGrade) {
+  function buildWorkbook(state, kanjiByGrade, lang) {
     var t = state.type, o = state[t], seed = state.seed;
     var notes = [], pages = [], custom = null;
 
@@ -772,16 +821,18 @@
       var sz = TRACE_SIZES[o.size];
       var words = [];
       if (o.source === 'words') {
-        var pw = parseKanaWords(o.words, o.script);
+        var pw = parseKanaWords(o.words, o.script, lang);
         custom = pw;
         words = pw.words;
-        if (!words.length) notes.push('なぞる言葉が入っていません。言葉を入れるか、「行を選ぶ」に切り替えてください。');
+        if (!words.length) notes.push(msg(lang).noWords);
       } else {
         o.rows.forEach(function (k) { Array.from(KANA_ROWS[k]).forEach(function (c) { words.push(c); }); });
       }
       if (o.script === 'kata') words = words.map(toKata);
       var groups = words.map(function (w) { return traceRows(w, sz.cols, sz.trace); });
-      paginateGroups(groups, sz.rows).forEach(function (rows, i) {
+      // ローマ字は 1 字ずつの行の練習だけ（言葉は字の組み合わせで読みが変わるため付けない）
+      if (o.romaji && o.source === 'rows') groups.forEach(function (g) { var c = g[0][0]; if (romajiOf(c.ch)) c.ro = romajiOf(c.ch); });
+      paginateGroups(groups, state.common.paper === 'letter' ? sz.rowsLetter : sz.rows).forEach(function (rows, i) {
         pages.push({ kind: 'kana', index: i, rows: rows, size: o.size, script: o.script });
       });
     } else if (t === 'kanji') {
@@ -792,14 +843,14 @@
         var pk = parseKanjiInput(o.custom, o.grade, kanjiGradeMap(kanjiByGrade));
         custom = pk;
         chars = pk.chars;
-        if (!chars.length) notes.push('練習する漢字がまだありません。一覧から選ぶか、漢字を入れてください。');
+        if (!chars.length) notes.push(msg(lang).noKanji);
       } else {
         var need = zs.rows * o.pages;
         if (o.source === 'random') chars = makeRng(seed, 700).shuffle(all).slice(0, need);
         else {
           var st = Math.min(o.start, all.length) - 1;
           chars = all.slice(st, st + need);
-          if (chars.length < need) notes.push(o.grade + '年生の漢字は ' + all.length + ' 字です。最後の字で終わります。');
+          if (chars.length < need) notes.push(msg(lang).kanjiEnd(o.grade, all.length));
         }
       }
       var g2 = chars.map(function (c) { return traceRows(c, zs.cols, zs.trace); });
@@ -808,9 +859,11 @@
       });
     } else if (t === 'maze') {
       for (var q = 0; q < o.pages; q++) pages.push({ kind: 'maze', index: q, maze: genMaze(o.level, seed, q), level: o.level });
+    } else if (t === 'genko') {
+      for (var gp = 0; gp < o.pages; gp++) pages.push(genkoPage(o, state.common.paper, gp));
     }
 
-    return { type: t, pages: pages, notes: notes, custom: custom, hasAnswers: t !== 'kana' && t !== 'kanji' };
+    return { type: t, pages: pages, notes: notes, custom: custom, hasAnswers: t !== 'kana' && t !== 'kanji' && t !== 'genko' };
   }
 
   // ---------------------------------------------------------------
@@ -834,40 +887,39 @@
    * 読み込んだファイルの文字列を確かめる。中身の正規化は normalizeState / normalizePresets で行う
    * @returns {{ok: true, data: object} | {ok: false, error: string}} error は画面にそのまま出す文
    */
-  function parseBackup(text, tool, requiredKeys) {
+  function parseBackup(text, tool, requiredKeys, lang) {
+    var M = msg(lang);
     var o;
     try { o = JSON.parse(text); } catch (e) { o = null; }
     if (!o || typeof o !== 'object' || Array.isArray(o) || typeof o.tool !== 'string') {
-      return { ok: false, error: 'ファイルを読み取れませんでした。このツールの「ファイルに書き出す」で作った .json ファイルを選んでください。' };
+      return { ok: false, error: M.backupBad };
     }
     if (o.tool !== tool) {
-      return { ok: false, error: 'ほかのツール（' + o.tool.slice(0, 40) + '）のファイルです。このツールで書き出したファイルを選んでください。' };
+      return { ok: false, error: M.backupOther(o.tool.slice(0, 40)) };
     }
     if (o.version !== BACKUP_VERSION) {
-      return { ok: false, error: typeof o.version === 'number' && o.version > BACKUP_VERSION
-        ? '新しい版のツールで書き出したファイルのため読み込めません。ページを再読み込みしてから、もう一度お試しください。'
-        : 'ファイルの形式が正しくないため読み込めません。' };
+      return { ok: false, error: typeof o.version === 'number' && o.version > BACKUP_VERSION ? M.backupNewer : M.backupFormat };
     }
     var data = o.data;
     var missing = !data || typeof data !== 'object' || Array.isArray(data) ||
       (requiredKeys || []).some(function (k) { return data[k] === undefined || data[k] === null; });
-    if (missing) return { ok: false, error: 'ファイルの中身が足りないため読み込めません。' };
+    if (missing) return { ok: false, error: M.backupMissing };
     return { ok: true, data: data };
   }
 
   // 印刷物に小さく入れるクレジット（既定で表示、設定で外せる。決定 D38）。
   // 紙から来た人を数えるため、着地ページ /gakushu-print/print/ に向ける（サイト README「ツールを追加するとき」22）
-  var CREDIT = 'yorozu-craft.com/gakushu-print/print/ で作成';
+  var CREDIT = TX.sheet.ja.credit;
 
   var api = {
     TOOL: TOOL, CREDIT: CREDIT, TYPES: TYPES, MAX_PAGES: MAX_PAGES, SHARE_MAX: SHARE_MAX, MAX_PRESETS: MAX_PRESETS,
-    ARITH_LEVELS: ARITH_LEVELS, CLOCK_LEVELS: CLOCK_LEVELS, MAZE_LEVELS: MAZE_LEVELS, KANA_ROWS: KANA_ROWS, TRACE_SIZES: TRACE_SIZES, COUNTS: COUNTS, DIRS: DIRS,
+    ARITH_LEVELS: ARITH_LEVELS, CLOCK_LEVELS: CLOCK_LEVELS, MAZE_LEVELS: MAZE_LEVELS, KANA_ROWS: KANA_ROWS, TRACE_SIZES: TRACE_SIZES, PAPERS: PAPERS, GENKO_SIZES: GENKO_SIZES, ROMAJI: ROMAJI, COUNTS: COUNTS, DIRS: DIRS,
     mulberry32: mulberry32, makeRng: makeRng, seedLabel: seedLabel, toHalf: toHalf,
     hasCarry: hasCarry, hasBorrow: hasBorrow, answerOf: answerOf, arithPossible: arithPossible, genArith: genArith, genKuku: genKuku,
     parseArithLines: parseArithLines, arithRule: arithRule, kukuRule: kukuRule, withCustom: withCustom,
     genHyaku: genHyaku, genClock: genClock, clockFits: clockFits, clockText: clockText, funPun: funPun, handAngles: handAngles, parseClockLines: parseClockLines,
     genMaze: genMaze, solveMaze: solveMaze, mazeStats: mazeStats,
-    toKata: toKata, parseKanaWords: parseKanaWords, kanjiGradeMap: kanjiGradeMap, parseKanjiInput: parseKanjiInput,
+    toKata: toKata, romajiOf: romajiOf, genkoPage: genkoPage, parseKanaWords: parseKanaWords, kanjiGradeMap: kanjiGradeMap, parseKanjiInput: parseKanjiInput,
     traceRows: traceRows, paginate: paginate, paginateGroups: paginateGroups,
     defaults: defaults, normalizeState: normalizeState, normalizePresets: normalizePresets,
     encodeShare: encodeShare, decodeShare: decodeShare, buildWorkbook: buildWorkbook,

@@ -7,6 +7,9 @@
   <meta name="description" content="ひらがな・カタカナのなぞり書き、学年別の漢字練習、たし算・ひき算（くり上がりの有無・筆算）、九九、百ます計算、時計の読み方、迷路の学習プリントを無料で作成。登録不要、毎回ちがう問題、答えのページつき。A4 で印刷・PDF 保存。">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://yorozu-craft.com/gakushu-print/">
+  <link rel="alternate" hreflang="ja" href="https://yorozu-craft.com/gakushu-print/">
+  <link rel="alternate" hreflang="en" href="https://yorozu-craft.com/gakushu-print/en/">
+  <link rel="alternate" hreflang="x-default" href="https://yorozu-craft.com/gakushu-print/">
 
   <meta property="og:title" content="学習プリントメーカー（無料・登録不要）｜yorozu-craft">
   <meta property="og:description" content="ひらがな・漢字・計算・百ます・時計・迷路の学習プリントを無料で作成。毎回ちがう問題、答えつき、A4 で印刷。名前や練習したい字・問題も入れられます。">
@@ -49,6 +52,7 @@
   <header class="app-header">
     <h1>学習プリントメーカー</h1>
     <p class="subtitle">ひらがな・カタカナ・漢字・計算・百ます・時計・迷路。毎回ちがう問題で、答えのページつき。A4 で印刷・PDF 保存。</p>
+    <p class="lang-switch"><a href="./en/" hreflang="en" lang="en">English (for learners of Japanese)</a></p>
   </header>
 
   <!-- 固定バー（SCREEN.md 1.2・D59）: 種類や設定を選んだあと、印刷ボタンが画面の外にあるときだけ上端に出す。読み込み時は無い -->
@@ -61,13 +65,8 @@
 
     <p class="badge">登録不要・印刷は無料・設定はこの端末のブラウザにだけ保存します</p>
 
-    <div id="shared-banner" class="notice" role="status" hidden>
-      <p><strong>共有されたプリントです</strong>（問題番号 <span id="shared-seed"></span>）。このまま印刷すると、送った人と同じ問題になります。</p>
-      <div class="btn-row">
-        <a href="./" id="shared-new" class="btn btn-sub">自分のプリントを作る</a>
-      </div>
-      <p class="small">ひらがな・漢字・計算・時計・迷路のプリントを、登録なしで作れます。</p>
-    </div>
+    <!-- 共有リンクで開いたときだけ出す。文言は text.js（main.js が入れる） -->
+    <div id="shared-banner" class="notice" role="status" hidden></div>
     <p id="load-msg" class="notice" role="status" hidden></p>
 
     <!-- 1. 種類 -->
@@ -116,7 +115,7 @@
             <label><input type="radio" name="arith-carry" value="with" data-k="arith.carry" id="arith-carry-with"> あり</label>
             <label><input type="radio" name="arith-carry" value="any" data-k="arith.carry" checked> まぜる</label>
           </div>
-          <p class="hint" id="arith-carry-note">「なし」はどの位でもくり上がり・くり下がりが起きない問題だけ、「あり」は必ずどこかで起きる問題だけです（5+5 のように答えが 10 になるものは「あり」）。</p>
+          <details class="hint-more"><summary>「なし」「あり」とは</summary><p class="hint" id="arith-carry-note">「なし」はどの位でもくり上がり・くり下がりが起きない問題だけ、「あり」は必ずどこかで起きる問題だけです（5+5 のように答えが 10 になるものは「あり」）。</p></details>
         </fieldset>
         <div class="field">
           <label for="arith-count">1 枚の問題数</label>
@@ -206,7 +205,7 @@
             <label><input type="radio" name="hyaku-op" value="sub" data-k="hyaku.op"> ひき算</label>
             <label><input type="radio" name="hyaku-op" value="mul" data-k="hyaku.op"> かけ算</label>
           </div>
-          <p class="hint">たし算・かけ算は 0〜9 どうし。ひき算は上の 10〜19 から左の 0〜9 を引きます。</p>
+          <details class="hint-more"><summary>数の範囲</summary><p class="hint">たし算・かけ算は 0〜9 どうし。ひき算は上の 10〜19 から左の 0〜9 を引きます。</p></details>
         </fieldset>
         <fieldset class="field">
           <legend>ますの数</legend>
@@ -215,17 +214,20 @@
             <label><input type="radio" name="hyaku-size" value="5" data-k="hyaku.size" data-t="num"> 25 ます（5×5 を 1 枚に 2 つ）</label>
           </div>
         </fieldset>
-        <fieldset class="field">
-          <legend>利き手</legend>
-          <div class="seg">
-            <label><input type="radio" name="hyaku-hand" value="right" data-k="hyaku.hand" checked> 右利き</label>
-            <label><input type="radio" name="hyaku-hand" value="left" data-k="hyaku.hand"> 左利き（数を右側に）</label>
-          </div>
-        </fieldset>
         <div class="field">
           <label for="hyaku-pages">枚数</label>
           <select id="hyaku-pages" data-k="hyaku.pages" data-t="num" class="pages-select"><option value="1">1 枚</option></select>
         </div>
+        <details class="field custom more" data-more="hyaku">
+          <summary>くわしい設定<span class="more-state" id="more-hyaku"></span></summary>
+          <fieldset class="field">
+            <legend>利き手</legend>
+            <div class="seg">
+              <label><input type="radio" name="hyaku-hand" value="right" data-k="hyaku.hand" checked> 右利き</label>
+              <label><input type="radio" name="hyaku-hand" value="left" data-k="hyaku.hand"> 左利き（数を右側に）</label>
+            </div>
+          </fieldset>
+        </details>
       </div>
 
       <!-- 時計 -->
@@ -292,22 +294,24 @@
         <fieldset class="field" id="kana-rows-box">
           <legend>行</legend>
           <div class="chips" id="kana-rows"></div>
-          <p class="hint">1 字ごとに「お手本・なぞる・自分で書く」の 1 行になります。</p>
+          <details class="hint-more"><summary>1 行の中身</summary><p class="hint">1 字ごとに「お手本・なぞる・自分で書く」の 1 行になります。</p></details>
         </fieldset>
         <div class="field" id="kana-words-box" hidden>
           <label for="kana-words">なぞる言葉（空白か改行で区切る）</label>
-          <p class="hint">お子さんの名前、好きなもの、いま覚えている言葉など。</p>
           <textarea id="kana-words" data-k="kana.words" rows="3" placeholder="はなこ&#10;りんご　くるま"></textarea>
           <div class="report" id="kana-report" aria-live="polite"></div>
         </div>
-        <fieldset class="field">
-          <legend>ますの大きさ</legend>
-          <div class="seg">
-            <label><input type="radio" name="kana-size" value="L" data-k="kana.size" checked> 大（2cm・年中〜年長）</label>
-            <label><input type="radio" name="kana-size" value="M" data-k="kana.size"> 中（1.5cm・1 年生）</label>
-            <label><input type="radio" name="kana-size" value="S" data-k="kana.size"> 小（1.2cm）</label>
-          </div>
-        </fieldset>
+        <details class="field custom more" data-more="kana">
+          <summary>くわしい設定<span class="more-state" id="more-kana"></span></summary>
+          <fieldset class="field">
+            <legend>ますの大きさ</legend>
+            <div class="seg">
+              <label><input type="radio" name="kana-size" value="L" data-k="kana.size" checked> 大（2cm・年中〜年長）</label>
+              <label><input type="radio" name="kana-size" value="M" data-k="kana.size"> 中（1.5cm・1 年生）</label>
+              <label><input type="radio" name="kana-size" value="S" data-k="kana.size"> 小（1.2cm）</label>
+            </div>
+          </fieldset>
+        </details>
       </div>
 
       <!-- 漢字 -->
@@ -329,7 +333,7 @@
         </fieldset>
         <div class="field" id="kanji-start-box">
           <label for="kanji-start">何番目の字から</label>
-          <p class="hint">学年別漢字配当表の並び（音読みの五十音順）の何番目から始めるか。</p>
+          <details class="hint-more"><summary>並び順</summary><p class="hint">学年別漢字配当表の並び（音読みの五十音順）の何番目から始めるか。</p></details>
           <input type="number" id="kanji-start" data-k="kanji.start" data-t="num" min="1" max="202" value="1" inputmode="numeric">
           <p class="small" id="kanji-range" aria-live="polite"></p>
         </div>
@@ -366,7 +370,6 @@
             <label><input type="radio" name="maze-level" value="normal" data-k="maze.level" checked> ふつう（13×16）</label>
             <label><input type="radio" name="maze-level" value="hard" data-k="maze.level"> むずかしい（22×28）</label>
           </div>
-          <p class="hint">どの迷路も必ずゴールまで行けて、正しい道はひとつだけです。</p>
         </fieldset>
         <div class="field">
           <label for="maze-pages">枚数</label>
@@ -468,6 +471,7 @@
   </footer>
 
   <script src="./constants.js"></script>
+  <script src="./text.js"></script>
   <script src="./calc.js"></script>
   <script src="./sheets.js"></script>
   <script src="./main.js"></script>

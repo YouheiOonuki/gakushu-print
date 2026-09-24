@@ -8,6 +8,9 @@
   'use strict';
 
   var Calc = root.Calc || (typeof require !== 'undefined' ? require('./calc.js') : null);
+  var TX = root.TEXT || (typeof require !== 'undefined' ? require('./text.js') : null);
+  // 紙に入る文言。render の lang で選ぶ（省くと日本語。日本語ページの出力は前と同じ）
+  var L = TX.sheet.ja, LANG = 'ja';
 
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
@@ -37,7 +40,9 @@
       case 'clock':
         return { main: o.mode === 'read' ? 'とけいの よみかた' : 'とけいの はりを かこう', sub: { hour: 'なんじ', half: 'なんじ・なんじはん', five: '5ふん きざみ', min: '1ぷん きざみ' }[o.level] };
       case 'kana':
-        return { main: (o.script === 'kata' ? 'カタカナ' : 'ひらがな') + ' れんしゅう', sub: '' };
+        return { main: L.kanaTitle(o.script === 'kata'), sub: '' };
+      case 'genko':
+        return { main: o.layout === 'grid' ? L.gridTitle() : L.genkoTitle(), sub: L.genkoSub(o.layout, o.size) };
       case 'kanji':
         return { main: 'かん字 れんしゅう', sub: o.grade + 'ねんせい' };
       case 'maze':
@@ -55,7 +60,7 @@
         return o.op === 'sub' ? 'うえの かずから、' + (o.hand === 'left' ? 'みぎ' : 'ひだり') + 'の かずを ひきましょう。'
           : (o.hand === 'left' ? 'うえと みぎの' : 'うえと ひだりの') + ' かずを ' + (o.op === 'add' ? 'たしましょう。' : 'かけましょう。');
       case 'clock': return o.mode === 'read' ? 'なんじ なんぷん ですか。' : 'とけいに ながい はりと みじかい はりを かきましょう。';
-      case 'kana': case 'kanji': return 'うすい 字を なぞってから、じぶんで かきましょう。';
+      case 'kana': case 'kanji': return L.traceInst;
       case 'maze': return 'スタートから ゴールまで いきましょう。';
     }
     return '';
@@ -76,10 +81,13 @@
     var c = state.common, t = title(page, state);
     var fields = '';
     if (c.showName) {
-      fields += '<span class="f f-name"><span class="lbl">なまえ</span><span class="box name">' +
+      fields += '<span class="f f-name"><span class="lbl">' + L.name + '</span><span class="box name">' +
         (c.name ? '<span class="' + (c.nameTrace ? 'name-trace' : 'name-dark') + '">' + esc(c.name) + '</span>' : '') + '</span></span>';
     }
-    if (c.showDate) fields += '<span class="f f-date"><span class="box xs"></span>がつ<span class="box xs"></span>にち</span>';
+    if (c.showDate) {
+      fields += L.date ? '<span class="f f-date"><span class="lbl">' + L.date + '</span><span class="box date"></span></span>'
+        : '<span class="f f-date"><span class="box xs"></span>' + L.month + '<span class="box xs"></span>' + L.day + '</span>';
+    }
     fields += scoreBox(page, state);
     var ins = instruction(page, state, answer);
     return '<header class="sh-head">' +
@@ -93,7 +101,7 @@
   function footer(state, hasSeed) {
     return '<footer class="sh-foot">' +
       '<span>' + (hasSeed ? 'もんだい ばんごう ' + Calc.seedLabel(state.seed) : '') + '</span>' +
-      (state.common.credit ? '<span class="credit">' + esc(Calc.CREDIT) + '</span>' : '<span></span>') +
+      (state.common.credit ? '<span class="credit">' + esc(L.credit) + '</span>' : '<span></span>') +
       '</footer>';
   }
 
@@ -195,10 +203,10 @@
 
   function traceBody(page) {
     var sz = Calc.TRACE_SIZES[page.size];
-    var html = '<div class="tr tr-' + page.size + '" style="--cell:' + sz.mm + 'mm">';
+    var html = '<div class="tr tr-' + page.size + '"' + (LANG === 'ja' ? '' : ' lang="ja"') + ' style="--cell:' + sz.mm + 'mm">';
     page.rows.forEach(function (row) {
       html += '<div class="tr-row">' + row.map(function (c) {
-        return '<span class="tc tc-' + c.kind + '">' + (c.ch ? esc(c.ch) : '') + '</span>';
+        return '<span class="tc tc-' + c.kind + '">' + (c.ro ? '<span class="ro" lang="en">' + esc(c.ro) + '</span>' : '') + (c.ch ? esc(c.ch) : '') + '</span>';
       }).join('') + '</div>';
     });
     return html + '</div>';
@@ -231,6 +239,38 @@
     return '<div class="mz-wrap">' + svg + '</svg></div>';
   }
 
+  /**
+   * 原稿用紙とマス目（SVG）。400 字詰は マス 10・行間 3 の座標で描いて本文の大きさに合わせて縮め、
+   * 練習用のマス目は 1 単位 = 1mm で描いて原寸にする（ますの大きさが選んだ mm になる）
+   */
+  function genkoBody(page) {
+    var d = '', g = '';
+    var line = function (x1, y1, x2, y2) { return 'M' + x1 + ' ' + y1 + (x1 === x2 ? 'V' + y2 : 'H' + x2); };
+    if (page.layout === 'grid') {
+      var s = page.size, W = page.cols * s, H = page.rows * s, i;
+      for (i = 0; i <= page.cols; i++) d += line(i * s, 0, i * s, H);
+      for (i = 0; i <= page.rows; i++) d += line(0, i * s, W, i * s);
+      if (page.guides) {
+        for (i = 0; i < page.cols; i++) g += line(i * s + s / 2, 0, i * s + s / 2, H);
+        for (i = 0; i < page.rows; i++) g += line(0, i * s + s / 2, W, i * s + s / 2);
+      }
+      return '<div class="gk-wrap"><svg class="gk" width="' + W + 'mm" height="' + H + 'mm" viewBox="0 0 ' + W + ' ' + H + '" aria-hidden="true">' +
+        (g ? '<path d="' + g + '" class="gk-guide" stroke-dasharray="' + (s / 20) + ' ' + (s / 20) + '"/>' : '') +
+        '<path d="' + d + '" class="gk-line"/></svg></div>';
+    }
+    // 400 字詰: 20 字の列（たて書き）または行（よこ書き）を 20 本。列と列のあいだは ふりがな・句読点の欄
+    var c = page.cell, gap = page.gap, n = page.cols, len = n * c, span = n * c + (n + 1) * gap, k, j;
+    var vert = page.layout === 'v';
+    for (k = 0; k < n; k++) {
+      var a = gap + k * (c + gap);    // 列（行）の始まり
+      for (j = 0; j <= n; j++) d += vert ? line(a, j * c, a + c, j * c) : line(j * c, a, j * c, a + c);
+      d += vert ? line(a, 0, a, len) + line(a + c, 0, a + c, len) : line(0, a, len, a) + line(0, a + c, len, a + c);
+    }
+    var VW = vert ? span : len, VH = vert ? len : span;
+    return '<div class="gk-wrap"><svg class="gk gk-fit" viewBox="-1 -1 ' + (VW + 2) + ' ' + (VH + 2) + '" preserveAspectRatio="xMidYMin meet" aria-hidden="true">' +
+      '<path d="' + d + '" class="gk-line"/><rect x="0" y="0" width="' + VW + '" height="' + VH + '" class="gk-frame"/></svg></div>';
+  }
+
   function body(page, answer) {
     switch (page.kind) {
       case 'arith': case 'kuku': return arithBody(page, answer);
@@ -238,6 +278,7 @@
       case 'clock': return clockBody(page, answer);
       case 'kana': case 'kanji': return traceBody(page);
       case 'maze': return mazeBody(page, answer);
+      case 'genko': return genkoBody(page);
     }
     return '';
   }
@@ -246,16 +287,20 @@
    * 印刷するページの HTML を作る
    * @param {object} wb calc.js buildWorkbook の戻り値
    * @param {object} state normalizeState 済み
+   * @param {string} [lang] 紙に入る文言の言語（'ja' 既定・'en'）
    * @returns {{html: string, questions: number, answers: number, total: number}}
    */
-  function render(wb, state) {
+  function render(wb, state, lang) {
+    LANG = lang === 'en' ? 'en' : 'ja';
+    L = TX.sheet[LANG];
     var mode = wb.hasAnswers ? state.common.answers : 'q';
-    var seeded = !(wb.type === 'kana' || (wb.type === 'kanji' && state.kanji.source !== 'random') ||
+    var paper = state.common.paper === 'letter' ? ' paper-letter' : '';   // A4 のときはクラスを足さない（日本語ページの出力は前のまま）
+    var seeded = !(wb.type === 'kana' || wb.type === 'genko' || (wb.type === 'kanji' && state.kanji.source !== 'random') ||
       (wb.type === 'kuku' && state.kuku.order !== 'random'));
     var out = [], q = 0, a = 0;
     var n = wb.pages.length;
     var one = function (page, answer) {
-      out.push('<section class="sheet sheet-' + page.kind + (answer ? ' sheet-answer' : '') + '" data-kind="' + page.kind + '" data-answer="' + (answer ? 1 : 0) + '">' +
+      out.push('<section class="sheet sheet-' + page.kind + paper + (answer ? ' sheet-answer' : '') + '" data-kind="' + page.kind + '" data-answer="' + (answer ? 1 : 0) + '">' +
         header(page, state, answer, page.index + 1, n) +
         '<div class="sh-body">' + body(page, answer) + '</div>' +
         footer(state, seeded) + '</section>');

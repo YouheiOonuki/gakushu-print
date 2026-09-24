@@ -1,6 +1,8 @@
 // ===========================
 // 学習プリントメーカー — 画面の制御（設定の読み書き・見本・印刷・共有・保存）
-// 問題づくりは calc.js、プリントの HTML は sheets.js、漢字の一覧は constants.js
+// 問題づくりは calc.js、プリントの HTML は sheets.js、漢字の一覧は constants.js、文言は text.js
+// 日本語ページ（/）と英語ページ（/en/）の両方がこのファイルを使う。言語は <html lang>、
+// 出す種類はページにある「種類」のラジオ、用紙はページにある用紙の選択肢で決まる（無ければ A4 だけ）
 // ===========================
 (function () {
   'use strict';
@@ -9,10 +11,24 @@
   var KANJI = window.Constants.kanjiByGrade.value;
   var TOOL = C.TOOL;
   var $ = function (id) { return document.getElementById(id); };
+  var LANG = document.documentElement.lang === 'en' ? 'en' : 'ja';
+  var T = window.TEXT.ui[LANG];
+  function hide(id, v) { var e = $(id); if (e) e.hidden = v; }
+  function on(id, ev, fn) { var e = $(id); if (e) e.addEventListener(ev, fn); }
+  // このページで選べる種類・用紙（英語ページはなぞり書き・原稿用紙だけ、日本語ページは A4 だけ）
+  var PAGE_TYPES = Array.prototype.map.call(document.querySelectorAll('input[name="type"]'), function (r) { return r.value; });
+  var PAGE_PAPERS = Array.prototype.map.call(document.querySelectorAll('input[data-k="common.paper"]'), function (r) { return r.value; });
+  if (!PAGE_PAPERS.length) PAGE_PAPERS = ['a4'];
+  function fitPage(st) {
+    if (PAGE_TYPES.indexOf(st.type) < 0) st.type = PAGE_TYPES[0];
+    if (PAGE_PAPERS.indexOf(st.common.paper) < 0) st.common.paper = PAGE_PAPERS[0];
+    return st;
+  }
 
   // --- ブラウザへの保存（README「ツールを追加するとき」12） ---
   // キーは必ず "gakushu-print_" で始める。全ツールが同じオリジンで localStorage を共有しているため
-  var KEY_PREFIX = 'gakushu-print_';
+  // 英語ページは別のキー（gakushu-print_en_…）。選べる種類が違うので、日本語ページの設定と混ぜない
+  var KEY_PREFIX = 'gakushu-print_' + (LANG === 'en' ? 'en_' : '');
   var store = {
     get: function (name, fallback) {
       try {
@@ -29,8 +45,8 @@
     try { return crypto.getRandomValues(new Uint32Array(1))[0]; } catch (e) { return Math.floor(Math.random() * 4294967296); }
   }
 
-  var TYPE_NAMES = { arith: 'たし算・ひき算', kuku: '九九', hyaku: '百ます計算', clock: '時計の読み方', kana: 'ひらがな・カタカナ', kanji: '漢字練習', maze: '迷路' };
-  var KANA_LABELS = { a: 'あ行', ka: 'か行', sa: 'さ行', ta: 'た行', na: 'な行', ha: 'は行', ma: 'ま行', ya: 'や行', ra: 'ら行', wa: 'わ行', ga: 'が行', za: 'ざ行', da: 'だ行', ba: 'ば行', pa: 'ぱ行', small: '小さい字' };
+  var TYPE_NAMES = T.typeNames;
+  var KANA_LABELS = T.kanaLabels;
 
   // --- 状態 ---
   var state, presets;
@@ -44,16 +60,22 @@
     var saved = store.get('settings', null);
     state = C.normalizeState(saved);
     if (!saved || saved.seed === undefined) state.seed = newSeed();
+    if (!saved && LANG === 'en') {
+      // 英語ページのはじめ: ローマ字あり。用紙は米国・カナダの英語ならレター
+      state.kana.romaji = true;
+      if (/^en-(US|CA)$/i.test(navigator.language || '')) state.common.paper = 'letter';
+    }
   }
-  presets = C.normalizePresets(store.get('presets', []));
+  fitPage(state);
+  presets = C.normalizePresets(store.get('presets', []), LANG);
 
   // --- 画面の部品を用意する（枚数・かなの行） ---
   document.querySelectorAll('.pages-select').forEach(function (sel) {
     var h = '';
-    for (var i = 1; i <= C.MAX_PAGES; i++) h += '<option value="' + i + '">' + i + ' 枚</option>';
+    for (var i = 1; i <= C.MAX_PAGES; i++) h += '<option value="' + i + '">' + T.pages(i) + '</option>';
     sel.innerHTML = h;
   });
-  $('kana-rows').innerHTML = Object.keys(C.KANA_ROWS).map(function (k) {
+  if ($('kana-rows')) $('kana-rows').innerHTML = Object.keys(C.KANA_ROWS).map(function (k) {
     return '<label><input type="checkbox" data-k="kana.rows" data-t="arr" value="' + k + '"> <span class="kana-lbl" data-row="' + k + '">' + KANA_LABELS[k] + '</span></label>';
   }).join('');
 
@@ -99,10 +121,11 @@
 
   function fillArithCounts() {
     var sel = $('arith-count');
+    if (!sel) return;
     var style = document.querySelector('input[name="arith-style"]:checked');
     var counts = C.COUNTS[style ? style.value : state.arith.style];
     var cur = sel.value;
-    sel.innerHTML = counts.map(function (n) { return '<option value="' + n + '">' + n + ' 問</option>'; }).join('');
+    sel.innerHTML = counts.map(function (n) { return '<option value="' + n + '">' + T.count(n) + '</option>'; }).join('');
     if (counts.indexOf(Number(cur)) >= 0) sel.value = cur;
     else sel.value = String(counts[1]);
   }
@@ -112,41 +135,48 @@
     document.querySelectorAll('[data-panel]').forEach(function (p) { p.hidden = p.getAttribute('data-panel') !== state.type; });
     // たし算・ひき算: 1けたどうしの「くり下がりあり」は作れない
     var withOk = C.arithPossible(state.arith.op, state.arith.level, 'with');
-    $('arith-carry-with').disabled = !withOk;
+    if ($('arith-carry-with')) $('arith-carry-with').disabled = !withOk;
     // 九九: 順番どおりのときは問題数・枚数は決まる
-    $('kuku-pages-box').hidden = state.kuku.order !== 'random';
-    $('kuku-count').closest('.field').hidden = state.kuku.order !== 'random';
-    // かな
-    $('kana-rows-box').hidden = state.kana.source !== 'rows';
-    $('kana-words-box').hidden = state.kana.source !== 'words';
+    hide('kuku-pages-box', state.kuku.order !== 'random');
+    if ($('kuku-count')) $('kuku-count').closest('.field').hidden = state.kuku.order !== 'random';
+    // かな（ローマ字は 1 字ずつの行の練習だけ）
+    hide('kana-rows-box', state.kana.source !== 'rows');
+    hide('kana-words-box', state.kana.source !== 'words');
+    hide('kana-romaji-box', state.kana.source !== 'rows');
     document.querySelectorAll('.kana-lbl').forEach(function (s) {
       var k = s.getAttribute('data-row'), label = KANA_LABELS[k];
-      s.textContent = state.kana.script === 'kata' && k !== 'small' ? C.toKata(label.replace('行', '')) + '行' : label;
+      if (LANG === 'en') {
+        var first = Array.from(C.KANA_ROWS[k])[k === 'small' ? 6 : 0];
+        s.innerHTML = '<span lang="ja">' + (state.kana.script === 'kata' ? C.toKata(first) : first) + '</span> ' + label;
+      } else s.textContent = state.kana.script === 'kata' && k !== 'small' ? C.toKata(label.replace('行', '')) + '行' : label;
     });
+    // 原稿用紙（ますの大きさ・十字の線は練習用のマス目だけ）
+    hide('genko-grid-box', state.genko.layout !== 'grid');
     // 漢字
-    $('kanji-start-box').hidden = state.kanji.source !== 'order';
-    $('kanji-custom-box').hidden = state.kanji.source !== 'custom';
-    $('kanji-pages-box').hidden = state.kanji.source === 'custom';
-    $('kanji-start').max = String(Array.from(KANJI[state.kanji.grade]).length);
-    // 答えのページ（なぞり書き・漢字には答えがない）
-    var hasAns = state.type !== 'kana' && state.type !== 'kanji';
+    hide('kanji-start-box', state.kanji.source !== 'order');
+    hide('kanji-custom-box', state.kanji.source !== 'custom');
+    hide('kanji-pages-box', state.kanji.source === 'custom');
+    if ($('kanji-start')) $('kanji-start').max = String(Array.from(KANJI[state.kanji.grade]).length);
+    // 答えのページ（なぞり書き・漢字・原稿用紙には答えがない）
+    var hasAns = state.type !== 'kana' && state.type !== 'kanji' && state.type !== 'genko';
     document.querySelectorAll('input[name="c-answers"]').forEach(function (r) { r.disabled = !hasAns; });
-    $('answers-note').textContent = hasAns
-      ? '答えは問題のあとに別のページでまとめて出ます。丸つけ用に「答えだけ」をあとから印刷することもできます（問題番号が同じなら同じ答え）。'
-      : 'このプリントには答えのページはありません。';
+    if ($('answers-note')) $('answers-note').textContent = hasAns ? T.answersNote : T.answersNone;
+    // 用紙: 印刷の用紙の大きさ（@page）をプリントに合わせる。A4 は style.css のまま
+    pageStyle.textContent = state.common.paper === 'letter' ? '@page { size: letter portrait; margin: 0; }' : '';
     updateSummaries(hasAns);
   }
 
   // --- 折りたたみの summary に今の設定を出す（SCREEN.md 1.2 の 6。開いた状態は保存しない） ---
-  var SIZE_NAMES = { L: '大', M: '中', S: '小' };
-  var ANSWER_NAMES = { q: '問題だけ', qa: '問題と答え', a: '答えだけ' };
+  var pageStyle = document.createElement('style');
+  document.head.appendChild(pageStyle);
   function setText(id, t) { var e = $(id); if (e && e.textContent !== t) e.textContent = t; }
   function updateSummaries(hasAns) {
-    setText('more-arith', ': ' + (state.arith.style === 'tate' ? 'たて（筆算）' : 'よこ') + '・' + state.arith.pages + ' 枚');
-    setText('more-clock', ': 分の数字' + (state.clock.guide ? 'あり' : 'なし'));
-    setText('more-kanji', ': ますの大きさ ' + SIZE_NAMES[state.kanji.size]);
-    setText('common-state', (state.common.showName ? 'なまえの欄あり' : 'なまえの欄なし') + '・' +
-      (hasAns ? ANSWER_NAMES[state.common.answers] : '答えのページなし') + '・A4 縦');
+    setText('more-arith', T.moreArith(state.arith.style === 'tate', state.arith.pages));
+    setText('more-clock', T.moreClock(state.clock.guide));
+    setText('more-kanji', T.moreSize(state.kanji.size));
+    setText('more-kana', T.moreKana(state.kana.size));
+    setText('more-hyaku', T.moreHand(state.hyaku.hand));
+    setText('common-state', T.commonState(state.common, hasAns, T.paperNames[state.common.paper]));
     setText('fixbar-type', TYPE_NAMES[state.type]);
   }
 
@@ -168,13 +198,13 @@
       updateBar();
     }, { rootMargin: '-44px 0px 0px 0px' }).observe($('print-row'));
   }
-  $('fixbar-print').addEventListener('click', function () { $('print').click(); });
+  on('fixbar-print', 'click', function () { $('print').click(); });
 
   // --- 入れたい問題・言葉・漢字の読み取り結果 ---
   function reportList(errors) {
     return '<ul>' + errors.slice(0, 10).map(function (e) {
-      return '<li>' + e.line + ' 行目「' + S.esc(e.text) + '」: ' + S.esc(e.reason) + '（使いません）</li>';
-    }).join('') + (errors.length > 10 ? '<li>ほか ' + (errors.length - 10) + ' 行</li>' : '') + '</ul>';
+      return '<li>' + T.reportLine(e.line, S.esc(e.text), S.esc(e.reason)) + '</li>';
+    }).join('') + (errors.length > 10 ? '<li>' + T.reportMore(errors.length - 10) + '</li>' : '') + '</ul>';
   }
   function showReports(wb) {
     ['arith', 'kuku', 'clock', 'kana', 'kanji'].forEach(function (t) { var el = $(t + '-report'); if (el && t !== wb.type) el.innerHTML = ''; });
@@ -182,16 +212,16 @@
     if (!el || !r) return;
     var h = '';
     if (wb.type === 'arith' || wb.type === 'kuku' || wb.type === 'clock') {
-      if (r.items.length) h += '<p class="ok">' + r.items.length + (wb.type === 'clock' ? ' つの時刻' : ' 問') + 'を使います。</p>';
+      if (r.items.length) h += '<p class="ok">' + T.useItems(r.items.length, wb.type === 'clock') + '</p>';
       if (r.errors.length) h += reportList(r.errors);
     } else if (wb.type === 'kana') {
-      if (r.words.length) h += '<p class="ok">' + r.words.length + ' 語をなぞります。</p>';
-      if (r.dropped.length) h += '<p class="warn">' + (state.kana.script === 'kata' ? 'カタカナ' : 'ひらがな') + 'でない文字は外しました：' + r.dropped.map(function (c) { return '「' + S.esc(c) + '」'; }).join('') + '</p>';
+      if (r.words.length) h += '<p class="ok">' + T.useWords(r.words.length) + '</p>';
+      if (r.dropped.length) h += '<p class="warn">' + T.dropped(state.kana.script === 'kata', r.dropped.map(S.esc)) + '</p>';
       if (r.hint) h += '<p class="warn">' + S.esc(r.hint) + '</p>';
     } else if (wb.type === 'kanji') {
-      if (r.chars.length) h += '<p class="ok">' + r.chars.length + ' 字：' + S.esc(r.chars.join('')) + '</p>';
-      if (r.higher.length) h += '<p class="warn">' + state.kanji.grade + ' 年生より上の学年の字は外しました：' + r.higher.map(function (x) { return S.esc(x.c) + '（' + x.g + '年）'; }).join('、') + '。学年を上げると使えます。</p>';
-      if (r.outside.length) h += '<p class="warn">小学校で習う漢字（学年別漢字配当表）にない字は外しました：' + S.esc(r.outside.join('')) + '</p>';
+      if (r.chars.length) h += '<p class="ok">' + T.kanjiChars(r.chars.length, S.esc(r.chars.join(''))) + '</p>';
+      if (r.higher.length) h += '<p class="warn">' + T.kanjiHigher(state.kanji.grade, r.higher.map(function (x) { return S.esc(x.c) + '（' + x.g + '年）'; }).join('、')) + '</p>';
+      if (r.outside.length) h += '<p class="warn">' + T.kanjiOutside(S.esc(r.outside.join(''))) + '</p>';
     }
     el.innerHTML = h;
   }
@@ -212,20 +242,21 @@
   // --- 見本（＝印刷されるページ） ---
   var lastRender = null;
   function render() {
-    var wb = C.buildWorkbook(state, KANJI);
-    var r = S.render(wb, state);
+    var wb = C.buildWorkbook(state, KANJI, LANG);
+    var r = S.render(wb, state, LANG);
     $('sheets').innerHTML = r.html;
     lastRender = r;
     fitPreview();
-    var info = '問題番号 ' + C.seedLabel(state.seed) + '・';
-    info += r.answers && r.questions ? '問題 ' + r.questions + ' 枚＋答え ' + r.answers + ' 枚' : r.answers ? '答え ' + r.answers + ' 枚' : r.total + ' 枚';
-    info += '（A4 縦）';
-    if (state.type === 'kana' || (state.type === 'kanji' && state.kanji.source !== 'random') || (state.type === 'kuku' && state.kuku.order !== 'random')) info = r.total + ' 枚（A4 縦）';
+    var paperInfo = T.paperInfo(T.paperNames[state.common.paper]);
+    var info = T.seedInfo(C.seedLabel(state.seed));
+    info += r.answers && r.questions ? T.sheetsQA(r.questions, r.answers) : r.answers ? T.sheetsA(r.answers) : T.sheetsN(r.total);
+    info += paperInfo;
+    if (state.type === 'kana' || state.type === 'genko' || (state.type === 'kanji' && state.kanji.source !== 'random') || (state.type === 'kuku' && state.kuku.order !== 'random')) info = T.sheetsN(r.total) + paperInfo;
     $('pv-info').textContent = info;
     $('reseed').hidden = !(state.type === 'arith' || state.type === 'hyaku' || state.type === 'clock' || state.type === 'maze' ||
       (state.type === 'kuku' && state.kuku.order === 'random') || (state.type === 'kanji' && state.kanji.source === 'random'));
     var notes = wb.notes.slice();
-    if (!r.total) notes.push('印刷するページがありません。');
+    if (!r.total) notes.push(T.noPages);
     $('pv-notes').hidden = !notes.length;
     $('pv-notes').textContent = notes.join(' ');
     if (state.type === 'kanji' && state.kanji.source === 'order') {
@@ -233,19 +264,20 @@
       var st = Math.min(state.kanji.start, all.length);
       var per = C.TRACE_SIZES[state.kanji.size].rows * state.kanji.pages;
       var end = Math.min(all.length, st + per - 1);
-      $('kanji-range').textContent = st + '〜' + end + ' 番目（' + all[st - 1] + '〜' + all[end - 1] + '）を練習します。全部で ' + all.length + ' 字。';
+      $('kanji-range').textContent = T.kanjiRange(st, end, all[st - 1], all[end - 1], all.length);
     }
     showReports(wb);
     renderKanjiPicker();
   }
 
-  /** 見本の縮小率（A4 の幅 210mm ≒ 794px を、見本の枠の幅に合わせる） */
+  /** 見本の縮小率（用紙の幅 A4 210mm ≒ 794px・レター 215.9mm ≒ 816px を、見本の枠の幅に合わせる） */
   function fitPreview() {
     var box = $('sheets');
     var w = box.clientWidth;
     if (!w) return;
-    box.style.setProperty('--z', String(Math.min(1, (w - 4) / 794)));
-    box.style.setProperty('--zs', String(Math.min(1, (w - 4) / 794) * 0.3));   // 2 枚目からの小さい見本
+    var pw = state.common.paper === 'letter' ? 816 : 794;
+    box.style.setProperty('--z', String(Math.min(1, (w - 4) / pw)));
+    box.style.setProperty('--zs', String(Math.min(1, (w - 4) / pw) * 0.3));   // 2 枚目からの小さい見本
   }
   addEventListener('resize', fitPreview);
 
@@ -258,7 +290,7 @@
   function onChange(e) {
     var raw = readForm();
     if (e && e.target && e.target.name === 'arith-style') { fillArithCounts(); raw.arith.count = Number($('arith-count').value); }
-    state = C.normalizeState(raw);
+    state = fitPage(C.normalizeState(raw));
     leaveShared();
     updateVisibility();
     save();
@@ -284,19 +316,19 @@
     try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* 何もしない */ }
   }
 
-  $('reseed').addEventListener('click', function () {
+  on('reseed', 'click', function () {
     state.seed = newSeed();
     leaveShared();
     save();
     render();
   });
 
-  $('kuku-all').addEventListener('click', function () {
+  on('kuku-all', 'click', function () {
     document.querySelectorAll('input[data-k="kuku.dans"]').forEach(function (c) { c.checked = true; });
     onChange();
   });
 
-  $('kanji-pick').addEventListener('click', function (e) {
+  on('kanji-pick', 'click', function (e) {
     var b = e.target.closest('button[data-c]');
     if (!b) return;
     var c = b.getAttribute('data-c'), ta = $('kanji-custom');
@@ -320,21 +352,21 @@
     var out = $('share-url'), msg = $('share-msg');
     if (url.length > C.SHARE_MAX) {
       out.hidden = true;
-      msg.textContent = 'リンクが長くなりすぎました（入れた問題や言葉が多いため）。「ファイルに書き出す」で作ったファイルを渡してください。';
+      msg.textContent = T.shareTooLong;
       return;
     }
     out.value = url;
     out.hidden = false;
-    var done = function () { msg.textContent = 'リンクをコピーしました。開いた人は同じ問題のプリントを印刷できます。'; };
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, function () { out.select(); msg.textContent = 'リンクを選びました。コピーして送ってください。'; });
-    else { out.select(); msg.textContent = 'リンクを選びました。コピーして送ってください。'; }
+    var done = function () { msg.textContent = T.shareCopied; };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, function () { out.select(); msg.textContent = T.shareSelected; });
+    else { out.select(); msg.textContent = T.shareSelected; }
   });
 
   $('shared-keep').addEventListener('click', function () {
     leaveShared();
     save();
     $('load-msg').hidden = false;
-    $('load-msg').textContent = '共有されたプリントの設定を、この端末に保存しました。';
+    $('load-msg').textContent = T.sharedKept;
   });
 
   // --- よく使う設定 ---
@@ -342,21 +374,21 @@
     var ul = $('presets');
     ul.innerHTML = presets.map(function (p) {
       return '<li><span class="p-name">' + S.esc(p.name) + ' <span class="p-type">' + TYPE_NAMES[p.state.type] + '</span></span>' +
-        '<button type="button" class="btn btn-sub btn-sm" data-act="load" data-id="' + p.id + '">呼び出す</button>' +
-        '<button type="button" class="btn btn-sub btn-sm" data-act="del" data-id="' + p.id + '">削除</button></li>';
+        '<button type="button" class="btn btn-sub btn-sm" data-act="load" data-id="' + p.id + '">' + T.presetLoad + '</button>' +
+        '<button type="button" class="btn btn-sub btn-sm" data-act="del" data-id="' + p.id + '">' + T.presetDelete + '</button></li>';
     }).join('');
   }
   $('preset-save').addEventListener('click', function () {
-    var name = $('preset-name').value.trim() || (state.common.name ? state.common.name + ' ' : '') + TYPE_NAMES[state.type];
-    if (presets.length >= C.MAX_PRESETS) { $('preset-msg').textContent = '保存できるのは ' + C.MAX_PRESETS + ' 件までです。使わないものを削除してください。'; return; }
+    var name = $('preset-name').value.trim() || T.presetDefaultName(state.common.name, TYPE_NAMES[state.type]);
+    if (presets.length >= C.MAX_PRESETS) { $('preset-msg').textContent = T.presetLimit(C.MAX_PRESETS); return; }
     var st = JSON.parse(JSON.stringify(state));
     delete st.seed;
     presets.push({ id: 'p' + Date.now().toString(36), name: name.slice(0, 30), state: st });
-    presets = C.normalizePresets(presets);
+    presets = C.normalizePresets(presets, LANG);
     store.set('presets', presets);
     $('preset-name').value = '';
     renderPresets();
-    $('preset-msg').textContent = '「' + name.slice(0, 30) + '」を保存しました。';
+    $('preset-msg').textContent = T.presetSaved(name.slice(0, 30));
   });
   $('presets').addEventListener('click', function (e) {
     var b = e.target.closest('button[data-act]');
@@ -366,16 +398,16 @@
     if (b.getAttribute('data-act') === 'load') {
       var st = JSON.parse(JSON.stringify(p.state));
       st.seed = newSeed();
-      state = C.normalizeState(st);
+      state = fitPage(C.normalizeState(st));
       leaveShared();
       writeForm(); updateVisibility(); save(); render();
-      $('preset-msg').textContent = '「' + p.name + '」を呼び出しました（新しい問題です）。';
+      $('preset-msg').textContent = T.presetLoaded(p.name);
       $('sec-preview').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else if (window.confirm('「' + p.name + '」を削除します。よろしいですか？')) {
+    } else if (window.confirm(T.presetConfirmDelete(p.name))) {
       presets = presets.filter(function (x) { return x !== p; });
       store.set('presets', presets);
       renderPresets();
-      $('preset-msg').textContent = '削除しました。';
+      $('preset-msg').textContent = T.presetDeleted;
     }
   });
 
@@ -389,25 +421,25 @@
     a.download = C.backupFileName(TOOL);
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
-    $('backup-msg').textContent = 'ファイルに書き出しました。機種変更のときは、このファイルを新しい端末に移して「ファイルから読み込む」を押してください。';
+    $('backup-msg').textContent = T.backupExported;
   });
   $('backup-import').addEventListener('click', function () { $('backup-file').click(); });
   $('backup-file').addEventListener('change', function () {
     var file = this.files && this.files[0];
     this.value = '';
     if (!file) return;
-    if (file.size > 1024 * 1024) { $('backup-msg').textContent = 'ファイルが大きすぎます。このツールで書き出したファイルを選んでください。'; return; }
+    if (file.size > 1024 * 1024) { $('backup-msg').textContent = T.backupTooBig; return; }
     file.text().then(function (text) {
-      var r = C.parseBackup(text, TOOL, ['settings', 'presets']);
+      var r = C.parseBackup(text, TOOL, ['settings', 'presets'], LANG);
       if (!r.ok) { $('backup-msg').textContent = r.error; return; }
-      if (!window.confirm('ファイルの内容で、いまの設定とよく使う設定を置き換えます。よろしいですか？')) return;
-      state = C.normalizeState(r.data.settings);
-      presets = C.normalizePresets(r.data.presets);
+      if (!window.confirm(T.backupConfirm)) return;
+      state = fitPage(C.normalizeState(r.data.settings));
+      presets = C.normalizePresets(r.data.presets, LANG);
       leaveShared();
       store.set('presets', presets);
       writeForm(); updateVisibility(); save(); render(); renderPresets();
-      $('backup-msg').textContent = 'ファイルから読み込みました（よく使う設定 ' + presets.length + ' 件）。';
-    }, function () { $('backup-msg').textContent = 'ファイルを読み取れませんでした。'; });
+      $('backup-msg').textContent = T.backupImported(presets.length);
+    }, function () { $('backup-msg').textContent = T.backupUnreadable; });
   });
 
   // 開いたままのタブに別の共有リンクを貼ったときは、読み直してそのプリントを出す
@@ -415,6 +447,7 @@
 
   // --- はじめの表示 ---
   if (sharedMode) {
+    $('shared-banner').innerHTML = T.sharedBanner;   // 共有リンクで開いたときだけの文なので、ページには書かずここで入れる
     $('shared-banner').hidden = false;
     $('shared-keep-row').hidden = false;
     $('shared-seed').textContent = C.seedLabel(state.seed);
