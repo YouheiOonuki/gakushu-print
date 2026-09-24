@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>__TITLE__｜yorozu-craft</title>
-  <meta name="description" content="__DESCRIPTION__">
+  <title>学習プリントメーカー（無料・登録不要）ひらがな・漢字・計算・百ます・時計・迷路｜yorozu-craft</title>
+  <meta name="description" content="ひらがな・カタカナのなぞり書き、学年別の漢字練習、たし算・ひき算（くり上がりの有無・筆算）、九九、百ます計算、時計の読み方、迷路の学習プリントを無料で作成。登録不要、毎回ちがう問題、答えのページつき。A4 で印刷・PDF 保存。">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://yorozu-craft.com/__REPO__/">
+  <link rel="canonical" href="https://yorozu-craft.com/gakushu-print/">
 
-  <meta property="og:title" content="__TITLE__｜yorozu-craft">
-  <meta property="og:description" content="__DESCRIPTION__">
+  <meta property="og:title" content="学習プリントメーカー（無料・登録不要）｜yorozu-craft">
+  <meta property="og:description" content="ひらがな・漢字・計算・百ます・時計・迷路の学習プリントを無料で作成。毎回ちがう問題、答えつき、A4 で印刷。名前や練習したい字・問題も入れられます。">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://yorozu-craft.com/__REPO__/">
+  <meta property="og:url" content="https://yorozu-craft.com/gakushu-print/">
   <meta property="og:site_name" content="yorozu-craft">
   <meta property="og:locale" content="ja_JP">
-  <meta property="og:image" content="https://yorozu-craft.com/__REPO__/og-image.png">
+  <meta property="og:image" content="https://yorozu-craft.com/gakushu-print/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
@@ -25,55 +25,419 @@
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "__TITLE__",
-    "description": "__DESCRIPTION__",
-    "url": "https://yorozu-craft.com/__REPO__/",
-    "applicationCategory": "UtilitiesApplication",
+    "name": "学習プリントメーカー",
+    "description": "ひらがな・カタカナのなぞり書き、学年別の漢字練習、たし算・ひき算、九九、百ます計算、時計の読み方、迷路の学習プリントを無料で作成。登録不要、毎回ちがう問題、答えのページつき。A4 で印刷・PDF 保存。",
+    "url": "https://yorozu-craft.com/gakushu-print/",
+    "applicationCategory": "EducationalApplication",
     "operatingSystem": "All",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
     "inLanguage": "ja"
   }
   </script>
 
-  <!-- Google AdSense（サイト所有確認 + 広告配信スクリプト）。全画面で操作する画面なら script を消して meta だけ残す -->
+  <!-- Google AdSense（サイト所有確認 + 広告配信スクリプト）。広告は印刷に出さない（style.css の @media print） -->
   <meta name="google-adsense-account" content="ca-pub-5375267956079717">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5375267956079717"
      crossorigin="anonymous"></script>
 
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./apple-touch-icon.png">
-  <!-- PWA-BEGIN -->
-  <link rel="manifest" href="./manifest.webmanifest">
-  <!-- PWA-END -->
   <link rel="stylesheet" href="./style.css">
 </head>
-<body>
+<body class="tool-page">
 
   <header class="app-header">
-    <h1>__TITLE__</h1>
-    <p class="subtitle">__DESCRIPTION__</p>
+    <h1>学習プリントメーカー</h1>
+    <p class="subtitle">ひらがな・カタカナ・漢字・計算・百ます・時計・迷路。毎回ちがう問題で、答えのページつき。A4 で印刷・PDF 保存。</p>
   </header>
 
   <main class="app-main">
 
-    <!-- ここにツール本体を書く（例: 金額を 100 円単位で切り上げる） -->
-    <section class="card" aria-labelledby="tool-heading">
-      <h2 id="tool-heading">計算</h2>
-      <div class="field">
-        <label for="amount">金額</label>
-        <p class="hint">入力内容はこの端末のブラウザにだけ保存され、外部には送信されません。</p>
-        <input type="number" id="amount" inputmode="numeric" placeholder="例：1234">
+    <p class="badge">登録不要・印刷は無料・広告は印刷されません・設定はこの端末のブラウザにだけ保存します</p>
+
+    <div id="shared-banner" class="notice" role="status" hidden>
+      <p><strong>共有されたプリントです</strong>（問題番号 <span id="shared-seed"></span>）。このまま印刷すると、送った人と同じ問題になります。</p>
+      <div class="btn-row">
+        <button type="button" id="shared-keep" class="btn btn-sub">この設定を自分用に保存する</button>
+        <a href="./" id="shared-new" class="btn btn-sub">自分のプリントを作る</a>
       </div>
-      <p>結果：<strong id="result" aria-live="polite">—</strong></p>
-      <button type="button" id="share" class="btn">結果を開くリンクをコピー</button>
-      <!-- 保存内容のファイルへの書き出し・読み込み（README「ツールを追加するとき」20。保存する・共有するボタンの近くに置く） -->
-      <button type="button" id="backup-export" class="btn">ファイルに書き出す</button>
-      <button type="button" id="backup-import" class="btn">ファイルから読み込む</button>
-      <input type="file" id="backup-file" accept=".json,application/json" hidden>
-      <p id="backup-msg" class="small" aria-live="polite"></p>
+      <p class="small">ひらがな・漢字・計算・時計・迷路のプリントを、登録なしで作れます。</p>
+    </div>
+    <p id="load-msg" class="notice" role="status" hidden></p>
+
+    <!-- 1. 種類 -->
+    <section class="card" id="sec-type" aria-labelledby="h-type">
+      <h2 id="h-type">プリントの種類</h2>
+      <div class="types">
+        <label class="tile"><input type="radio" name="type" value="arith" data-k="type" checked><span class="t-ico" aria-hidden="true">＋−</span><span class="t-name">たし算・ひき算</span><span class="t-sub">くり上がり・筆算</span></label>
+        <label class="tile"><input type="radio" name="type" value="kuku" data-k="type"><span class="t-ico" aria-hidden="true">×</span><span class="t-name">九九</span><span class="t-sub">段をえらぶ</span></label>
+        <label class="tile"><input type="radio" name="type" value="hyaku" data-k="type"><span class="t-ico" aria-hidden="true">▦</span><span class="t-name">百ます計算</span><span class="t-sub">タイムをはかる</span></label>
+        <label class="tile"><input type="radio" name="type" value="clock" data-k="type"><span class="t-ico" aria-hidden="true">◷</span><span class="t-name">時計の読み方</span><span class="t-sub">何時・何分</span></label>
+        <label class="tile"><input type="radio" name="type" value="kana" data-k="type"><span class="t-ico" aria-hidden="true">あ</span><span class="t-name">ひらがな・カタカナ</span><span class="t-sub">なぞり書き</span></label>
+        <label class="tile"><input type="radio" name="type" value="kanji" data-k="type"><span class="t-ico" aria-hidden="true">字</span><span class="t-name">漢字練習</span><span class="t-sub">1〜6年生</span></label>
+        <label class="tile"><input type="radio" name="type" value="maze" data-k="type"><span class="t-ico" aria-hidden="true">◫</span><span class="t-name">迷路</span><span class="t-sub">3 段階</span></label>
+      </div>
     </section>
 
-    <p class="small"><a href="./guide.html">使い方・よくある質問・ご利用上の注意</a></p>
+    <!-- 2. 内容（種類ごと） -->
+    <section class="card" id="sec-opts" aria-labelledby="h-opts">
+      <h2 id="h-opts">内容</h2>
+
+      <!-- たし算・ひき算 -->
+      <div class="panel" data-panel="arith">
+        <fieldset class="field">
+          <legend>計算</legend>
+          <div class="seg">
+            <label><input type="radio" name="arith-op" value="add" data-k="arith.op" checked> たし算</label>
+            <label><input type="radio" name="arith-op" value="sub" data-k="arith.op"> ひき算</label>
+            <label><input type="radio" name="arith-op" value="mix" data-k="arith.op"> まぜる</label>
+          </div>
+        </fieldset>
+        <div class="field">
+          <label for="arith-level">数の大きさ</label>
+          <select id="arith-level" data-k="arith.level">
+            <option value="d1">1けた と 1けた（例: 7+8、9−4）</option>
+            <option value="teen">10いくつ と 1けた（例: 13+5、15−8）</option>
+            <option value="d2d1">2けた と 1けた（例: 47+6）</option>
+            <option value="d2d2">2けた と 2けた（例: 38+45）</option>
+            <option value="d3d2">3けた と 2けた（例: 406−78）</option>
+            <option value="d3d3">3けた と 3けた（例: 358+267）</option>
+          </select>
+        </div>
+        <fieldset class="field">
+          <legend>くり上がり・くり下がり</legend>
+          <div class="seg">
+            <label><input type="radio" name="arith-carry" value="none" data-k="arith.carry"> なし</label>
+            <label><input type="radio" name="arith-carry" value="with" data-k="arith.carry" id="arith-carry-with"> あり</label>
+            <label><input type="radio" name="arith-carry" value="any" data-k="arith.carry" checked> まぜる</label>
+          </div>
+          <p class="hint" id="arith-carry-note">「なし」はどの位でもくり上がり・くり下がりが起きない問題だけ、「あり」は必ずどこかで起きる問題だけです（5+5 のように答えが 10 になるものは「あり」）。</p>
+        </fieldset>
+        <fieldset class="field">
+          <legend>書き方</legend>
+          <div class="seg">
+            <label><input type="radio" name="arith-style" value="yoko" data-k="arith.style" checked> よこ（7 ＋ 8 ＝）</label>
+            <label><input type="radio" name="arith-style" value="tate" data-k="arith.style"> たて（筆算）</label>
+          </div>
+        </fieldset>
+        <div class="grid2">
+          <div class="field">
+            <label for="arith-count">1 枚の問題数</label>
+            <select id="arith-count" data-k="arith.count" data-t="num"><option value="10">10 問</option><option value="20" selected>20 問</option><option value="30">30 問</option></select>
+          </div>
+          <div class="field">
+            <label for="arith-pages">枚数</label>
+            <select id="arith-pages" data-k="arith.pages" data-t="num" class="pages-select"><option value="1">1 枚</option></select>
+          </div>
+        </div>
+        <details class="field custom">
+          <summary>入れたい問題を足す（任意）</summary>
+          <p class="hint">1 行に 1 問（例: 7+8、15-9）。宿題でまちがえた問題などを入れると、作った問題といっしょにまぜて出します。答えは自動で計算します。</p>
+          <label for="arith-custom" class="visually-hidden">入れたい問題</label>
+          <textarea id="arith-custom" data-k="arith.custom" rows="4" placeholder="7+8&#10;15-9"></textarea>
+          <div class="seg">
+            <label><input type="radio" name="arith-cmode" value="mix" data-k="arith.customMode" checked> 作った問題とまぜる</label>
+            <label><input type="radio" name="arith-cmode" value="only" data-k="arith.customMode"> 入れた問題だけ</label>
+          </div>
+          <div class="report" id="arith-report" aria-live="polite"></div>
+        </details>
+      </div>
+
+      <!-- 九九 -->
+      <div class="panel" data-panel="kuku" hidden>
+        <fieldset class="field">
+          <legend>段</legend>
+          <div class="chips">
+            <label><input type="checkbox" data-k="kuku.dans" data-t="arr-num" value="1"> 1</label>
+            <label><input type="checkbox" data-k="kuku.dans" data-t="arr-num" value="2" checked> 2</label>
+            <label><input type="checkbox" data-k="kuku.dans" data-t="arr-num" value="3"> 3</label>
+            <label><input type="checkbox" data-k="kuku.dans" data-t="arr-num" value="4"> 4</label>
+            <label><input type="checkbox" data-k="kuku.dans" data-t="arr-num" value="5"> 5</label>
+            <label><input type="checkbox" data-k="kuku.dans" data-t="arr-num" value="6"> 6</label>
+            <label><input type="checkbox" data-k="kuku.dans" data-t="arr-num" value="7"> 7</label>
+            <label><input type="checkbox" data-k="kuku.dans" data-t="arr-num" value="8"> 8</label>
+            <label><input type="checkbox" data-k="kuku.dans" data-t="arr-num" value="9"> 9</label>
+          </div>
+          <div class="btn-row"><button type="button" class="btn btn-sub btn-sm" id="kuku-all">全部の段をえらぶ</button></div>
+        </fieldset>
+        <fieldset class="field">
+          <legend>順番</legend>
+          <div class="seg">
+            <label><input type="radio" name="kuku-order" value="seq" data-k="kuku.order"> 1 から順に</label>
+            <label><input type="radio" name="kuku-order" value="rev" data-k="kuku.order"> 9 から逆に</label>
+            <label><input type="radio" name="kuku-order" value="random" data-k="kuku.order" checked> ばらばら</label>
+          </div>
+        </fieldset>
+        <div class="grid2">
+          <div class="field">
+            <label for="kuku-count">1 枚の問題数</label>
+            <select id="kuku-count" data-k="kuku.count" data-t="num"><option value="20" selected>20 問</option><option value="30">30 問</option></select>
+          </div>
+          <div class="field" id="kuku-pages-box">
+            <label for="kuku-pages">枚数</label>
+            <select id="kuku-pages" data-k="kuku.pages" data-t="num" class="pages-select"><option value="1">1 枚</option></select>
+          </div>
+        </div>
+        <details class="field custom">
+          <summary>入れたい問題を足す（任意）</summary>
+          <p class="hint">1 行に 1 問（例: 6×7、8x9）。苦手な九九をまぜられます。</p>
+          <label for="kuku-custom" class="visually-hidden">入れたい問題</label>
+          <textarea id="kuku-custom" data-k="kuku.custom" rows="4" placeholder="6×7&#10;8×9"></textarea>
+          <div class="seg">
+            <label><input type="radio" name="kuku-cmode" value="mix" data-k="kuku.customMode" checked> 作った問題とまぜる</label>
+            <label><input type="radio" name="kuku-cmode" value="only" data-k="kuku.customMode"> 入れた問題だけ</label>
+          </div>
+          <div class="report" id="kuku-report" aria-live="polite"></div>
+        </details>
+      </div>
+
+      <!-- 百ます -->
+      <div class="panel" data-panel="hyaku" hidden>
+        <fieldset class="field">
+          <legend>計算</legend>
+          <div class="seg">
+            <label><input type="radio" name="hyaku-op" value="add" data-k="hyaku.op" checked> たし算</label>
+            <label><input type="radio" name="hyaku-op" value="sub" data-k="hyaku.op"> ひき算</label>
+            <label><input type="radio" name="hyaku-op" value="mul" data-k="hyaku.op"> かけ算</label>
+          </div>
+          <p class="hint">たし算・かけ算は 0〜9 どうし。ひき算は上の 10〜19 から左の 0〜9 を引きます。</p>
+        </fieldset>
+        <fieldset class="field">
+          <legend>ますの数</legend>
+          <div class="seg">
+            <label><input type="radio" name="hyaku-size" value="10" data-k="hyaku.size" data-t="num" checked> 百ます（10×10）</label>
+            <label><input type="radio" name="hyaku-size" value="5" data-k="hyaku.size" data-t="num"> 25 ます（5×5 を 1 枚に 2 つ）</label>
+          </div>
+        </fieldset>
+        <fieldset class="field">
+          <legend>利き手</legend>
+          <div class="seg">
+            <label><input type="radio" name="hyaku-hand" value="right" data-k="hyaku.hand" checked> 右利き</label>
+            <label><input type="radio" name="hyaku-hand" value="left" data-k="hyaku.hand"> 左利き（数を右側に）</label>
+          </div>
+        </fieldset>
+        <div class="field">
+          <label for="hyaku-pages">枚数</label>
+          <select id="hyaku-pages" data-k="hyaku.pages" data-t="num" class="pages-select"><option value="1">1 枚</option></select>
+        </div>
+      </div>
+
+      <!-- 時計 -->
+      <div class="panel" data-panel="clock" hidden>
+        <fieldset class="field">
+          <legend>むずかしさ</legend>
+          <div class="seg">
+            <label><input type="radio" name="clock-level" value="hour" data-k="clock.level"> 何時</label>
+            <label><input type="radio" name="clock-level" value="half" data-k="clock.level" checked> 何時・何時半</label>
+            <label><input type="radio" name="clock-level" value="five" data-k="clock.level"> 5 分きざみ</label>
+            <label><input type="radio" name="clock-level" value="min" data-k="clock.level"> 1 分きざみ</label>
+          </div>
+        </fieldset>
+        <fieldset class="field">
+          <legend>問題の形</legend>
+          <div class="seg">
+            <label><input type="radio" name="clock-mode" value="read" data-k="clock.mode" checked> 時計を読む</label>
+            <label><input type="radio" name="clock-mode" value="draw" data-k="clock.mode"> 針をかく</label>
+          </div>
+        </fieldset>
+        <label class="inline field"><input type="checkbox" data-k="clock.guide" data-t="bool" checked> 時計の外側に分の数字（5・10・…）を入れる</label>
+        <div class="grid2">
+          <div class="field">
+            <label for="clock-count">1 枚の問題数</label>
+            <select id="clock-count" data-k="clock.count" data-t="num"><option value="4">4 問</option><option value="6" selected>6 問</option><option value="9">9 問</option><option value="12">12 問</option></select>
+          </div>
+          <div class="field">
+            <label for="clock-pages">枚数</label>
+            <select id="clock-pages" data-k="clock.pages" data-t="num" class="pages-select"><option value="1">1 枚</option></select>
+          </div>
+        </div>
+        <details class="field custom">
+          <summary>入れたい時刻を足す（任意）</summary>
+          <p class="hint">1 行に 1 つ（例: 7:30、7時30分、8じはん）。起きる時刻や家を出る時刻など、毎日の時刻を入れると身近になります。</p>
+          <label for="clock-custom" class="visually-hidden">入れたい時刻</label>
+          <textarea id="clock-custom" data-k="clock.custom" rows="3" placeholder="7:00&#10;7:30"></textarea>
+          <div class="seg">
+            <label><input type="radio" name="clock-cmode" value="mix" data-k="clock.customMode" checked> 作った時刻とまぜる</label>
+            <label><input type="radio" name="clock-cmode" value="only" data-k="clock.customMode"> 入れた時刻だけ</label>
+          </div>
+          <div class="report" id="clock-report" aria-live="polite"></div>
+        </details>
+      </div>
+
+      <!-- ひらがな・カタカナ -->
+      <div class="panel" data-panel="kana" hidden>
+        <fieldset class="field">
+          <legend>文字</legend>
+          <div class="seg">
+            <label><input type="radio" name="kana-script" value="hira" data-k="kana.script" checked> ひらがな</label>
+            <label><input type="radio" name="kana-script" value="kata" data-k="kana.script"> カタカナ</label>
+          </div>
+        </fieldset>
+        <fieldset class="field">
+          <legend>練習する字</legend>
+          <div class="seg">
+            <label><input type="radio" name="kana-source" value="rows" data-k="kana.source" checked> 行をえらぶ</label>
+            <label><input type="radio" name="kana-source" value="words" data-k="kana.source"> なぞる言葉を自分で入れる</label>
+          </div>
+        </fieldset>
+        <fieldset class="field" id="kana-rows-box">
+          <legend>行</legend>
+          <div class="chips" id="kana-rows"></div>
+          <p class="hint">1 字ごとに「お手本・なぞる・自分で書く」の 1 行になります。</p>
+        </fieldset>
+        <div class="field" id="kana-words-box" hidden>
+          <label for="kana-words">なぞる言葉（空白か改行で区切る）</label>
+          <p class="hint">お子さんの名前、好きなもの、いま覚えている言葉など。言葉ごとに「お手本となぞる・なぞる・自分で書く」の 3 行になります。のばす棒（ー）と小さい字も使えます。</p>
+          <textarea id="kana-words" data-k="kana.words" rows="3" placeholder="はなこ&#10;りんご　くるま"></textarea>
+          <div class="report" id="kana-report" aria-live="polite"></div>
+        </div>
+        <fieldset class="field">
+          <legend>ますの大きさ</legend>
+          <div class="seg">
+            <label><input type="radio" name="kana-size" value="L" data-k="kana.size" checked> 大（2cm・年中〜年長）</label>
+            <label><input type="radio" name="kana-size" value="M" data-k="kana.size"> 中（1.5cm・1 年生）</label>
+            <label><input type="radio" name="kana-size" value="S" data-k="kana.size"> 小（1.2cm）</label>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- 漢字 -->
+      <div class="panel" data-panel="kanji" hidden>
+        <div class="field">
+          <label for="kanji-grade">学年</label>
+          <select id="kanji-grade" data-k="kanji.grade" data-t="num">
+            <option value="1">1 年生（80 字）</option><option value="2">2 年生（160 字）</option><option value="3">3 年生（200 字）</option>
+            <option value="4">4 年生（202 字）</option><option value="5">5 年生（193 字）</option><option value="6">6 年生（191 字）</option>
+          </select>
+        </div>
+        <fieldset class="field">
+          <legend>練習する漢字</legend>
+          <div class="seg">
+            <label><input type="radio" name="kanji-source" value="order" data-k="kanji.source" checked> 表の順に</label>
+            <label><input type="radio" name="kanji-source" value="random" data-k="kanji.source"> ばらばらに</label>
+            <label><input type="radio" name="kanji-source" value="custom" data-k="kanji.source"> 字をえらぶ</label>
+          </div>
+        </fieldset>
+        <div class="field" id="kanji-start-box">
+          <label for="kanji-start">何番目の字から</label>
+          <p class="hint">学年別漢字配当表の並び（音読みの五十音順）の何番目から始めるか。</p>
+          <input type="number" id="kanji-start" data-k="kanji.start" data-t="num" min="1" max="202" value="1" inputmode="numeric">
+          <p class="small" id="kanji-range" aria-live="polite"></p>
+        </div>
+        <div class="field" id="kanji-custom-box" hidden>
+          <label for="kanji-custom">練習する漢字</label>
+          <p class="hint">下の一覧をタップするか、文字をはりつけてください（その日に習った字、名前の字など）。えらんだ学年までの字だけを使います。</p>
+          <textarea id="kanji-custom" data-k="kanji.custom" rows="2" placeholder="例：花 空 森"></textarea>
+          <div class="report" id="kanji-report" aria-live="polite"></div>
+          <div class="kanji-pick" id="kanji-pick" role="group" aria-label="この学年の漢字（タップで選ぶ）"></div>
+        </div>
+        <div class="grid2">
+          <fieldset class="field">
+            <legend>ますの大きさ</legend>
+            <div class="seg">
+              <label><input type="radio" name="kanji-size" value="L" data-k="kanji.size" checked> 大</label>
+              <label><input type="radio" name="kanji-size" value="M" data-k="kanji.size"> 中</label>
+              <label><input type="radio" name="kanji-size" value="S" data-k="kanji.size"> 小</label>
+            </div>
+          </fieldset>
+          <div class="field" id="kanji-pages-box">
+            <label for="kanji-pages">枚数</label>
+            <select id="kanji-pages" data-k="kanji.pages" data-t="num" class="pages-select"><option value="1">1 枚</option></select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 迷路 -->
+      <div class="panel" data-panel="maze" hidden>
+        <fieldset class="field">
+          <legend>むずかしさ</legend>
+          <div class="seg">
+            <label><input type="radio" name="maze-level" value="easy" data-k="maze.level"> かんたん（7×9）</label>
+            <label><input type="radio" name="maze-level" value="normal" data-k="maze.level" checked> ふつう（13×16）</label>
+            <label><input type="radio" name="maze-level" value="hard" data-k="maze.level"> むずかしい（22×28）</label>
+          </div>
+          <p class="hint">どの迷路も必ずゴールまで行けて、正しい道はひとつだけです。</p>
+        </fieldset>
+        <div class="field">
+          <label for="maze-pages">枚数</label>
+          <select id="maze-pages" data-k="maze.pages" data-t="num" class="pages-select"><option value="1">1 枚</option></select>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 名前・答え・印刷のしかた -->
+    <section class="card" id="sec-common" aria-labelledby="h-common">
+      <h2 id="h-common">名前・答え・印刷のしかた</h2>
+      <div class="field">
+        <label for="c-name">名前（任意）</label>
+        <p class="hint">入れると、なまえの欄にうすい字で入ります（なぞって書けます）。空なら書く欄だけです。</p>
+        <input type="text" id="c-name" data-k="common.name" maxlength="20" placeholder="例：はなこ">
+      </div>
+      <div class="check-grid field">
+        <label class="inline"><input type="checkbox" data-k="common.nameTrace" data-t="bool" checked> 名前をうすい字にする（外すと、こい字）</label>
+        <label class="inline"><input type="checkbox" data-k="common.showName" data-t="bool" checked> なまえの欄</label>
+        <label class="inline"><input type="checkbox" data-k="common.showDate" data-t="bool" checked> 日付の欄</label>
+        <label class="inline"><input type="checkbox" data-k="common.showScore" data-t="bool" checked> 正解の数の欄（百ますはタイムも）</label>
+      </div>
+      <fieldset class="field" id="answers-box">
+        <legend>答えのページ</legend>
+        <div class="seg">
+          <label><input type="radio" name="c-answers" value="q" data-k="common.answers"> 問題だけ</label>
+          <label><input type="radio" name="c-answers" value="qa" data-k="common.answers" checked> 問題と答え</label>
+          <label><input type="radio" name="c-answers" value="a" data-k="common.answers"> 答えだけ</label>
+        </div>
+        <p class="hint" id="answers-note">答えは問題のあとに別のページでまとめて出ます。丸つけ用に「答えだけ」をあとから印刷することもできます（問題番号が同じなら同じ答え）。</p>
+      </fieldset>
+      <label class="inline field"><input type="checkbox" data-k="common.credit" data-t="bool" checked> ページの下に「yorozu-craft.com/gakushu-print/print/ で作成」と小さく入れる</label>
+    </section>
+
+    <!-- 4. 見本と印刷 -->
+    <section class="card" id="sec-preview" aria-labelledby="h-preview">
+      <h2 id="h-preview">印刷の見本</h2>
+      <div class="btn-row">
+        <button type="button" id="print" class="btn">印刷する・PDF に保存</button>
+        <button type="button" id="reseed" class="btn btn-sub">べつの問題にする</button>
+      </div>
+      <p class="small" id="pv-info" aria-live="polite"></p>
+      <div id="pv-notes" class="warn-box" role="status" hidden></div>
+      <div id="sheets" class="sheets" aria-label="印刷されるページ"></div>
+      <p class="small">スマホからは、共有メニューの「プリント」（iPhone の AirPrint）や、コンビニのネットプリントのアプリに PDF を送る方法があります。くわしくは<a href="./guide.html#print">印刷のコツ</a>。</p>
+    </section>
+
+    <!-- 5. 共有・よく使う設定・バックアップ -->
+    <section class="card" id="sec-save" aria-labelledby="h-save">
+      <h2 id="h-save">共有・よく使う設定・バックアップ</h2>
+      <h3 class="sub-h">同じプリントを共有する</h3>
+      <p class="hint">リンクを開いた人は、同じ問題のプリントを印刷できます（兄弟で同じ問題、先生と家庭で同じプリントなど）。</p>
+      <label class="inline field"><input type="checkbox" id="share-name"> 名前もリンクに入れる</label>
+      <div class="btn-row">
+        <button type="button" id="share" class="btn">共有リンクを作ってコピー</button>
+      </div>
+      <label for="share-url" class="visually-hidden">共有リンク</label>
+      <input type="text" id="share-url" class="share-url" readonly hidden>
+      <p id="share-msg" class="small" aria-live="polite"></p>
+
+      <h3 class="sub-h">よく使う設定</h3>
+      <p class="hint">子どもごと・学年ごとの設定に名前をつけて保存できます。呼び出すと、毎回ちがう問題で作ります。</p>
+      <div class="inline-row">
+        <label for="preset-name" class="visually-hidden">設定の名前</label>
+        <input type="text" id="preset-name" maxlength="30" placeholder="例：はなこ ひらがな">
+        <button type="button" id="preset-save" class="btn btn-sub">いまの設定を保存</button>
+      </div>
+      <ul id="presets" class="preset-list"></ul>
+      <p id="preset-msg" class="small" aria-live="polite"></p>
+
+      <h3 class="sub-h">バックアップ</h3>
+      <div class="btn-row">
+        <button type="button" id="backup-export" class="btn btn-sub">ファイルに書き出す</button>
+        <button type="button" id="backup-import" class="btn btn-sub">ファイルから読み込む</button>
+      </div>
+      <input type="file" id="backup-file" accept=".json,application/json" hidden>
+      <p id="backup-msg" class="small" aria-live="polite"></p>
+      <p class="small">ファイルには、いまの設定とよく使う設定が入ります。機種変更のときや、ほかの端末で同じ設定を使いたいときに。</p>
+    </section>
+
+    <p class="small center"><a href="./guide.html">使い方・印刷のコツ・学年の目安・よくある質問・ご利用上の注意</a></p>
 
   </main>
 
@@ -81,7 +445,7 @@
     <nav class="footer-nav" aria-label="フッターナビゲーション">
       <ul>
         <li><a href="../">yorozu-craft トップ</a></li>
-        <li><a href="./" aria-current="page">__TITLE__</a></li>
+        <li><a href="./" aria-current="page">学習プリントメーカー</a></li>
         <li><a href="./guide.html">使い方・よくある質問</a></li>
         <li><a href="../about.html">運営者情報</a></li>
         <li><a href="../privacy-policy.html">プライバシーポリシー</a></li>
@@ -92,6 +456,7 @@
 
   <script src="./constants.js"></script>
   <script src="./calc.js"></script>
+  <script src="./sheets.js"></script>
   <script src="./main.js"></script>
   <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
