@@ -23,7 +23,7 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 - **保存**: `gakushu-print_settings`（いまの設定）、`gakushu-print_presets`（よく使う設定。最大 30 件・種は持たない＝呼び出すたびに新しい問題）
 - **バックアップ**（D31）: `{ tool: 'gakushu-print', version: 1, exportedAt, data: { settings, presets } }`、`gakushu-print-backup-YYYYMMDD.json`
 - **印刷**: 見本（`#sheets`）がそのまま印刷される（`@media print` でほかを隠す。`beforeprint` でも作り直す）ので、Ctrl+P でも白紙にならない。A4 縦・余白 0 の `@page`、1 枚ごとに改ページ。広告（`ins.adsbygoogle` など）は印刷しない
-- **なぞり書きの字**: 端末に教科書体（UD デジタル 教科書体・游教科書体・Klee）があれば使い、なければ端末のゴシック体。Web フォントは読まない（サイト README の 9）
+- **なぞり書きの字**: 端末に教科書体（UD デジタル 教科書体・游教科書体・Klee）があれば使い、なければ `fonts/` の Klee One（かな約 33KB・漢字約 270KB に絞ったもの。OFL 1.1）を読む。サイト README 9 の例外（2026-09-24 オーナー決定）。詳細は `fonts/README.md`
 
 ## 問題の作り方（仕様）
 
@@ -68,4 +68,4 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 
 ## ライセンス
 
-MIT License（`LICENSE`）。漢字の一覧は上の「データの出典」のとおり。
+MIT License（`LICENSE`）。漢字の一覧は上の「データの出典」のとおり。`fonts/` のフォント（Klee One）は SIL Open Font License 1.1（`fonts/OFL.txt`）。

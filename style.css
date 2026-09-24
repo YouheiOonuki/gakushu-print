@@ -293,10 +293,23 @@ textarea { max-width: 100%; display: block; margin-bottom: 0.4rem; line-height: 
 .clk .hand-ans { stroke: #c0392b; }
 .clk-dot { fill: #222; }
 
-/* なぞり書き（マス目と十字の点線）。教科書体が端末にあれば使う（Web フォントは読まない） */
+/* なぞり書き（マス目と十字の点線）。端末の教科書体を先に使い、無いときだけ fonts/ の Klee One を読む
+   （サイトの README 9 の例外。かなと漢字を分けてあり、使う字のファイルだけが読まれる） */
+@font-face {
+  font-family: "YC Klee One";
+  src: url("fonts/klee-kana.woff2") format("woff2");
+  unicode-range: U+20-7E, U+3001-3002, U+3005-3006, U+300C-300D, U+3041-3096, U+309D-309E, U+30A1-30FE, U+FF01, U+FF08-FF09, U+FF1F;
+  font-display: swap;
+}
+@font-face {
+  font-family: "YC Klee One";
+  src: url("fonts/klee-kanji.woff2") format("woff2");
+  unicode-range: U+4E00-9FFF;
+  font-display: swap;
+}
 .tr {
   display: flex; flex-direction: column; align-items: center;
-  font-family: "UD デジタル 教科書体 NK-R", "UD Digi Kyokasho NK-R", "UD デジタル 教科書体 N-R", "UD Digi Kyokasho N-R", "YuKyokasho", "Klee", "Klee One",
+  font-family: "UD デジタル 教科書体 NK-R", "UD Digi Kyokasho NK-R", "UD デジタル 教科書体 N-R", "UD Digi Kyokasho N-R", "YuKyokasho", "Klee", "Klee One", "YC Klee One",
     "Noto Sans JP", "Noto Sans CJK JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
 }
 .tr-row { display: flex; }
