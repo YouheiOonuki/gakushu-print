@@ -1,5 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- 仮のアイコン（和紙風の配色の四角）。ツールに合わせて描き直す -->
-  <rect x="6" y="6" width="52" height="52" rx="10" fill="#faf6ee" stroke="#8b4513" stroke-width="4"/>
-  <rect x="20" y="20" width="24" height="24" rx="4" fill="#3f6b2a"/>
+  <!-- 学習プリントメーカー: マス目の紙と えんぴつ -->
+  <rect width="64" height="64" rx="14" fill="#8b4513"/>
+  <rect x="12" y="9" width="34" height="46" rx="3" fill="#faf6ee"/>
+  <g fill="none" stroke="#8b4513" stroke-width="2">
+    <rect x="17" y="15" width="11" height="11"/>
+    <rect x="30" y="15" width="11" height="11"/>
+    <rect x="17" y="30" width="11" height="11"/>
+  </g>
+  <path d="M22.5 15v11M17 20.5h11M35.5 15v11M30 20.5h11" stroke="#cfa98a" stroke-width="1" stroke-dasharray="2 1.5"/>
+  <path d="M19.5 36.5h6M22.5 33.5v6" stroke="#3a3025" stroke-width="2.4" stroke-linecap="round"/>
+  <g transform="rotate(45 44 42)">
+    <rect x="40" y="22" width="8" height="26" fill="#e8b04a"/>
+    <rect x="40" y="22" width="8" height="4" fill="#d9776b"/>
+    <path d="M40 48 l4 7 l4 -7 Z" fill="#f3e6d8"/>
+    <path d="M43 53.2 l1 1.8 l1 -1.8 Z" fill="#3a3025"/>
+  </g>
 </svg>
