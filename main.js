@@ -267,7 +267,12 @@
   });
 
   // --- 印刷（見本の HTML がそのまま印刷される。Ctrl+P でも同じ） ---
-  $('print').addEventListener('click', function () { render(); window.print(); });
+  // なぞり書きのフォント（fonts/）を読み終えてから印刷する。読めなくても 3 秒で印刷に進む
+  $('print').addEventListener('click', function () {
+    render();
+    var ready = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+    Promise.race([ready, new Promise(function (r) { setTimeout(r, 3000); })]).then(function () { window.print(); });
+  });
   addEventListener('beforeprint', function () { render(); });
 
   // --- 共有リンク（README「ツールを追加するとき」11。# 以降なのでサーバーには送られない） ---
