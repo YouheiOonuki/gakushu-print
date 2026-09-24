@@ -53,7 +53,7 @@
 
   <main class="app-main">
 
-    <p class="badge">登録不要・印刷は無料・広告は印刷されません・設定はこの端末のブラウザにだけ保存します</p>
+    <p class="badge">登録不要・印刷は無料・設定はこの端末のブラウザにだけ保存します</p>
 
     <div id="shared-banner" class="notice" role="status" hidden>
       <p><strong>共有されたプリントです</strong>（問題番号 <span id="shared-seed"></span>）。このまま印刷すると、送った人と同じ問題になります。</p>
@@ -287,7 +287,7 @@
         </fieldset>
         <div class="field" id="kana-words-box" hidden>
           <label for="kana-words">なぞる言葉（空白か改行で区切る）</label>
-          <p class="hint">お子さんの名前、好きなもの、いま覚えている言葉など。言葉ごとに「お手本となぞる・なぞる・自分で書く」の 3 行になります。のばす棒（ー）と小さい字も使えます。</p>
+          <p class="hint">お子さんの名前、好きなもの、いま覚えている言葉など。</p>
           <textarea id="kana-words" data-k="kana.words" rows="3" placeholder="はなこ&#10;りんご　くるま"></textarea>
           <div class="report" id="kana-report" aria-live="polite"></div>
         </div>
@@ -326,7 +326,7 @@
         </div>
         <div class="field" id="kanji-custom-box" hidden>
           <label for="kanji-custom">練習する漢字</label>
-          <p class="hint">下の一覧をタップするか、文字をはりつけてください（その日に習った字、名前の字など）。えらんだ学年までの字だけを使います。</p>
+          <p class="hint">下の一覧をタップするか、文字をはりつけてください。</p>
           <textarea id="kanji-custom" data-k="kanji.custom" rows="2" placeholder="例：花 空 森"></textarea>
           <div class="report" id="kanji-report" aria-live="polite"></div>
           <div class="kanji-pick" id="kanji-pick" role="group" aria-label="この学年の漢字（タップで選ぶ）"></div>
@@ -370,7 +370,7 @@
       <h2 id="h-common">名前・答え・印刷のしかた</h2>
       <div class="field">
         <label for="c-name">名前（任意）</label>
-        <p class="hint">入れると、なまえの欄にうすい字で入ります（なぞって書けます）。空なら書く欄だけです。</p>
+        <p class="hint">入れると、なまえの欄にうすい字で入ります。</p>
         <input type="text" id="c-name" data-k="common.name" maxlength="20" placeholder="例：はなこ">
       </div>
       <div class="check-grid field">
@@ -401,14 +401,14 @@
       <p class="small" id="pv-info" aria-live="polite"></p>
       <div id="pv-notes" class="warn-box" role="status" hidden></div>
       <div id="sheets" class="sheets" aria-label="印刷されるページ"></div>
-      <p class="small">スマホからは、共有メニューの「プリント」（iPhone の AirPrint）や、コンビニのネットプリントのアプリに PDF を送る方法があります。くわしくは<a href="./guide.html#print">印刷のコツ</a>。</p>
+      <p class="small">スマホからの印刷は<a href="./guide.html#print">印刷のコツ</a>に。</p>
     </section>
 
     <!-- 5. 共有・よく使う設定・バックアップ -->
     <section class="card" id="sec-save" aria-labelledby="h-save">
       <h2 id="h-save">共有・よく使う設定・バックアップ</h2>
       <h3 class="sub-h">同じプリントを共有する</h3>
-      <p class="hint">リンクを開いた人は、同じ問題のプリントを印刷できます（兄弟で同じ問題、先生と家庭で同じプリントなど）。</p>
+      <p class="hint">リンクを開いた人は、同じ問題のプリントを印刷できます。</p>
       <label class="inline field"><input type="checkbox" id="share-name"> 名前もリンクに入れる</label>
       <div class="btn-row">
         <button type="button" id="share" class="btn">共有リンクを作ってコピー</button>
@@ -418,7 +418,7 @@
       <p id="share-msg" class="small" aria-live="polite"></p>
 
       <h3 class="sub-h">よく使う設定</h3>
-      <p class="hint">子どもごと・学年ごとの設定に名前をつけて保存できます。呼び出すと、毎回ちがう問題で作ります。</p>
+      <p class="hint">子どもごと・学年ごとの設定に名前をつけて保存します。</p>
       <div class="inline-row">
         <label for="preset-name" class="visually-hidden">設定の名前</label>
         <input type="text" id="preset-name" maxlength="30" placeholder="例：はなこ ひらがな">
@@ -434,10 +434,10 @@
       </div>
       <input type="file" id="backup-file" accept=".json,application/json" hidden>
       <p id="backup-msg" class="small" aria-live="polite"></p>
-      <p class="small">ファイルには、いまの設定とよく使う設定が入ります。機種変更のときや、ほかの端末で同じ設定を使いたいときに。</p>
+      <p class="small">ファイルには、いまの設定とよく使う設定が入ります。</p>
     </section>
 
-    <p class="small center"><a href="./guide.html">使い方・印刷のコツ・学年の目安・よくある質問・ご利用上の注意</a></p>
+    <p class="small center"><a href="./guide.html">使い方・印刷のコツ・学年の目安・よくある質問</a></p>
 
   </main>
 
