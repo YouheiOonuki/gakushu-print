@@ -547,6 +547,11 @@
     M: { mm: 15, cols: 12, rows: 15, rowsLetter: 14, trace: 4 },
     S: { mm: 12, cols: 15, rows: 19, rowsLetter: 18, trace: 5 },
   };
+  /** なぞり書き（かな・漢字）の 1 ページの行数。レターは A4 より少ない */
+  function traceRowsPerPage(size, paper) {
+    var sz = TRACE_SIZES[size];
+    return paper === 'letter' ? sz.rowsLetter : sz.rows;
+  }
 
   // 用紙（mm）。body は原稿用紙のページの本文（見出し・ページの下を除く）に使える大きさ（Chromium で測った値から少し引いた。
   // A4 245.5・レター 227.9。2026-09-24）。rowsLetter も同じく測って、はみ出さない行数にした
@@ -832,11 +837,11 @@
       var groups = words.map(function (w) { return traceRows(w, sz.cols, sz.trace); });
       // ローマ字は 1 字ずつの行の練習だけ（言葉は字の組み合わせで読みが変わるため付けない）
       if (o.romaji && o.source === 'rows') groups.forEach(function (g) { var c = g[0][0]; if (romajiOf(c.ch)) c.ro = romajiOf(c.ch); });
-      paginateGroups(groups, state.common.paper === 'letter' ? sz.rowsLetter : sz.rows).forEach(function (rows, i) {
+      paginateGroups(groups, traceRowsPerPage(o.size, state.common.paper)).forEach(function (rows, i) {
         pages.push({ kind: 'kana', index: i, rows: rows, size: o.size, script: o.script });
       });
     } else if (t === 'kanji') {
-      var zs = TRACE_SIZES[o.size];
+      var zs = TRACE_SIZES[o.size], zRows = traceRowsPerPage(o.size, state.common.paper);   // 英語ページのレターは行を減らす
       var all = Array.from(kanjiByGrade[o.grade] || '');
       var chars;
       if (o.source === 'custom') {
@@ -845,7 +850,7 @@
         chars = pk.chars;
         if (!chars.length) notes.push(msg(lang).noKanji);
       } else {
-        var need = zs.rows * o.pages;
+        var need = zRows * o.pages;
         if (o.source === 'random') chars = makeRng(seed, 700).shuffle(all).slice(0, need);
         else {
           var st = Math.min(o.start, all.length) - 1;
@@ -854,7 +859,7 @@
         }
       }
       var g2 = chars.map(function (c) { return traceRows(c, zs.cols, zs.trace); });
-      paginateGroups(g2, zs.rows).forEach(function (rows, i) {
+      paginateGroups(g2, zRows).forEach(function (rows, i) {
         pages.push({ kind: 'kanji', index: i, rows: rows, size: o.size, grade: o.grade });
       });
     } else if (t === 'maze') {
@@ -920,7 +925,7 @@
     genHyaku: genHyaku, genClock: genClock, clockFits: clockFits, clockText: clockText, funPun: funPun, handAngles: handAngles, parseClockLines: parseClockLines,
     genMaze: genMaze, solveMaze: solveMaze, mazeStats: mazeStats,
     toKata: toKata, romajiOf: romajiOf, genkoPage: genkoPage, parseKanaWords: parseKanaWords, kanjiGradeMap: kanjiGradeMap, parseKanjiInput: parseKanjiInput,
-    traceRows: traceRows, paginate: paginate, paginateGroups: paginateGroups,
+    traceRows: traceRows, traceRowsPerPage: traceRowsPerPage, paginate: paginate, paginateGroups: paginateGroups,
     defaults: defaults, normalizeState: normalizeState, normalizePresets: normalizePresets,
     encodeShare: encodeShare, decodeShare: decodeShare, buildWorkbook: buildWorkbook,
     backupFileName: backupFileName, buildBackup: buildBackup, parseBackup: parseBackup,

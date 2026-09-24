@@ -154,9 +154,92 @@ test('hreflang: 日本語と英語のページが両方向に結ばれ、canonic
   assert.ok(sm.includes(`<loc>${B}en/</loc>`) && sm.includes(`<loc>${B}en/guide.html</loc>`));
 });
 
-test('英語ページで出す種類はなぞり書きと原稿用紙だけ（漢字は読みのデータが無いので出さない）', () => {
+test('英語ページで出す種類はなぞり書き・漢字・原稿用紙', () => {
   const types = [...read('en/index.html').matchAll(/name="type" value="(\w+)"/g)].map((m) => m[1]);
-  assert.deepEqual(types, ['kana', 'genko']);
+  assert.deepEqual(types, ['kana', 'kanji', 'genko']);
   const ja = [...read('index.html').matchAll(/name="type" value="(\w+)"/g)].map((m) => m[1]);
   assert.deepEqual(ja, ['arith', 'kuku', 'hyaku', 'clock', 'kana', 'kanji', 'maze']);
+});
+
+// 漢字（K57・D81）: 字だけ。読み・意味・筆順は持たない・出さない
+const JA_ONLY = /なまえ|がつ|にち|なぞって|かん字|ねんせい|もんだい|ばんごう|こたえ/;
+
+test('英語の漢字プリント: 見出しと学年が英語、字は lang="ja"、紙に日本語の案内が残らない', () => {
+  for (const source of ['order', 'random', 'custom']) {
+    const { r } = build({ type: 'kanji', seed: 9, common: { name: 'Emma' }, kanji: { grade: 4, source, custom: '茨城' } }, 'en');
+    assert.match(r.html, /<h3>Kanji practice 漢字<\/h3>/);
+    assert.match(r.html, /<p class="sh-sub">Grade 4 \(Japanese elementary school\)<\/p>/);
+    assert.match(r.html, /<div class="tr tr-L" lang="ja"/);
+    assert.match(r.html, /Trace the gray characters/);
+    assert.doesNotMatch(r.html, JA_ONLY, source);
+  }
+  // ばらばらのときだけ番号（英語）が入る
+  assert.match(build({ type: 'kanji', seed: 9, kanji: { source: 'random' } }, 'en').r.html, /<span>Sheet number [0-9A-Z-]+<\/span>/);
+  assert.doesNotMatch(build({ type: 'kanji', kanji: { source: 'order' } }, 'en').r.html, /Sheet number/);
+  // 日本語ページの見出しと番号は前のまま
+  const ja = build({ type: 'kanji', seed: 9, kanji: { grade: 2, source: 'random' } }).r.html;
+  assert.match(ja, /<h3>かん字 れんしゅう<\/h3>/);
+  assert.match(ja, /<p class="sh-sub">2ねんせい<\/p>/);
+  assert.match(ja, /もんだい ばんごう /);
+});
+
+test('英語の漢字プリント: 1 年の最初の字から配当表の順、各行はお手本 1 字＋なぞる字、読みの欄は無い', () => {
+  const { wb, r } = build({ type: 'kanji', kanji: { grade: 1, source: 'order' } }, 'en');
+  const rows = wb.pages[0].rows;
+  assert.deepEqual(rows.map((row) => row[0].ch).join(''), Array.from(K[1]).slice(0, C.TRACE_SIZES.L.rows).join(''));
+  rows.forEach((row) => {
+    assert.equal(row[0].kind, 'dark');
+    assert.equal(row.filter((c) => c.kind === 'light').length, C.TRACE_SIZES.L.trace);
+    assert.ok(row.every((c) => c.ro === undefined));
+  });
+  assert.doesNotMatch(r.html, /class="ro"/);
+  // 学年の字だけ（全学年・全ページ）
+  for (let g = 1; g <= 6; g++) {
+    const all = build({ type: 'kanji', kanji: { grade: g, source: 'order', size: 'S', pages: 10 } }, 'en').wb;
+    const chars = all.pages.flatMap((p) => p.rows.map((row) => row[0].ch)).join('');
+    assert.equal(chars, Array.from(K[g]).slice(0, C.TRACE_SIZES.S.rows * 10).join(''), g);
+  }
+});
+
+test('英語の漢字プリント: レターは行数を減らしてはみ出さない。A4 は前のまま', () => {
+  for (const size of ['L', 'M', 'S']) {
+    const a4 = build({ type: 'kanji', kanji: { grade: 4, size, pages: 2 } }, 'en').wb;
+    const lt = build({ type: 'kanji', common: { paper: 'letter' }, kanji: { grade: 4, size, pages: 2 } }, 'en').wb;
+    assert.equal(a4.pages[0].rows.length, C.TRACE_SIZES[size].rows);
+    assert.equal(lt.pages[0].rows.length, C.TRACE_SIZES[size].rowsLetter);
+    assert.equal(lt.pages.length, 2);
+    assert.equal(C.traceRowsPerPage(size, 'letter'), C.TRACE_SIZES[size].rowsLetter);
+    assert.equal(C.traceRowsPerPage(size, 'a4'), C.TRACE_SIZES[size].rows);
+  }
+  const rnd = build({ type: 'kanji', seed: 3, common: { paper: 'letter' }, kanji: { grade: 3, source: 'random', size: 'M', pages: 3 } }, 'en').wb;
+  const picked = rnd.pages.flatMap((p) => p.rows.map((row) => row[0].ch));
+  assert.equal(picked.length, C.TRACE_SIZES.M.rowsLetter * 3);
+  assert.equal(new Set(picked).size, picked.length, 'ばらばらでも同じ字は出さない');
+  assert.match(build({ type: 'kanji', common: { paper: 'letter' } }, 'en').r.html, /class="sheet sheet-kanji paper-letter"/);
+});
+
+test('英語の漢字: 選んだ字の読み取りとお知らせが英語', () => {
+  const { wb } = build({ type: 'kanji', kanji: { grade: 1, source: 'custom', custom: '森雲茨A' } }, 'en');
+  assert.deepEqual(wb.custom.chars, ['森']);
+  assert.deepEqual(wb.custom.higher, [{ c: '雲', g: 2 }, { c: '茨', g: 4 }]);
+  assert.equal(wb.custom.higher.map((x) => TX.ui.en.kanjiHigherItem(x.c, x.g)).join(TX.ui.en.listSep), '雲 (grade 2), 茨 (grade 4)');
+  assert.equal(wb.custom.higher.map((x) => TX.ui.ja.kanjiHigherItem(x.c, x.g)).join(TX.ui.ja.listSep), '雲（2年）、茨（4年）');
+  assert.match(build({ type: 'kanji', kanji: { source: 'custom', custom: '' } }, 'en').wb.notes[0], /No kanji chosen yet/);
+  assert.match(build({ type: 'kanji', kanji: { grade: 1, start: 75, pages: 1 } }, 'en').wb.notes[0], /Grade 1 has 80 kanji/);
+});
+
+test('英語ページの漢字: 学年の字数が配当表と一致し、読み・意味を出さないと書いてある', () => {
+  const html = read('en/index.html');
+  const opts = [...html.matchAll(/<option value="(\d)">Grade (\d) \((\d+) kanji\)<\/option>/g)];
+  assert.equal(opts.length, 6);
+  opts.forEach(([, v, g, n]) => { assert.equal(v, g); assert.equal(Number(n), Array.from(K[g]).length); });
+  assert.match(html, /Characters only\. Readings, meanings and stroke order are not included\./);
+  const guide = read('en/guide.html');
+  assert.match(guide, /Readings \(on'yomi and kun'yomi\), meanings and stroke order are not included/);
+  assert.match(guide, /It has 1,026 kanji across grades 1 to 6\./);
+  assert.equal(Object.values(K).reduce((n, s) => n + Array.from(s).length, 0), 1026);
+  // 漢字の入力欄はすべてある（main.js が id で探す）
+  for (const id of ['kanji-grade', 'kanji-start', 'kanji-start-box', 'kanji-range', 'kanji-custom', 'kanji-custom-box', 'kanji-report', 'kanji-pick', 'kanji-pages', 'kanji-pages-box', 'more-kanji']) {
+    assert.ok(html.includes(`id="${id}"`), id);
+  }
 });
