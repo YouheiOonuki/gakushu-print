@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>暗号メーカー（ずらし・換字・記号）暗号文と解読シート・暗号表を印刷｜子ども向け・無料・登録なし｜学習プリントメーカー</title>
+  <meta name="description" content="ひらがな・カタカナ・英字の文を暗号にして印刷。ずらし（シーザー暗号）・いれかえ表・え・きごう・ばんごう・たぬき・さかさ。暗号文シート、解読シート（切って使う円盤・暗号表）、答えを A4 で。宝探しや誕生日の手紙、自由研究に。無料・登録なし。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/gakushu-print/angou/">
+
+  <meta property="og:title" content="暗号メーカー（暗号文と解読シートを印刷）｜学習プリントメーカー">
+  <meta property="og:description" content="文を入れて、ずらし・いれかえ表・え・きごうなどで暗号に。暗号文・解読シート（円盤・暗号表）・答えを A4 で印刷。宝探しや誕生日の手紙に。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/gakushu-print/angou/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/gakushu-print/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "暗号メーカー",
+    "description": "ひらがな・カタカナ・英字の文を暗号にして、暗号文・解読シート（円盤・暗号表）・答えを A4 で印刷。ずらし（シーザー暗号）・いれかえ表・え・きごう・ばんごう・たぬき・さかさ。無料・登録なし。",
+    "url": "https://yorozu-craft.com/gakushu-print/angou/",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja",
+    "isPartOf": { "@type": "WebSite", "name": "学習プリントメーカー", "url": "https://yorozu-craft.com/gakushu-print/" }
+  }
+  </script>
+
+  <!-- Google AdSense（サイト所有確認 + 広告配信スクリプト）。親が作って印刷する画面なので本体と同じ扱い。広告は印刷に出さない（style.css の @media print） -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5375267956079717"
+     crossorigin="anonymous"></script>
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./angou.css">
+</head>
+<body class="tool-page">
+
+  <header class="app-header">
+    <p class="crumb"><a href="../">学習プリントメーカー</a></p>
+    <h1>暗号メーカー</h1>
+    <p class="subtitle">文を暗号にして、暗号文と解読シートを印刷。</p>
+  </header>
+
+  <!-- 固定バー（SCREEN.md 1.2）: 印刷ボタンが画面の外にあるときだけ上端に出す -->
+  <div class="fixbar" id="fixbar" role="status" hidden>
+    <span class="fixbar-type" id="fixbar-type"></span>
+    <button type="button" class="btn" id="fixbar-print">印刷する</button>
+  </div>
+
+  <main class="app-main">
+
+    <p class="badge">登録不要・印刷は無料・文はこの端末のブラウザにだけ保存します</p>
+    <div id="shared-banner" class="notice" role="status" hidden></div>
+    <p id="load-msg" class="notice" role="status" hidden></p>
+
+    <!-- 1. 暗号の しかた -->
+    <section class="card" id="sec-type" aria-labelledby="h-type">
+      <h2 id="h-type">暗号の しかた</h2>
+      <div class="types six">
+        <label class="tile"><input type="radio" name="method" value="shift" checked><span class="t-ico" aria-hidden="true">+3</span><span class="t-name">ずらし</span><span class="t-sub">あいうえお順に ずらす</span></label>
+        <label class="tile"><input type="radio" name="method" value="subst"><span class="t-ico" aria-hidden="true">⇄</span><span class="t-name">いれかえ表</span><span class="t-sub">字を べつの字に</span></label>
+        <label class="tile"><input type="radio" name="method" value="pict"><span class="t-ico" aria-hidden="true">◆</span><span class="t-name">え・きごう</span><span class="t-sub">字を マークに</span></label>
+        <label class="tile"><input type="radio" name="method" value="num"><span class="t-ico" aria-hidden="true">12</span><span class="t-name">ばんごう</span><span class="t-sub">あ＝1 … ん＝46</span></label>
+        <label class="tile"><input type="radio" name="method" value="tanuki"><span class="t-ico" aria-hidden="true">た</span><span class="t-name">たぬき</span><span class="t-sub">よけいな字を まぜる</span></label>
+        <label class="tile"><input type="radio" name="method" value="rev"><span class="t-ico" aria-hidden="true">↩</span><span class="t-name">さかさ</span><span class="t-sub">うしろから よむ</span></label>
+      </div>
+    </section>
+
+    <!-- 2. 文 -->
+    <section class="card" id="sec-opts" aria-labelledby="h-opts">
+      <h2 id="h-opts">暗号にする文</h2>
+      <div class="field msg-box" id="msg-field">
+        <label for="msg" class="visually-hidden">暗号にする文</label>
+        <textarea id="msg" rows="3" maxlength="400" placeholder="例：たからは つくえの したに あるよ"></textarea>
+        <p class="hint">ひらがな・カタカナ・英字。漢字はひらがなにしてください。</p>
+        <p class="count" id="msg-count"></p>
+      </div>
+      <div id="msg-hidden" class="notice" hidden>
+        共有された暗号です。もとの文は かくしています。
+        <button type="button" class="btn btn-sub btn-sm" id="msg-show">もとの文を見る・かえる</button>
+      </div>
+      <div class="field" id="key-field">
+        <div class="key-row">
+          <label for="key">ずらす数</label>
+          <select id="key"></select>
+          <span class="key-ex" id="key-ex"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 印刷ボタンと見本 -->
+    <section class="card" id="sec-preview" aria-labelledby="h-preview">
+      <h2 id="h-preview" class="visually-hidden">印刷と見本</h2>
+      <div class="btn-row print-row" id="print-row">
+        <button type="button" id="print" class="btn">印刷する・PDF に保存</button>
+        <button type="button" id="reseed" class="btn btn-sub">べつの暗号にする</button>
+      </div>
+      <p class="cipher-line" id="cipher-line" aria-live="polite"></p>
+      <div id="pv-notes" class="warn-box" role="status" hidden></div>
+      <p class="small" id="pv-info"></p>
+      <div id="sheets" class="sheets" aria-label="印刷の見本"></div>
+    </section>
+
+    <!-- 4. くわしい設定 -->
+    <details class="card opt" id="sec-more">
+      <summary>くわしい設定: <span class="opt-state" id="more-state"></span></summary>
+      <div class="field">
+        <label for="title">題（任意）</label>
+        <input type="text" id="title" maxlength="24" placeholder="例：ひみつの てがみ／たからの ありか">
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="to">だれへ（任意）</label><input type="text" id="to" maxlength="16" placeholder="例：はなこ"></div>
+        <div class="field"><label for="from">だれから（任意）</label><input type="text" id="from" maxlength="16" placeholder="例：パパ"></div>
+      </div>
+      <fieldset class="field">
+        <legend>印刷する紙</legend>
+        <div class="check-grid">
+          <label class="inline"><input type="checkbox" id="pg-cipher" checked> 暗号文</label>
+          <label class="inline"><input type="checkbox" id="pg-tool" checked> 解読シート（円盤・表）</label>
+          <label class="inline"><input type="checkbox" id="pg-answer" checked> 答え</label>
+        </div>
+      </fieldset>
+      <div class="check-grid field">
+        <label class="inline"><input type="checkbox" id="hint" checked> 暗号文にヒント（とき方）を書く</label>
+        <label class="inline" id="rev-row"><input type="checkbox" id="rev"> さかさにもする（うしろから よむ）</label>
+        <label class="inline"><input type="checkbox" id="credit" checked> 紙の下に「yorozu-craft.com/gakushu-print/print/ で作成」と入れる</label>
+      </div>
+    </details>
+
+    <!-- 5. 暗号を とく -->
+    <details class="card opt" id="sec-decode">
+      <summary>暗号を とく（字を入れて もどす）</summary>
+      <p class="hint" id="decode-hint">いまの しかたと かぎで もどします。</p>
+      <label for="decode-in" class="visually-hidden">暗号の文</label>
+      <textarea id="decode-in" rows="2" maxlength="600" placeholder="例：てんへ"></textarea>
+      <p class="decode-out" id="decode-out" aria-live="polite"></p>
+    </details>
+
+    <!-- 6. 共有・バックアップ -->
+    <details class="card opt" id="sec-save">
+      <summary>共有・バックアップ</summary>
+      <div class="btn-row" id="shared-keep-row" hidden>
+        <button type="button" id="shared-keep" class="btn btn-sub">この設定を自分用に保存する</button>
+      </div>
+      <h3 class="sub-h">かぎを共有する</h3>
+      <p class="hint">リンクを開いた人は、同じ解読シートを印刷して暗号をとけます。文はリンクに入りません。</p>
+      <label class="inline field"><input type="checkbox" id="share-msg"> 文（と だれへ・だれから・題）もリンクに入れる</label>
+      <div class="btn-row"><button type="button" id="share" class="btn">共有リンクを作ってコピー</button></div>
+      <label for="share-url" class="visually-hidden">共有リンク</label>
+      <input type="text" id="share-url" class="share-url" readonly hidden>
+      <p id="share-msg-out" class="small" aria-live="polite"></p>
+      <h3 class="sub-h">バックアップ</h3>
+      <div class="btn-row">
+        <button type="button" id="backup-export" class="btn btn-sub">ファイルに書き出す</button>
+        <button type="button" id="backup-import" class="btn btn-sub">ファイルから読み込む</button>
+      </div>
+      <input type="file" id="backup-file" accept=".json,application/json" hidden>
+      <p id="backup-msg" class="small" aria-live="polite"></p>
+      <p class="small">入力内容はこの端末のブラウザ（localStorage、キー <code>gakushu-print_angou</code>）にだけ保存され、外部には送信されません。書き出し・読み込みはこの画面のボタンから。</p>
+    </details>
+
+    <p class="small center"><a href="./guide.html">使い方・暗号の きまり・よくある質問</a></p>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">学習プリントメーカー</a></li>
+        <li><a href="./" aria-current="page">暗号メーカー</a></li>
+        <li><a href="./guide.html">使い方・よくある質問</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="../text.js"></script>
+  <script src="../calc.js"></script>
+  <script src="./cipher.js"></script>
+  <script src="./sheets.js"></script>
+  <script src="./main.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

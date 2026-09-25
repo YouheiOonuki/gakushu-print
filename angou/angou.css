@@ -1,0 +1,84 @@
+/* ===========================
+   暗号メーカー — ../style.css の上に重ねる（紙は style.css の .sheet: A4 縦 210×297mm）
+   =========================== */
+.crumb { font-size: 0.78rem; }
+.crumb a { color: var(--accent); }
+.msg-box textarea { font-size: 1.1rem; min-height: 5.5rem; }
+.count { font-size: 0.78rem; color: var(--muted); text-align: right; max-width: 100%; }
+.cipher-line { font-size: 1.05rem; background: var(--bg); border: 1px dashed var(--border); border-radius: 6px; padding: 0.5rem 0.7rem; margin: 0.4rem 0; white-space: pre-wrap; overflow-wrap: anywhere; min-height: 2.4rem; }
+.cipher-line .lbl { display: block; font-size: 0.72rem; color: var(--muted); }
+.key-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.key-row select { max-width: 9rem; }
+.key-row .key-ex { font-size: 0.85rem; color: var(--muted); }
+.decode-out { font-size: 1.1rem; font-weight: 600; min-height: 1.6rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+.types.six { grid-template-columns: repeat(auto-fill, minmax(9.6rem, 1fr)); }
+
+/* ---------- 紙 ---------- */
+.sheet.angou .sh-head .tf { display: inline-block; min-width: 24mm; border-bottom: 0.3mm solid #444; font-size: 14pt; padding: 0 1mm; text-align: center; }
+.sheet.angou .hint-line { font-size: 11pt; color: #333; background: #f3f3f3; border-radius: 2mm; padding: 1.5mm 3mm; margin-bottom: 1mm; }
+.sheet.angou .plain { font-size: 16pt; font-weight: 700; color: #c0392b; margin: 1mm 0 2mm; overflow-wrap: anywhere; }
+.sheet.angou .empty { color: #888; font-size: 14pt; text-align: center; margin-top: 30mm; }
+
+/* 暗号文のます目: 上 = 暗号、下 = 答えを書く ます */
+.cgrid { display: flex; flex-wrap: wrap; gap: 3.2mm 1.2mm; align-content: flex-start; }
+.cc { width: var(--w); display: flex; flex-direction: column; }
+.cc .cq, .cc .ca { position: relative; width: var(--w); height: var(--w); display: flex; align-items: center; justify-content: center; }
+.cc .cq { border: 0.35mm solid #333; border-bottom: none; border-radius: 1mm 1mm 0 0; }
+.cc .ca { border: 0.35mm solid #333; border-top: 0.25mm dashed #999; border-radius: 0 0 1mm 1mm; }
+.cc.ot .cq { border-color: transparent; }
+.cc.ot .ca, .cc .ca.no { border-color: transparent; }
+.cc.sp { visibility: hidden; }
+.cbr { flex-basis: 100%; height: 0; }
+.cq .kc { font-size: calc(var(--w) * 0.66); line-height: 1; }
+.cq .kc.sm { font-size: calc(var(--w) * 0.42); align-self: flex-end; margin: 0 0 calc(var(--w) * 0.08) 0; }
+.cq .nm { font-size: calc(var(--w) * 0.55); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.cq .nm.n2 { font-size: calc(var(--w) * 0.46); letter-spacing: -0.03em; }
+.cq .nm.sm { font-size: calc(var(--w) * 0.34); align-self: flex-end; margin-bottom: calc(var(--w) * 0.08); }
+.cq .sym { width: 76%; height: 76%; }
+.cq .sym.sm { width: 46%; height: 46%; align-self: flex-end; margin-bottom: 6%; }
+.cq .mk { position: absolute; right: 4%; top: 4%; width: 30%; height: auto; }
+.cc.ot .cq { font-size: calc(var(--w) * 0.6); }
+.ca .af { color: #c0392b; font-weight: 700; font-size: calc(var(--w) * 0.62); line-height: 1; }
+.ca .ax { color: #999; font-size: calc(var(--w) * 0.5); }
+
+/* 解読シート: 表 */
+.sheet.angou .rule { font-size: 10pt; color: #333; margin: 1mm 0 2mm; }
+.ktab { border-collapse: collapse; width: 100%; table-layout: fixed; margin-bottom: 3mm; }
+.ktab td { border: 0.3mm solid #555; height: 16mm; text-align: center; vertical-align: middle; white-space: nowrap; }
+.ktab.tight td { height: 13.4mm; }
+.ktab .kcell { display: flex; align-items: center; justify-content: center; }
+.ktab td.blank { background: #f2f2f2; }
+.ktab .tk { font-size: 17pt; }
+.ktab .tn { font-variant-numeric: tabular-nums; }
+.ktab .tar { font-size: 9pt; color: #777; margin: 0 1.5mm; }
+.ktab .tp { font-size: 14pt; color: #444; }
+.ktab .tsym { width: 10mm; height: 10mm; flex: none; }
+.ktab.tight .tsym { width: 9mm; height: 9mm; }
+.atab td { height: 12mm; }
+.atab .tk, .atab .tp { font-size: 12pt; }
+.atab .tsym { width: 8mm; height: 8mm; }
+
+/* 解読シート: 円盤 */
+.wbody { position: relative; }
+.wheel { position: absolute; left: 0; top: 0; }
+.wheel .wc { fill: #fff; stroke: #222; stroke-width: 1; }
+.wheel .wg { fill: none; stroke: #888; stroke-width: 0.3; stroke-dasharray: 1.2 1; }
+.wheel .wl { stroke: #999; stroke-width: 0.25; }
+.wheel .wt { text-anchor: middle; dominant-baseline: central; fill: #222; font-family: inherit; }
+.wheel .w0 { font-weight: 700; fill: #c0392b; }
+.wheel .wn { text-anchor: middle; fill: #555; font-family: inherit; }
+.wheel .wp { stroke: #222; stroke-width: 0.4; }
+.wtext { position: absolute; left: 0; top: 152mm; width: 64mm; font-size: 9.5pt; line-height: 1.45; }
+.wsteps { padding-left: 4.5mm; }
+.wsteps li { margin-bottom: 1mm; }
+.wnote { margin-top: 1.5mm; font-weight: 700; }
+.wtext .rule { font-size: 9pt; }
+
+/* 解読シート: たぬき・さかさ */
+.bigrule { display: flex; flex-direction: column; align-items: center; gap: 5mm; padding-top: 18mm; text-align: center; }
+.bigrule .tanuki { width: 110mm; height: auto; }
+.bigrule .arrow { width: 120mm; height: auto; }
+.bigrule .big { font-size: 34pt; font-weight: 700; }
+.bigrule .mid { font-size: 17pt; }
+.xout { display: inline-block; position: relative; font-weight: 700; font-size: 1.3em; padding: 0 1mm; }
+.xout::after { content: ''; position: absolute; left: -1mm; right: -1mm; top: 50%; border-top: 1mm solid #c0392b; transform: rotate(-20deg); }
