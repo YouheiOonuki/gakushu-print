@@ -64,6 +64,18 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 - 保存 `gakushu-print_booklet`、共有リンク `#s=`（名前は既定で入れない）、バックアップ `{ tool: 'gakushu-print', version: 1, data: { booklet } }`・`gakushu-print-booklet-backup-YYYYMMDD.json`
 - `calc.js` から `carveMaze`・`b64uEncode`・`b64uDecode` を export に足した（中身は変えていない）
 
+## 暗号メーカー（`angou/`。2026-09-25。yorozu-plans の企画書 44・K100）
+
+ひらがな・カタカナ・英字の文を暗号にして、暗号文・解読シート・答えを A4 たてで印刷する。親が作って印刷する画面なので、本体と同じく広告あり（印刷には出さない）。
+
+- **方式**（`cipher.js` の `METHODS`）: ずらし（五十音 46 字・英字 26 字のシーザー。ずらす数 1〜45、英字は 26 で割った余り）／いれかえ表（種から作る並べかえ。どの字も自分と同じにしない）／え・きごう（`sheets.js` で描いた 72 種のマーク＝形 8 × しるし 9。かな 46・英字 26 に重ならずに割り当て）／ばんごう（あ＝1 … ん＝46、A＝47 … Z＝72）／たぬき（文に使っていない字を まぜる。た が先。だ などがあれば た は使わない）／さかさ（行ごと）。ほかの方式に「さかさにもする」を重ねられる
+- **字のきまり**: 文は粒（もとの字＋しるし）に分ける。濁点・半濁点・小さい字・カタカナ・英大文字は しるしとして運び、暗号にするのは もとの字だけ。゛゜ がつかない字には後ろにつける（ぽ＋1 ＝ ま゜）。小さい形の無い字（っ＋1 ＝ 小さい て）は紙のますに小さく描く。ー・句読点・数字・空白・改行はそのまま。漢字・ゐ・ゑ は暗号にできず、お知らせを出す。入力は NFKC で半角カナ・全角英字をそろえる
+- **往復**: どの方式・種・ずらす数でも、暗号の粒からもとの文が 1 字もちがわずに戻ることを `tests/angou.test.js` で確かめる。字で写した暗号（画面の「暗号を とく」）からも戻る（小さい形の無い字と、ばんごう の英字の大小・カタカナは除く）
+- **紙**: 暗号文（暗号の下に答えを書くます。字数で ますの大きさを 18〜8mm から選ぶ）・解読シート（ずらし は切って割りピンでとめる円盤。かな用と、英字があれば英字用。ほかは五十音の並びの表・たぬきの絵・矢印）・答え（暗号の下に赤で答え）
+- **共有リンク** `#s=`: 方式・ずらす数・種・ヒント・さかさ・クレジット（たぬきは まぜる字）だけ。**文・だれへ・だれから・題はチェックしたときだけ**入れる。文入りのリンクを開いた人には、文を隠し、答えのページは既定で外す
+- 保存 `gakushu-print_angou`、バックアップ `{ tool: 'gakushu-print', version: 1, data: { angou } }`・`gakushu-print-angou-backup-YYYYMMDD.json`
+- ひらがな・カタカナのパネルから 1 行リンク
+
 ## 問題の作り方（仕様）
 
 - 乱数: mulberry32。用途（問題・ページ）ごとに種を混ぜて使う（`calc.js` の `makeRng`）
@@ -104,13 +116,14 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 | `romaji.js` / `romaji-words.js` | ローマ字のつづり（本表・第1表）とタイピングの判定 ／ 学年別の言葉（このツールで選んだもの） |
 | `kuku/` | 九九ゲーム（`index.html`・`main.js`・`game.js`・`guide.html`） |
 | `romaji/` | ローマ字タイピング（`index.html`・`main.js`・`game.js`・`guide.html`） |
+| `angou/` | 暗号メーカー（`index.html`・`guide.html`・`cipher.js` 暗号のロジック・`sheets.js` 紙と SVG・`main.js`・`angou.css`） |
 | `booklet/` | おでかけ冊子（`index.html`・`guide.html`・`book.js` 中身と面付け・`pages.js` ページの SVG と紙・`main.js`・`book.css`） |
 | `play.css` | 遊ぶ画面の見た目（`style.css` の上に重ねる） |
 | `main.js` | 画面の制御・保存・共有リンク・印刷 |
 | `style.css` | 見た目（和紙風の配色、ダークモード対応）とプリント（mm 単位）・印刷 |
 | `404.html` | ツール配下の存在しない URL で出るページ（サイト共通のもの） |
 | `favicon.svg` / `apple-touch-icon.png` / `og-image.png` | アイコン / ホーム画面用アイコン / SNS 共有用画像（1200×630） |
-| `sitemap.xml` | サイトマップ（`/`・`guide.html`・`en/`・`en/guide.html`・`kuku/`・`kuku/guide.html`・`romaji/`・`romaji/guide.html`・`booklet/`・`booklet/guide.html`。日英を hreflang で結ぶ。robots.txt はドメイン直下で管理） |
+| `sitemap.xml` | サイトマップ（`/`・`guide.html`・`en/`・`en/guide.html`・`kuku/`・`kuku/guide.html`・`romaji/`・`romaji/guide.html`・`booklet/`・`booklet/guide.html`・`angou/`・`angou/guide.html`。日英を hreflang で結ぶ。robots.txt はドメイン直下で管理） |
 | `tests/*.test.js` | テスト（`node --test tests/*.test.js`。`.github/workflows/test.yml` で push・PR のたびに自動実行） |
 
 ## ライセンス
