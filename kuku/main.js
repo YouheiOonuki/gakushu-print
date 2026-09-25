@@ -230,12 +230,7 @@
       $('rec-msg').textContent = 'ファイルから読み込みました。';
     }, function () { $('rec-msg').textContent = 'ファイルを読み取れませんでした。'; });
   });
-  $('rec-reset').addEventListener('click', function () {
-    if (!window.confirm('九九ゲームの記録（いちばん速い記録・にがて）を消します。よろしいですか？')) return;
-    data.records = G.normalizeRecords({});
-    save(); updateMenu();
-    $('rec-msg').textContent = '記録を消しました。';
-  });
+  // 記録を消すのは全ツール共通の「保存した内容をすべて消す」ボタン（../reset-storage.js）
 
   writeMenu();
   save();
