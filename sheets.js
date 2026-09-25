@@ -47,6 +47,9 @@
         return { main: L.kanjiTitle(), sub: L.kanjiSub(o.grade) };
       case 'maze':
         return { main: 'めいろ', sub: { easy: 'かんたん', normal: 'ふつう', hard: 'むずかしい' }[o.level] };
+      case 'romaji':
+        return { main: o.source === 'table' ? 'ローマ字の表' : 'ローマ字の れんしゅう',
+          sub: (o.source === 'table' ? '' : o.grade + '年生の 漢字の ことば・') + (o.sys === 'kun' ? '訓令式（昭和29年の告示の 第1表）' : 'ヘボン式（令和7年の告示）') };
     }
     return { main: '', sub: '' };
   }
@@ -62,6 +65,9 @@
       case 'clock': return o.mode === 'read' ? 'なんじ なんぷん ですか。' : 'とけいに ながい はりと みじかい はりを かきましょう。';
       case 'kana': case 'kanji': return L.traceInst;
       case 'maze': return 'スタートから ゴールまで いきましょう。';
+      case 'romaji':
+        if (o.source === 'table') return o.mode === 'trace' ? 'うすい字を なぞりましょう。' : '';
+        return o.mode === 'trace' ? 'うすい字を なぞってから、右に 書きましょう。' : 'ローマ字で 書きましょう。';
     }
     return '';
   }
@@ -271,8 +277,45 @@
       '<path d="' + d + '" class="gk-line"/><rect x="0" y="0" width="' + VW + '" height="' + VH + '" class="gk-frame"/></svg></div>';
   }
 
+  /**
+   * 英語の 4 本線（1 組）の SVG。1 単位 = 1mm。上から 1・2 本目のあいだが大文字の上、2・3 本目が小文字、3 本目が基線（赤）、4 本目が下
+   * text があれば基線に合わせて書く（cls: rj-light うすい字 ／ rj-dark こい字）
+   */
+  function fourLines(w, g, text, cls) {
+    var y = [1, 1 + g, 1 + 2 * g, 1 + 3 * g], H = 2 + 3 * g;
+    var s = '<svg class="rj-4" viewBox="0 0 ' + w + ' ' + H + '" width="' + w + 'mm" height="' + H + 'mm" aria-hidden="true">' +
+      '<path d="M0 ' + y[0] + 'H' + w + 'M0 ' + y[3] + 'H' + w + '" class="rj-l"/>' +
+      '<path d="M0 ' + y[1] + 'H' + w + '" class="rj-l rj-dash"/>' +
+      '<path d="M0 ' + y[2] + 'H' + w + '" class="rj-base"/>';
+    if (text) s += '<text x="2" y="' + y[2] + '" class="' + cls + '" font-size="' + (g * 2).toFixed(2) + '">' + esc(text) + '</text>';
+    return s + '</svg>';
+  }
+
+  /** ローマ字: 言葉（1 行 1 語。左に漢字とよみ、右に 4 本線）か、ローマ字表 */
+  function romajiBody(page, answer) {
+    if (page.source === 'table') {
+      var cell = function (c) {
+        if (!c) return '<td class="rj-empty"></td>';
+        return '<td><span class="rj-k">' + esc(c.k) + '</span><span class="rj-r ' + (page.mode === 'trace' ? 'rj-light' : 'rj-dark') + '">' + esc(c.r) + '</span></td>';
+      };
+      var table = function (rows, cls, head) {
+        return '<table class="rj-tab ' + cls + '"><caption>' + head + '</caption>' + rows.map(function (r) { return '<tr>' + r.map(cell).join('') + '</tr>'; }).join('') + '</table>';
+      };
+      return '<div class="rj-tables">' + table(page.seion, 'rj-seion', 'せいおん・ん') +
+        '<div class="rj-side">' + table(page.dakuon, 'rj-daku', 'だくおん・はんだくおん') + table(page.yoon, 'rj-yoon', 'ようおん') + '</div></div>';
+    }
+    var html = '<ol class="rj-words">';
+    page.items.forEach(function (it, i) {
+      var model = page.mode === 'trace' ? fourLines(140, 4.2, it.r, 'rj-light') : answer ? fourLines(140, 4.2, it.r, 'rj-dark ans-fill-svg') : fourLines(140, 4.2, '', '');
+      html += '<li><span class="no">(' + (page.startNo + i) + ')</span><span class="rj-word"><span class="rj-w">' + esc(it.w) + '</span>' +
+        (it.w !== it.k ? '<span class="rj-yomi">' + esc(it.k) + '</span>' : '') + '</span>' + model + '</li>';
+    });
+    return html + '</ol>';
+  }
+
   function body(page, answer) {
     switch (page.kind) {
+      case 'romaji': return romajiBody(page, answer);
       case 'arith': case 'kuku': return arithBody(page, answer);
       case 'hyaku': return hyakuBody(page, answer);
       case 'clock': return clockBody(page, answer);
@@ -294,9 +337,10 @@
     LANG = lang === 'en' ? 'en' : 'ja';
     L = TX.sheet[LANG];
     var mode = wb.hasAnswers ? state.common.answers : 'q';
+    var romajiSeeded = wb.type === 'romaji' && state.romaji.source === 'words';
     var paper = state.common.paper === 'letter' ? ' paper-letter' : '';   // A4 のときはクラスを足さない（日本語ページの出力は前のまま）
     var seeded = !(wb.type === 'kana' || wb.type === 'genko' || (wb.type === 'kanji' && state.kanji.source !== 'random') ||
-      (wb.type === 'kuku' && state.kuku.order !== 'random'));
+      (wb.type === 'kuku' && state.kuku.order !== 'random') || (wb.type === 'romaji' && !romajiSeeded));
     var out = [], q = 0, a = 0;
     var n = wb.pages.length;
     var one = function (page, answer) {

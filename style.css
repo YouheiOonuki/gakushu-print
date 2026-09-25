@@ -384,6 +384,34 @@ details.card.opt > summary:focus-visible, .custom > summary:focus-visible { outl
 .gk-frame { fill: none; stroke: #555; stroke-width: 0.8; }
 .gk-guide { fill: none; stroke: #b4b4b4; stroke-width: 0.2; }
 
+/* ローマ字（言葉は 1 行 1 語: 番号・漢字とよみ・英語の 4 本線。表は 清音／濁音・拗音 を 2 段に） */
+.rj-words { list-style: none; display: flex; flex-direction: column; justify-content: space-evenly; height: 100%; }
+.rj-words li { display: grid; grid-template-columns: 8mm 36mm 140mm; align-items: center; }
+.rj-words .no { font-size: 9pt; color: #666; }
+.rj-word { display: flex; flex-direction: column; line-height: 1.2; }
+.rj-w { font-size: 15pt; font-weight: 700; white-space: nowrap; }
+.rj-yomi { font-size: 9.5pt; color: #444; }
+.rj-4 { display: block; overflow: visible; }
+.rj-l { stroke: #555; stroke-width: 0.25; fill: none; }
+.rj-dash { stroke: #999; stroke-dasharray: 1 0.8; }
+.rj-base { stroke: #c0392b; stroke-width: 0.35; fill: none; }
+.rj-4 text { font-family: "Helvetica Neue", Arial, "Noto Sans", sans-serif; letter-spacing: 0.35px; }
+.rj-light { fill: #bdbdbd; color: #bdbdbd; }
+.rj-dark { fill: #111; color: #111; }
+.ans-fill-svg { fill: #c0392b; }
+.rj-tables { display: flex; flex-direction: column; gap: 4mm; height: 100%; }
+.rj-side { display: flex; gap: 5mm; align-items: flex-start; }
+.rj-tab { border-collapse: collapse; }
+.rj-tab caption { text-align: left; font-size: 10pt; font-weight: 700; padding-bottom: 1mm; }
+.rj-tab td { border: 0.3mm solid #666; text-align: center; vertical-align: middle; padding: 0.6mm 0; }
+.rj-tab .rj-empty { background: #f2f2f2; }
+.rj-k { display: block; font-size: 10pt; color: #333; line-height: 1.1; }
+.rj-r { display: block; font-family: "Helvetica Neue", Arial, "Noto Sans", sans-serif; line-height: 1.15; }
+.rj-tab td { padding: 0; line-height: 1.05; }
+.rj-seion { width: 100%; } .rj-seion td { width: 20%; height: 9.4mm; } .rj-seion .rj-r { font-size: 14pt; }
+.rj-daku td { width: 17mm; height: 9.4mm; } .rj-daku .rj-r { font-size: 12.5pt; }
+.rj-yoon td { width: 17mm; height: 7.4mm; } .rj-yoon .rj-r { font-size: 10.5pt; } .rj-yoon .rj-k { font-size: 7.5pt; }
+
 /* 用紙がレター（215.9×279.4mm。英語ページ） */
 .sheet.paper-letter { width: 215.9mm; height: 279.4mm; }
 

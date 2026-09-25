@@ -60,7 +60,8 @@ const dir = path.join(__dirname, '..', 'fonts');
 
 test('漢字のフォントに、学年別漢字配当表の字がすべてある', () => {
   const cps = codepoints(path.join(dir, 'klee-kanji.woff2'));
-  const src = fs.readFileSync(path.join(__dirname, '..', 'constants.js'), 'utf8');
+  // 配当表の字だけを見る（constants.js のコメントの漢字は数えない）
+  const src = Object.values(require('../constants.js').kanjiByGrade.value).join('');
   const kanji = [...new Set(src.match(/[一-鿿]/g))];
   assert.ok(kanji.length >= 1026);
   const missing = kanji.filter(k => !cps.has(k.codePointAt(0)));

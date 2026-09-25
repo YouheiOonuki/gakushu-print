@@ -158,7 +158,7 @@ test('英語ページで出す種類はなぞり書き・漢字・原稿用紙',
   const types = [...read('en/index.html').matchAll(/name="type" value="(\w+)"/g)].map((m) => m[1]);
   assert.deepEqual(types, ['kana', 'kanji', 'genko']);
   const ja = [...read('index.html').matchAll(/name="type" value="(\w+)"/g)].map((m) => m[1]);
-  assert.deepEqual(ja, ['arith', 'kuku', 'hyaku', 'clock', 'kana', 'kanji', 'maze']);
+  assert.deepEqual(ja, ['arith', 'kuku', 'hyaku', 'clock', 'kana', 'kanji', 'maze', 'romaji']);
 });
 
 // 漢字（K57・D81）: 字だけ。読み・意味・筆順は持たない・出さない

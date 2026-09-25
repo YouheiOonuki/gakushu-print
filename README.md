@@ -2,7 +2,7 @@
 
 公開 URL: **https://yorozu-craft.com/gakushu-print/**（英語版 **https://yorozu-craft.com/gakushu-print/en/**）
 
-ひらがな・カタカナ・漢字・計算・百ます・時計・迷路の学習プリントを無料で作成。登録不要、毎回ちがう問題、答えつき。A4 で印刷・PDF 保存。
+ひらがな・カタカナ・漢字・ローマ字・計算・百ます・時計・迷路の学習プリントを無料で作成。九九ゲームとローマ字タイピングも。登録不要、毎回ちがう問題、答えつき。A4 で印刷・PDF 保存。
 yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github.io の README](https://github.com/YouheiOonuki/youheioonuki.github.io) を参照）。企画は yorozu-plans の `docs/10_学習プリント.md`。
 
 ## 機能
@@ -16,6 +16,7 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 | ひらがな・カタカナ | 行（清音・濁音・半濁音・小さい字）、ますの大きさ 3 段階 | — | なぞる言葉（名前など。その文字の種類だけ残し、ほかは外して知らせる） |
 | 漢字練習 | 1〜6 年生、表の順（何番目から）・ばらばら | — | 字をえらぶ（一覧をタップ／はりつけ。選んだ学年までの字だけ） |
 | 迷路 | かんたん 7×9・ふつう 13×16・むずかしい 22×28。必ず解け、道はひとつ | あり（道を線で） | — |
+| ローマ字 | 1〜6 年生の漢字の言葉（1 枚 10 語・英語の 4 本線）かローマ字の表。ヘボン式（令和7年告示の本表）／訓令式（昭和29年告示の第1表）。なぞる・自分で書く | 「自分で書く」だけ | — |
 
 共通: 名前（なまえ欄にうすい字で入る）・日付欄・正解数の欄の有無、答えのページ（問題だけ／問題と答え／答えだけ）、1〜10 枚、印刷物のクレジット（既定で表示・外せる。着地ページ `print/`）。
 
@@ -24,6 +25,21 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 - **バックアップ**（D31）: `{ tool: 'gakushu-print', version: 1, exportedAt, data: { settings, presets } }`、`gakushu-print-backup-YYYYMMDD.json`
 - **印刷**: 見本（`#sheets`）がそのまま印刷される（`@media print` でほかを隠す。`beforeprint` でも作り直す）ので、Ctrl+P でも白紙にならない。A4 縦・余白 0 の `@page`、1 枚ごとに改ページ。広告（`ins.adsbygoogle` など）は印刷しない
 - **なぞり書きの字**: 端末に教科書体（UD デジタル 教科書体・游教科書体・Klee）があれば使い、なければ `fonts/` の Klee One（かな約 33KB・漢字約 270KB に絞ったもの。OFL 1.1）を読む。サイト README 9 の例外（2026-09-24 オーナー決定）。詳細は `fonts/README.md`
+
+## 画面で遊ぶ（2026-09-25。yorozu-plans の企画書 33・K101・K102）
+
+こどもが遊ぶ画面なので、**`kuku/`・`romaji/` は AdSense の meta だけ**（サイト README 5・D18）。広告は各 `guide.html` に出す。サイト本体の `tools/check-site.mjs` の `META_ONLY_PAGES` に `/gakushu-print/kuku/`・`/gakushu-print/romaji/` を足す必要がある。
+
+- **九九ゲーム（`kuku/`）**: 向き（6×7＝□／□×□＝42 の逆）、段（いくつでも）、順番（1 から順／ばらばら）、問題数（10・20・全部）。答えの桁の数だけ押すと判定、まちがえた問題は答えを見せて最後にもう一度（時間は全部正解するまで）。逆は 1〜9 どうしのどの式でも正解。大きなテンキー（電話と同じ並び）、パソコンは数字キー。問題の並びは `calc.js` の `genKuku` と同じ。記録（出し方ごとのいちばん速い時間・まちがえた九九の数）は `gakushu-print_kuku`。まちがえた九九は、このツールの九九のプリント（入れた問題）の共有リンク `../#s=` で開く。ロジックは `kuku/game.js`
+- **ローマ字タイピング（`romaji/`）**: 1 字ずつ（ローマ字表）か 1〜6 年生の漢字の言葉（`romaji-words.js`。その学年までの配当表の漢字だけで書け、その学年の字を 1 字以上。テストで確かめる）。お手本はヘボン式／訓令式、出す／かくす（かくすと同じところで 2 回まちがえたら見せる）。**打ち方はどちらのつづりでも、IME の打ち方（ci・xtu・nn など）でも正解**。「ん」は IME と同じく、次が あ行・な行・や行なら nn か n'。記録は `gakushu-print_romaji`。ロジックは `romaji/game.js`、判定は `romaji.js` の `makeTyper`（いくつもの打ち方を同時に追う）
+- 書き出し・読み込みはそれぞれの記録だけ（`{ tool: 'gakushu-print', version: 1, data: { kuku } }`、`gakushu-print-kuku-backup-YYYYMMDD.json`。ローマ字は `romaji`）。本体の設定のファイルとは別
+- 共通の見た目は `play.css`（出題中は見出しを隠し、問題とボタンを 1 画面に）
+
+### ローマ字のつづりの根拠（`constants.js` の `romajiRule`）
+
+- 「ローマ字のつづり方」（**令和7年12月22日 内閣告示第4号**。昭和29年内閣告示第1号は廃止）の本表を「ヘボン式」とし、同じ告示の「（付）対照表」にある昭和29年告示の第1表のつづりを「訓令式」とした（し si・ち ti・つ tu・ふ hu・じ／ぢ zi・しゃ sya・ちゃ tya・じゃ zya）
+- 添え書き: ん は n（次が母音字か y なら n'）、っ は子音字を重ねる（ch は c: maccha）、長音は (2) 母音字を並べる書き方（toukyou）。符号（ō）は、かなだけでは長音か決められないので出さない。固有名詞は頭を大文字
+- 小学校学習指導要領（平成29年告示）解説 国語編は「「ローマ字のつづり方」（令和７年内閣告示）を踏まえる」「必要に応じて「（付）対照表」で示されているつづり方も参考」（2026-03-23 更新の PDF、p.79 で確認）
 
 ## 英語版（/en/。日本語学習者向け。yorozu-plans の GLOBAL.md K58）
 
@@ -55,6 +71,7 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 | 時期 | 確認すること | 直す場所 |
 |------|------------|---------|
 | 学習指導要領の改訂時（次は 2030 年ごろの見込み） | 学年別漢字配当表の変更 | `constants.js`、`tests/data.test.js` の字数、`guide.html` の出典と最終確認日 |
+| 確認日から 12 か月まで（ローマ字） | 「ローマ字のつづり方」の告示・学習指導要領解説の記述に変更がないか | `romaji.js`、`constants.js` の `romajiRule.checked`、`romaji/guide.html` の確認日。言葉を足したら `tests/romaji.test.js` が学年と打ち方を確かめる |
 
 直したら、`guide.html` の「更新履歴」に日付と内容を 1 行足す。
 
@@ -69,12 +86,16 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 | `text.js` | 画面・読み取り・紙の文言（日本語・英語） |
 | `calc.js` | 問題づくり（乱数・計算・百ます・時計・迷路・なぞり書き・ローマ字・原稿用紙・読み取り・ページ分け・共有・正規化・バックアップ）。純粋関数 |
 | `sheets.js` | プリント 1 枚ずつの HTML（問題と答え） |
-| `constants.js` | 学年別漢字配当表（値・出典・確認日） |
+| `constants.js` | 学年別漢字配当表（値・出典・確認日）、ローマ字のつづりの出典と確認日（`romajiRule`） |
+| `romaji.js` / `romaji-words.js` | ローマ字のつづり（本表・第1表）とタイピングの判定 ／ 学年別の言葉（このツールで選んだもの） |
+| `kuku/` | 九九ゲーム（`index.html`・`main.js`・`game.js`・`guide.html`） |
+| `romaji/` | ローマ字タイピング（`index.html`・`main.js`・`game.js`・`guide.html`） |
+| `play.css` | 遊ぶ画面の見た目（`style.css` の上に重ねる） |
 | `main.js` | 画面の制御・保存・共有リンク・印刷 |
 | `style.css` | 見た目（和紙風の配色、ダークモード対応）とプリント（mm 単位）・印刷 |
 | `404.html` | ツール配下の存在しない URL で出るページ（サイト共通のもの） |
 | `favicon.svg` / `apple-touch-icon.png` / `og-image.png` | アイコン / ホーム画面用アイコン / SNS 共有用画像（1200×630） |
-| `sitemap.xml` | サイトマップ（`/`・`guide.html`・`en/`・`en/guide.html`。日英を hreflang で結ぶ。robots.txt はドメイン直下で管理） |
+| `sitemap.xml` | サイトマップ（`/`・`guide.html`・`en/`・`en/guide.html`・`kuku/`・`kuku/guide.html`・`romaji/`・`romaji/guide.html`。日英を hreflang で結ぶ。robots.txt はドメイン直下で管理） |
 | `tests/*.test.js` | テスト（`node --test tests/*.test.js`。`.github/workflows/test.yml` で push・PR のたびに自動実行） |
 
 ## ライセンス

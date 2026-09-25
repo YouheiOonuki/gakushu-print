@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>学習プリントメーカー（無料・登録不要）ひらがな・漢字・計算・百ます・時計・迷路｜yorozu-craft</title>
-  <meta name="description" content="ひらがな・カタカナのなぞり書き、学年別の漢字練習、たし算・ひき算（くり上がりの有無・筆算）、九九、百ます計算、時計の読み方、迷路の学習プリントを無料で作成。登録不要、毎回ちがう問題、答えのページつき。A4 で印刷・PDF 保存。">
+  <meta name="description" content="ひらがな・カタカナのなぞり書き、学年別の漢字練習、たし算・ひき算（くり上がりの有無・筆算）、九九、百ます計算、時計の読み方、迷路、ローマ字の学習プリントを無料で作成。登録不要、毎回ちがう問題、答えのページつき。A4 で印刷・PDF 保存。">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://yorozu-craft.com/gakushu-print/">
   <link rel="alternate" hreflang="ja" href="https://yorozu-craft.com/gakushu-print/">
@@ -51,7 +51,7 @@
 
   <header class="app-header">
     <h1>学習プリントメーカー</h1>
-    <p class="subtitle">ひらがな・カタカナ・漢字・計算・百ます・時計・迷路。毎回ちがう問題で、答えのページつき。A4 で印刷・PDF 保存。</p>
+    <p class="subtitle">ひらがな・カタカナ・漢字・ローマ字・計算・百ます・時計・迷路。毎回ちがう問題で、答えのページつき。A4 で印刷・PDF 保存。</p>
     <p class="lang-switch"><a href="./en/" hreflang="en" lang="en">English (for learners of Japanese)</a></p>
   </header>
 
@@ -80,6 +80,7 @@
         <label class="tile"><input type="radio" name="type" value="kana" data-k="type"><span class="t-ico" aria-hidden="true">あ</span><span class="t-name">ひらがな・カタカナ</span><span class="t-sub">なぞり書き</span></label>
         <label class="tile"><input type="radio" name="type" value="kanji" data-k="type"><span class="t-ico" aria-hidden="true">字</span><span class="t-name">漢字練習</span><span class="t-sub">1〜6年生</span></label>
         <label class="tile"><input type="radio" name="type" value="maze" data-k="type"><span class="t-ico" aria-hidden="true">◫</span><span class="t-name">迷路</span><span class="t-sub">3 段階</span></label>
+        <label class="tile"><input type="radio" name="type" value="romaji" data-k="type"><span class="t-ico" aria-hidden="true">Aa</span><span class="t-name">ローマ字</span><span class="t-sub">表・学年の言葉</span></label>
       </div>
     </section>
 
@@ -165,6 +166,7 @@
           </div>
           <div class="btn-row"><button type="button" class="btn btn-sub btn-sm" id="kuku-all">全部の段をえらぶ</button></div>
         </fieldset>
+        <p class="small"><a href="./kuku/">画面で遊ぶ（九九ゲーム・タイムアタック）→</a></p>
         <fieldset class="field">
           <legend>順番</legend>
           <div class="seg">
@@ -376,6 +378,47 @@
           <select id="maze-pages" data-k="maze.pages" data-t="num" class="pages-select"><option value="1">1 枚</option></select>
         </div>
       </div>
+
+      <!-- ローマ字 -->
+      <div class="panel" data-panel="romaji" hidden>
+        <fieldset class="field">
+          <legend>内容</legend>
+          <div class="seg">
+            <label><input type="radio" name="romaji-source" value="words" data-k="romaji.source" checked> 学年の漢字の言葉</label>
+            <label><input type="radio" name="romaji-source" value="table" data-k="romaji.source"> ローマ字の表</label>
+          </div>
+        </fieldset>
+        <div class="field" id="romaji-grade-box">
+          <label for="romaji-grade">学年</label>
+          <select id="romaji-grade" data-k="romaji.grade" data-t="num">
+            <option value="1">1 年生の漢字の言葉</option><option value="2">2 年生の漢字の言葉</option><option value="3" selected>3 年生の漢字の言葉</option>
+            <option value="4">4 年生の漢字の言葉（都道府県）</option><option value="5">5 年生の漢字の言葉</option><option value="6">6 年生の漢字の言葉</option>
+          </select>
+        </div>
+        <fieldset class="field">
+          <legend>つづり</legend>
+          <div class="seg">
+            <label><input type="radio" name="romaji-sys" value="hep" data-k="romaji.sys" checked> ヘボン式（shi・tsu）</label>
+            <label><input type="radio" name="romaji-sys" value="kun" data-k="romaji.sys"> 訓令式（si・tu）</label>
+          </div>
+          <details class="hint-more"><summary>どちらを選ぶ？</summary><p class="hint">2025 年 12 月の内閣告示「ローマ字のつづり方」がヘボン式を基本にし、小学校の学習指導要領の解説もこの告示を踏まえる形に改められました。訓令式は前の告示（昭和29年）の第1表のつづりです。</p></details>
+        </fieldset>
+        <fieldset class="field">
+          <legend>書き方</legend>
+          <div class="seg">
+            <label><input type="radio" name="romaji-mode" value="trace" data-k="romaji.mode" checked> <span id="romaji-trace-lbl">うすい字をなぞる</span></label>
+            <label><input type="radio" name="romaji-mode" value="write" data-k="romaji.mode"> <span id="romaji-write-lbl">自分で書く（答えつき）</span></label>
+          </div>
+        </fieldset>
+        <details class="field custom more" data-more="romaji" id="romaji-pages-box">
+          <summary>くわしい設定<span class="more-state" id="more-romaji"></span></summary>
+          <div class="field">
+            <label for="romaji-pages">枚数（1 枚 10 語）</label>
+            <select id="romaji-pages" data-k="romaji.pages" data-t="num" class="pages-select"><option value="1">1 枚</option></select>
+          </div>
+          <p class="small"><a href="./romaji/">キーボードで打つ練習（ローマ字タイピング）→</a></p>
+        </details>
+      </div>
     </section>
 
     <!-- 4. 印刷ボタンと見本（最小の設定の直後） -->
@@ -472,6 +515,8 @@
 
   <script src="./constants.js"></script>
   <script src="./text.js"></script>
+  <script src="./romaji-words.js"></script>
+  <script src="./romaji.js"></script>
   <script src="./calc.js"></script>
   <script src="./sheets.js"></script>
   <script src="./main.js"></script>
