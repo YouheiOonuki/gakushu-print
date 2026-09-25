@@ -1,0 +1,57 @@
+/* ===========================
+   おでかけ冊子 — ../style.css の上に重ねる
+   紙（.bsheet）は A4 よこ 297×210mm。1 面（.slot）は A5（148.5×210）かミニブックの A7（74.25×105）
+   =========================== */
+@page { size: A4 landscape; margin: 0; }
+
+/* 見本: 読む順のページ（本の形） */
+.book-pv { display: grid; grid-template-columns: repeat(auto-fill, minmax(6.2rem, 1fr)); gap: 0.5rem; margin-top: 0.6rem; }
+.book-pv figure { margin: 0; }
+.book-pv svg { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: 2px; box-shadow: 0 1px 3px var(--shadow); background: #fff; }
+.book-pv figcaption { font-size: 0.72rem; color: var(--muted); text-align: center; margin-top: 0.15rem; }
+.book-pv.mini { grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr)); }
+
+/* 印刷のしかた（主なボタンの直下の 1 行） */
+.printer-set { font-size: 0.85rem; background: var(--accent-soft); border: 1px solid var(--border); border-radius: 6px; padding: 0.45rem 0.7rem; margin: 0.3rem 0 0.5rem; }
+.printer-set b { color: var(--accent); }
+.steps { padding-left: 1.3rem; font-size: 0.88rem; }
+.steps li { margin: 0.15rem 0; }
+.fold-fig { display: block; width: 100%; max-width: 420px; height: auto; margin: 0.4rem 0; color: var(--text); }
+
+/* 印刷の並び（面付け）の見本 */
+.sheets-pv { display: grid; gap: 0.6rem; margin-top: 0.6rem; }
+.sheets-pv .bsheet { width: 100%; aspect-ratio: 297 / 210; height: auto; }
+.sheets-pv .face-cap { font-size: 0.75rem; color: var(--muted); }
+
+.bsheet { position: relative; background: #fff; overflow: hidden; box-shadow: 0 1px 4px var(--shadow); }
+.bsheet-in { position: absolute; left: 0; top: 0; width: 297mm; height: 210mm; transform-origin: 0 0; }
+.bsheet-face { position: absolute; left: 0; top: 0; width: 297mm; height: 210mm; }
+.bsheet.rot180 .bsheet-face { transform: rotate(180deg); transform-origin: 148.5mm 105mm; }
+.slot { position: absolute; }
+.slot svg { display: block; width: 100%; height: 100%; }
+
+/* 折る・切るしるし（紙のふち。ページの中身は内側 8mm から） */
+.mk { position: absolute; display: block; }
+.mk-fold-t, .mk-fold-b { left: 148.5mm; width: 0; height: 5mm; border-left: 0.3mm dashed #888; }
+.mk-fold-t { top: 0; }
+.mk-fold-b { bottom: 0; }
+.mk-cut { left: 148.5mm; top: 0; height: 210mm; width: 0; border-left: 0.25mm dashed #bbb; }
+.mk-mini-h { left: 0; top: 105mm; width: 297mm; height: 0; border-top: 0.2mm dotted #bbb; }
+.mk-mini-cut { left: 74.25mm; top: 104.8mm; width: 148.5mm; height: 0; border-top: 0.45mm solid #555; }
+.mk-mini-v1, .mk-mini-v2, .mk-mini-v3 { top: 0; height: 210mm; width: 0; border-left: 0.2mm dotted #bbb; }
+.mk-mini-v1 { left: 74.25mm; }
+.mk-mini-v2 { left: 148.5mm; }
+.mk-mini-v3 { left: 222.75mm; }
+
+#print-sheets { display: none; }
+
+@media print {
+  html, body { background: #fff !important; margin: 0; padding: 0; }
+  body.tool-page > :not(#print-sheets) { display: none !important; }
+  #print-sheets { display: block !important; }
+  #print-sheets .bsheet { width: 297mm; height: 209.6mm; box-shadow: none; break-after: page; page-break-after: always; }
+  #print-sheets .bsheet:last-child { break-after: auto; page-break-after: auto; }
+  ins.adsbygoogle, .google-auto-placed, iframe[id^="aswift"], iframe[id^="google_ads"] { display: none !important; }
+}
+.crumb { font-size: 0.78rem; }
+.crumb a { color: var(--accent); }

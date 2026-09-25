@@ -50,6 +50,20 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 - **原稿用紙**: 400 字詰（20 字 × 20 行。最も一般的な形で、たて書き用・よこ書き用がある — ja.wikipedia「原稿用紙」、2026-09-24 確認）を 1 ページに縮めて描く（ます 10：行間 3 の比。A4 で約 7.0mm（たて）・9.2mm（よこ）、レターで 7.2mm・9.5mm。Chromium で測定）。**練習用のマス目**は 10・12・15・20mm を原寸で、十字の点線の有無を選べる
 - **用紙**: A4／レター（215.9×279.4mm）。レターは `.sheet.paper-letter` と `@page { size: letter }`（`main.js` が入れる）。なぞり書きの行数（`TRACE_SIZES.rowsLetter`）と原稿用紙の本文の大きさ（`PAPERS.*.body`）は Chromium で測ってはみ出さない値にした。PDF のページの大きさ（612×792pt）とページ数は Playwright で確認
 
+## おでかけ冊子（`booklet/`。2026-09-25。yorozu-plans の企画書 37・K104）
+
+電車・新幹線・車・病院の待ち時間に、スマホ以外で遊ぶ冊子を印刷する。親が作って印刷する画面なので、本体と同じく広告あり（`index.html`・`guide.html` とも AdSense のスクリプトを読む。印刷には出さない）。
+
+- **中身**: めいろ（`calc.js` の完全迷路を冊子の大きさで）・てんつなぎ（`book.js` の `FIGURES`。このツールで作った単純な図形 12 種。角の点を残し、長い辺から点を足す）・みつけたら ビンゴ（場面ごとに 30 語。3×3〜5×5）・ことばさがし（ひらがな。言葉は決めた向きに 1 か所だけ）・すうじパズル（4×4／6×6。答えはひとつだけ）・ふたりで あそぼう（まるばつ・じんとり）・おえかき／にっき。表紙（題・名前・日付・もくじ）、答え（うしろから 2 ページ目。A5 は 1 ページに 6 つ）、うら表紙（もんだい ばんごう・クレジット）
+- **年齢**: 4〜6さい／小学1〜2年／小学3年〜（`LEVELS`）。4〜6さい はすうじパズルなし
+- **作り方（面付け）**: 紙はどれも A4 よこ（`@page { size: A4 landscape }`）
+  - A5 の冊子（中とじ）: 紙 s 枚目の表 = 左 N−2s・右 2s+1、裏 = 左 2s+2・右 N−2s−1。ページ数は 4 の倍数（足りない分は じゆうちょう）、24 ページまで。**両面・短辺とじ**。「長辺とじしか選べない」では裏の面を 180° 回して印刷する
+  - ミニブック: A4 1 枚の片面に 8 面。下の段 6 7 8 1、上の段はさかさまに 5 4 3 2。まん中 2 面ぶんの折り目に切り込み
+  - 切ってとじる: 片面に 2 ページずつ（両面印刷ができないとき）
+- **折ったときの順の確かめ**: `book.js` の `readSaddle`・`physicalSheets`・`readMini` は、面付けの式とは別に紙の動きから書いた読み順。`tests/booklet.test.js` が 4〜24 ページで確かめる。印刷した PDF（Chromium の `page.pdf`）からページ番号の位置と向きを読んで同じことを確かめた（企画書 37 の 6 章）
+- 保存 `gakushu-print_booklet`、共有リンク `#s=`（名前は既定で入れない）、バックアップ `{ tool: 'gakushu-print', version: 1, data: { booklet } }`・`gakushu-print-booklet-backup-YYYYMMDD.json`
+- `calc.js` から `carveMaze`・`b64uEncode`・`b64uDecode` を export に足した（中身は変えていない）
+
 ## 問題の作り方（仕様）
 
 - 乱数: mulberry32。用途（問題・ページ）ごとに種を混ぜて使う（`calc.js` の `makeRng`）
@@ -90,12 +104,13 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 | `romaji.js` / `romaji-words.js` | ローマ字のつづり（本表・第1表）とタイピングの判定 ／ 学年別の言葉（このツールで選んだもの） |
 | `kuku/` | 九九ゲーム（`index.html`・`main.js`・`game.js`・`guide.html`） |
 | `romaji/` | ローマ字タイピング（`index.html`・`main.js`・`game.js`・`guide.html`） |
+| `booklet/` | おでかけ冊子（`index.html`・`guide.html`・`book.js` 中身と面付け・`pages.js` ページの SVG と紙・`main.js`・`book.css`） |
 | `play.css` | 遊ぶ画面の見た目（`style.css` の上に重ねる） |
 | `main.js` | 画面の制御・保存・共有リンク・印刷 |
 | `style.css` | 見た目（和紙風の配色、ダークモード対応）とプリント（mm 単位）・印刷 |
 | `404.html` | ツール配下の存在しない URL で出るページ（サイト共通のもの） |
 | `favicon.svg` / `apple-touch-icon.png` / `og-image.png` | アイコン / ホーム画面用アイコン / SNS 共有用画像（1200×630） |
-| `sitemap.xml` | サイトマップ（`/`・`guide.html`・`en/`・`en/guide.html`・`kuku/`・`kuku/guide.html`・`romaji/`・`romaji/guide.html`。日英を hreflang で結ぶ。robots.txt はドメイン直下で管理） |
+| `sitemap.xml` | サイトマップ（`/`・`guide.html`・`en/`・`en/guide.html`・`kuku/`・`kuku/guide.html`・`romaji/`・`romaji/guide.html`・`booklet/`・`booklet/guide.html`。日英を hreflang で結ぶ。robots.txt はドメイン直下で管理） |
 | `tests/*.test.js` | テスト（`node --test tests/*.test.js`。`.github/workflows/test.yml` で push・PR のたびに自動実行） |
 
 ## ライセンス
