@@ -11,7 +11,8 @@
 
   var ui = {
     ja: {
-      typeNames: { arith: 'たし算・ひき算', kuku: '九九', hyaku: '百ます計算', clock: '時計の読み方', kana: 'ひらがな・カタカナ', kanji: '漢字練習', maze: '迷路', genko: '原稿用紙' },
+      typeNames: { arith: 'たし算・ひき算', kuku: '九九', hyaku: '百ます計算', clock: '時計の読み方', kana: 'ひらがな・カタカナ', kanji: '漢字練習', maze: '迷路', genko: '原稿用紙', romaji: 'ローマ字' },
+      romajiTrace: 'うすい字をなぞる', romajiWrite: '自分で書く（答えつき）', romajiTableTrace: 'うすい字をなぞる', romajiTableDark: 'こい字の表（見て覚える）',
       kanaLabels: { a: 'あ行', ka: 'か行', sa: 'さ行', ta: 'た行', na: 'な行', ha: 'は行', ma: 'ま行', ya: 'や行', ra: 'ら行', wa: 'わ行', ga: 'が行', za: 'ざ行', da: 'だ行', ba: 'ば行', pa: 'ぱ行', small: '小さい字' },
       pages: function (n) { return n + ' 枚'; },
       count: function (n) { return n + ' 問'; },
@@ -67,7 +68,8 @@
       backupUnreadable: 'ファイルを読み取れませんでした。',
     },
     en: {
-      typeNames: { arith: 'Addition and subtraction', kuku: 'Times tables', hyaku: '100-square math', clock: 'Telling time', kana: 'Kana tracing', kanji: 'Kanji practice', maze: 'Maze', genko: 'Genkouyoushi / grid' },
+      typeNames: { arith: 'Addition and subtraction', kuku: 'Times tables', hyaku: '100-square math', clock: 'Telling time', kana: 'Kana tracing', kanji: 'Kanji practice', maze: 'Maze', genko: 'Genkouyoushi / grid', romaji: 'Romaji' },
+      romajiTrace: 'Trace', romajiWrite: 'Write (with answers)', romajiTableTrace: 'Trace', romajiTableDark: 'Chart',
       kanaLabels: { a: 'a', ka: 'ka', sa: 'sa', ta: 'ta', na: 'na', ha: 'ha', ma: 'ma', ya: 'ya', ra: 'ra', wa: 'wa', ga: 'ga', za: 'za', da: 'da', ba: 'ba', pa: 'pa', small: 'small' },
       pages: function (n) { return n + (n === 1 ? ' page' : ' pages'); },
       count: function (n) { return n + ' problems'; },

@@ -25,6 +25,23 @@
       url: 'https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm',
       checked: '2026-09-24',
     },
+
+    // ローマ字のつづり（romaji.js の表の根拠）。値は romaji.js にあり、ここには出典と確認日だけを持つ
+    // - 本表（ヘボン式を基本）: 「ローマ字のつづり方」令和7年12月22日 内閣告示第4号（昭和29年内閣告示第1号は廃止）
+    // - 訓令式: 同じ告示の「（付）対照表」の「昭和29年内閣告示第1表に示されていたつづり方」
+    // - 学校: 小学校学習指導要領（平成29年告示）解説 国語編 p.79「「ローマ字のつづり方」（令和７年内閣告示）を踏まえる」
+    //   「必要に応じて「（付）対照表」で示されているつづり方も参考とする」（2026-03-23 更新の PDF で確認）
+    romajiRule: {
+      value: { notice: '令和7年内閣告示第4号', date: '2025-12-22' },
+      label: 'ローマ字のつづり方（令和7年内閣告示第4号）',
+      source: '文化庁「ローマ字のつづり方」（令和7年12月22日内閣告示第4号・内閣訓令第1号）、文部科学省「小学校学習指導要領（平成29年告示）解説 国語編」',
+      url: 'https://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/roma/index2.html',
+      urls: [
+        'https://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/pdf/94303201_01.pdf',
+        'https://www.mext.go.jp/content/20220606-mxt_kyoiku02-100002607_002.pdf',
+      ],
+      checked: '2026-09-25',
+    },
   };
 
   if (typeof module !== 'undefined' && module.exports) module.exports = CONSTANTS;

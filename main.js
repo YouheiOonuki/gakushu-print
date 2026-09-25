@@ -158,7 +158,14 @@
     hide('kanji-pages-box', state.kanji.source === 'custom');
     if ($('kanji-start')) $('kanji-start').max = String(Array.from(KANJI[state.kanji.grade]).length);
     // 答えのページ（なぞり書き・漢字・原稿用紙には答えがない）
-    var hasAns = state.type !== 'kana' && state.type !== 'kanji' && state.type !== 'genko';
+    var hasAns = C.hasAnswersOf(state);
+    // ローマ字（表は枚数なし。表の「書き方」は なぞる／こい字のお手本）
+    hide('romaji-grade-box', state.romaji.source !== 'words');
+    hide('romaji-pages-box', state.romaji.source !== 'words');
+    if ($('romaji-trace-lbl')) {
+      $('romaji-trace-lbl').textContent = state.romaji.source === 'table' ? T.romajiTableTrace : T.romajiTrace;
+      $('romaji-write-lbl').textContent = state.romaji.source === 'table' ? T.romajiTableDark : T.romajiWrite;
+    }
     document.querySelectorAll('input[name="c-answers"]').forEach(function (r) { r.disabled = !hasAns; });
     if ($('answers-note')) $('answers-note').textContent = hasAns ? T.answersNote : T.answersNone;
     // 用紙: 印刷の用紙の大きさ（@page）をプリントに合わせる。A4 は style.css のまま
@@ -176,6 +183,7 @@
     setText('more-kanji', T.moreSize(state.kanji.size));
     setText('more-kana', T.moreKana(state.kana.size));
     setText('more-hyaku', T.moreHand(state.hyaku.hand));
+    setText('more-romaji', ': ' + T.pages(state.romaji.pages));
     setText('common-state', T.commonState(state.common, hasAns, T.paperNames[state.common.paper]));
     setText('fixbar-type', TYPE_NAMES[state.type]);
   }
@@ -251,9 +259,11 @@
     var info = T.seedInfo(C.seedLabel(state.seed));
     info += r.answers && r.questions ? T.sheetsQA(r.questions, r.answers) : r.answers ? T.sheetsA(r.answers) : T.sheetsN(r.total);
     info += paperInfo;
-    if (state.type === 'kana' || state.type === 'genko' || (state.type === 'kanji' && state.kanji.source !== 'random') || (state.type === 'kuku' && state.kuku.order !== 'random')) info = T.sheetsN(r.total) + paperInfo;
+    var romajiWords = state.type === 'romaji' && state.romaji.source === 'words';
+    if (state.type === 'kana' || state.type === 'genko' || (state.type === 'kanji' && state.kanji.source !== 'random') || (state.type === 'kuku' && state.kuku.order !== 'random') ||
+      (state.type === 'romaji' && !romajiWords)) info = T.sheetsN(r.total) + paperInfo;
     $('pv-info').textContent = info;
-    $('reseed').hidden = !(state.type === 'arith' || state.type === 'hyaku' || state.type === 'clock' || state.type === 'maze' ||
+    $('reseed').hidden = !(state.type === 'arith' || state.type === 'hyaku' || state.type === 'clock' || state.type === 'maze' || romajiWords ||
       (state.type === 'kuku' && state.kuku.order === 'random') || (state.type === 'kanji' && state.kanji.source === 'random'));
     var notes = wb.notes.slice();
     if (!r.total) notes.push(T.noPages);

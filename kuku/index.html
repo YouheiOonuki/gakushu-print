@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>九九ゲーム（タイムアタック）段ごと・ばらばら・逆から｜無料・登録なし｜学習プリントメーカー</title>
+  <meta name="description" content="九九のタイムアタックゲーム。段ごと・ばらばら・答えから式を当てる「逆」の 3 通り。スマホの縦画面で大きなテンキー、記録はこの端末にだけ保存。まちがえた九九はそのままプリントにできます。無料・登録なし。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/gakushu-print/kuku/">
+
+  <meta property="og:title" content="九九ゲーム（タイムアタック）｜学習プリントメーカー">
+  <meta property="og:description" content="段ごと・ばらばら・逆から。大きなテンキーで九九のタイムアタック。まちがえた九九はプリントに。無料・登録なし。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/gakushu-print/kuku/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/gakushu-print/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "九九ゲーム（タイムアタック）",
+    "description": "九九のタイムアタックゲーム。段ごと・ばらばら・答えから式を当てる逆の 3 通り。大きなテンキー、記録はこの端末にだけ保存。無料・登録なし。",
+    "url": "https://yorozu-craft.com/gakushu-print/kuku/",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja",
+    "isPartOf": { "@type": "WebSite", "name": "学習プリントメーカー", "url": "https://yorozu-craft.com/gakushu-print/" }
+  }
+  </script>
+
+  <!-- Google AdSense: こどもが遊ぶ画面なので meta（サイト所有確認）だけ。広告は使い方ページ（guide.html）に出す（サイト README 5・決定 D18 と同じ。企画書 33 の D140） -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../play.css">
+</head>
+<body class="play-page">
+
+  <header class="app-header">
+    <p class="crumb"><a href="../">学習プリントメーカー</a></p>
+    <h1>九九ゲーム（タイムアタック）</h1>
+    <p class="subtitle">ぜんぶ正解するまでの時間をはかります。記録はこの端末にだけ保存。</p>
+  </header>
+
+  <main class="app-main" id="app">
+
+    <!-- メニュー -->
+    <section id="scr-menu" class="screen" aria-labelledby="h-menu">
+      <h2 id="h-menu" class="visually-hidden">出し方をえらぶ</h2>
+      <fieldset class="card menu">
+        <legend>出し方</legend>
+        <div class="opt-row"><span class="opt-label">向き</span>
+          <div class="seg">
+            <label><input type="radio" name="dir" value="fwd" checked> 6×7＝□</label>
+            <label><input type="radio" name="dir" value="rev"> □×□＝42（逆）</label>
+          </div>
+        </div>
+        <div class="opt-row"><span class="opt-label">段</span>
+          <div class="chips dan-chips" id="dans">
+            <label><input type="checkbox" name="dan" value="1"> 1</label>
+            <label><input type="checkbox" name="dan" value="2" checked> 2</label>
+            <label><input type="checkbox" name="dan" value="3"> 3</label>
+            <label><input type="checkbox" name="dan" value="4"> 4</label>
+            <label><input type="checkbox" name="dan" value="5"> 5</label>
+            <label><input type="checkbox" name="dan" value="6"> 6</label>
+            <label><input type="checkbox" name="dan" value="7"> 7</label>
+            <label><input type="checkbox" name="dan" value="8"> 8</label>
+            <label><input type="checkbox" name="dan" value="9"> 9</label>
+            <button type="button" class="btn btn-sub btn-sm" id="dan-all">ぜんぶ</button>
+          </div>
+        </div>
+        <div class="opt-row" id="order-row"><span class="opt-label">順番</span>
+          <div class="seg">
+            <label><input type="radio" name="order" value="seq"> 1 から順</label>
+            <label><input type="radio" name="order" value="random" checked> ばらばら</label>
+          </div>
+        </div>
+        <div class="opt-row" id="count-row"><span class="opt-label">問題数</span>
+          <div class="seg">
+            <label><input type="radio" name="count" value="10" checked> 10</label>
+            <label><input type="radio" name="count" value="20"> 20</label>
+            <label><input type="radio" name="count" value="0"> <span id="count-all">ぜんぶ</span></label>
+          </div>
+        </div>
+      </fieldset>
+
+      <p class="start-row"><button type="button" class="btn btn-big" id="start">スタート</button></p>
+      <p id="best-line" class="small best-line" aria-live="polite"></p>
+
+      <details class="card opt" id="rec-box">
+        <summary>記録: <span class="opt-state" id="rec-state"></span></summary>
+        <table class="rec-table" id="rec-table"></table>
+        <p class="small">にがて（まちがえた数の多い順）</p>
+        <ul class="miss-list" id="weak-list"></ul>
+        <div class="btn-row">
+          <a class="btn btn-sub" id="weak-print" href="../" hidden>にがてをプリントにする</a>
+        </div>
+        <p class="small">記録はこの端末のブラウザ（localStorage、キー <code>gakushu-print_kuku</code>）にだけ保存され、外部には送信されません。書き出し・読み込み・消去はここのボタンから。</p>
+        <div class="btn-row">
+          <button type="button" class="btn btn-sub btn-sm" id="rec-export">ファイルに書き出す</button>
+          <button type="button" class="btn btn-sub btn-sm" id="rec-import">ファイルから読み込む</button>
+          <button type="button" class="btn btn-sub btn-sm" id="rec-reset">記録を消す</button>
+        </div>
+        <input type="file" id="rec-file" accept=".json,application/json" hidden>
+        <p id="rec-msg" class="small" aria-live="polite"></p>
+      </details>
+
+      <p class="small center"><a href="./guide.html">遊び方・九九をおぼえるコツ・よくある質問</a></p>
+    </section>
+
+    <!-- 出題 -->
+    <section id="scr-play" class="screen play" hidden aria-label="九九の問題">
+      <div class="play-bar">
+        <span id="progress">1 / 10</span>
+        <span class="timer" id="timer" aria-hidden="true">0.0</span>
+        <button type="button" class="btn-ghost" id="quit">やめる</button>
+      </div>
+      <p class="question" id="question" aria-live="polite"></p>
+      <p class="fb" id="fb" aria-live="assertive"></p>
+      <div class="pad" id="pad" role="group" aria-label="すうじのボタン">
+        <button type="button" data-d="1">1</button><button type="button" data-d="2">2</button><button type="button" data-d="3">3</button>
+        <button type="button" data-d="4">4</button><button type="button" data-d="5">5</button><button type="button" data-d="6">6</button>
+        <button type="button" data-d="7">7</button><button type="button" data-d="8">8</button><button type="button" data-d="9">9</button>
+        <button type="button" class="fn" data-d="back" aria-label="1 つけす">けす</button><button type="button" data-d="0">0</button><span></span>
+      </div>
+    </section>
+
+    <!-- 結果 -->
+    <section id="scr-result" class="screen" hidden aria-labelledby="r-time">
+      <div class="card result">
+        <h2 id="r-time" class="result-title"></h2>
+        <p id="r-new" class="new" hidden>新記録！</p>
+        <p id="r-sub" class="small"></p>
+        <ul class="miss-list" id="r-miss"></ul>
+      </div>
+      <div class="btn-col">
+        <button type="button" class="btn btn-big" id="again">もう一度</button>
+        <button type="button" class="btn btn-big btn-sub" id="r-weak" hidden>まちがえた問題だけ</button>
+        <a class="btn btn-big btn-sub" id="r-print" href="../" hidden>まちがえた九九をプリントにする</a>
+        <button type="button" class="btn btn-big btn-sub" id="to-menu">メニューへ</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">学習プリントメーカー</a></li>
+        <li><a href="./" aria-current="page">九九ゲーム</a></li>
+        <li><a href="./guide.html">遊び方・よくある質問</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="../text.js"></script>
+  <script src="../calc.js"></script>
+  <script src="./game.js"></script>
+  <script src="./main.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

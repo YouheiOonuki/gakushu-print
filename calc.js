@@ -13,6 +13,9 @@
   // 文言（日本語・英語）は text.js。lang を省くと日本語
   var TX = root.TEXT || (typeof require !== 'undefined' ? require('./text.js') : null);
   function msg(lang) { return TX.calc[lang === 'en' ? 'en' : 'ja']; }
+  // ローマ字のプリントだけが使う（romaji.js・romaji-words.js）。読み込んでいないページ（九九ゲームなど）でも動くよう、使うときに取る
+  function romajiLib() { return root.Romaji || (typeof require !== 'undefined' ? require('./romaji.js') : null); }
+  function romajiWords() { return root.RomajiWords || (typeof require !== 'undefined' ? require('./romaji-words.js') : null); }
 
   // ---------------------------------------------------------------
   // 乱数（seed つき）
@@ -631,7 +634,8 @@
   // ---------------------------------------------------------------
   // 設定（保存・共有・ファイル）の形をそろえる
   // ---------------------------------------------------------------
-  var TYPES = ['arith', 'kuku', 'hyaku', 'clock', 'kana', 'kanji', 'maze', 'genko'];
+  var TYPES = ['arith', 'kuku', 'hyaku', 'clock', 'kana', 'kanji', 'maze', 'genko', 'romaji'];
+  var ROMAJI_PER_PAGE = 10;   // ローマ字の言葉のプリント 1 枚の言葉の数（4 本線 1 組ずつ）
   var MAX_PAGES = 10;
   var COUNTS = { yoko: [10, 20, 30], tate: [12, 16, 20] };
 
@@ -648,6 +652,7 @@
       kanji: { grade: 1, source: 'order', start: 1, size: 'L', pages: 1, custom: '' },
       maze: { level: 'normal', pages: 1 },
       genko: { layout: 'v', size: 15, guides: true, pages: 1 },
+      romaji: { source: 'words', grade: 3, sys: 'hep', mode: 'trace', pages: 1 },
     };
   }
 
@@ -703,6 +708,9 @@
       case 'genko':
         return { layout: oneOf(o.layout, ['v', 'h', 'grid'], d.layout), size: oneOf(Number(o.size), GENKO_SIZES, d.size),
           guides: o.guides === undefined ? d.guides : !!o.guides, pages: pages };
+      case 'romaji':
+        return { source: oneOf(o.source, ['words', 'table'], d.source), grade: intIn(o.grade, 1, 6, d.grade), sys: oneOf(o.sys, ['hep', 'kun'], d.sys),
+          mode: oneOf(o.mode, ['trace', 'write'], d.mode), pages: pages };
     }
     return d;
   }
@@ -866,9 +874,42 @@
       for (var q = 0; q < o.pages; q++) pages.push({ kind: 'maze', index: q, maze: genMaze(o.level, seed, q), level: o.level });
     } else if (t === 'genko') {
       for (var gp = 0; gp < o.pages; gp++) pages.push(genkoPage(o, state.common.paper, gp));
+    } else if (t === 'romaji') {
+      romajiPages(o, seed).forEach(function (pg) { pages.push(pg); });
     }
 
-    return { type: t, pages: pages, notes: notes, custom: custom, hasAnswers: t !== 'kana' && t !== 'kanji' && t !== 'genko' };
+    return { type: t, pages: pages, notes: notes, custom: custom, hasAnswers: hasAnswersOf(state) };
+  }
+
+  /** 答えのページがあるか（なぞり書き・漢字・原稿用紙・ローマ字表・ローマ字のなぞり書きには無い） */
+  function hasAnswersOf(state) {
+    var t = state.type;
+    if (t === 'romaji') return state.romaji.source === 'words' && state.romaji.mode === 'write';
+    return t !== 'kana' && t !== 'kanji' && t !== 'genko';
+  }
+
+  /**
+   * ローマ字のプリントの中身。表は 1 枚（清音・ん／濁音・半濁音／拗音）。言葉は学年の一覧を種でまぜて 1 枚 10 語
+   * items: {w: 書き方, k: よみ, r: ローマ字（書くときの形。固有名詞は頭が大文字）}
+   */
+  function romajiPages(o, seed) {
+    var RJ = romajiLib();
+    if (o.source === 'table') {
+      var rows = function (k) { return RJ.TABLE[k].map(function (row) { return RJ.tableRow(row).map(function (c) { return c ? { k: c, r: RJ.spell(c, o.sys) } : null; }); }); };
+      return [{ kind: 'romaji', index: 0, source: 'table', sys: o.sys, mode: o.mode, seion: rows('seion'), dakuon: rows('dakuon'), yoon: rows('yoon') }];
+    }
+    var list = romajiWords()[o.grade] || [];
+    var rng = makeRng(seed, 750), out = [], bag = [], need = ROMAJI_PER_PAGE * o.pages;
+    while (out.length < need && list.length) {
+      if (!bag.length) bag = rng.shuffle(list);
+      out.push(bag.pop());
+    }
+    return paginate(out.map(function (x) {
+      var r = RJ.spell(x.k, o.sys);
+      return { w: x.w, k: x.k, r: x.p ? r.charAt(0).toUpperCase() + r.slice(1) : r };
+    }), ROMAJI_PER_PAGE).map(function (items, i) {
+      return { kind: 'romaji', index: i, source: 'words', sys: o.sys, mode: o.mode, grade: o.grade, items: items, startNo: i * ROMAJI_PER_PAGE + 1 };
+    });
   }
 
   // ---------------------------------------------------------------
@@ -927,7 +968,7 @@
     toKata: toKata, romajiOf: romajiOf, genkoPage: genkoPage, parseKanaWords: parseKanaWords, kanjiGradeMap: kanjiGradeMap, parseKanjiInput: parseKanjiInput,
     traceRows: traceRows, traceRowsPerPage: traceRowsPerPage, paginate: paginate, paginateGroups: paginateGroups,
     defaults: defaults, normalizeState: normalizeState, normalizePresets: normalizePresets,
-    encodeShare: encodeShare, decodeShare: decodeShare, buildWorkbook: buildWorkbook,
+    encodeShare: encodeShare, decodeShare: decodeShare, buildWorkbook: buildWorkbook, hasAnswersOf: hasAnswersOf, romajiPages: romajiPages, ROMAJI_PER_PAGE: ROMAJI_PER_PAGE,
     backupFileName: backupFileName, buildBackup: buildBackup, parseBackup: parseBackup,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

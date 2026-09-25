@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ローマ字タイピング 練習ゲーム（小学生・学年別の言葉）｜si も shi もOK｜無料・登録なし</title>
+  <meta name="description" content="小学生のローマ字タイピング練習。1〜6年生の漢字の言葉と、ローマ字表の1字ずつ。ヘボン式（shi）でも訓令式（si）でも正解。お手本の表示・かくすを選べます。記録はこの端末にだけ保存。ローマ字の練習プリントも作れます。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/gakushu-print/romaji/">
+
+  <meta property="og:title" content="ローマ字タイピング（学年別の言葉）｜学習プリントメーカー">
+  <meta property="og:description" content="1〜6年生の漢字の言葉をローマ字で打つ練習。ヘボン式でも訓令式でも正解。無料・登録なし。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/gakushu-print/romaji/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/gakushu-print/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "ローマ字タイピング（学年別の言葉）",
+    "description": "小学生のローマ字タイピング練習。1〜6年生の漢字の言葉とローマ字表の1字ずつ。ヘボン式でも訓令式でも正解。記録はこの端末にだけ保存。無料・登録なし。",
+    "url": "https://yorozu-craft.com/gakushu-print/romaji/",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja",
+    "isPartOf": { "@type": "WebSite", "name": "学習プリントメーカー", "url": "https://yorozu-craft.com/gakushu-print/" }
+  }
+  </script>
+
+  <!-- Google AdSense: こどもが遊ぶ画面なので meta（サイト所有確認）だけ。広告は使い方ページ（guide.html）に出す（サイト README 5・決定 D18 と同じ。企画書 33 の D140） -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../play.css">
+</head>
+<body class="play-page">
+
+  <header class="app-header">
+    <p class="crumb"><a href="../">学習プリントメーカー</a></p>
+    <h1>ローマ字タイピング</h1>
+    <p class="subtitle">学年の漢字の言葉をローマ字で打ちます。si でも shi でも正解。</p>
+  </header>
+
+  <main class="app-main" id="app">
+
+    <section id="scr-menu" class="screen" aria-labelledby="h-menu">
+      <h2 id="h-menu" class="visually-hidden">出し方をえらぶ</h2>
+      <fieldset class="card menu">
+        <legend>出し方</legend>
+        <div class="opt-row"><label class="opt-label" for="level">言葉</label>
+          <select id="level">
+            <option value="kana">1 字ずつ（ローマ字表）</option>
+            <option value="1">1 年生の漢字の言葉</option><option value="2">2 年生の漢字の言葉</option><option value="3">3 年生の漢字の言葉</option>
+            <option value="4">4 年生の漢字の言葉（都道府県）</option><option value="5">5 年生の漢字の言葉</option><option value="6">6 年生の漢字の言葉</option>
+          </select>
+        </div>
+        <div class="opt-row"><span class="opt-label">お手本</span>
+          <div class="seg">
+            <label><input type="radio" name="sys" value="hep" checked> ヘボン式（shi）</label>
+            <label><input type="radio" name="sys" value="kun"> 訓令式（si）</label>
+            <label><input type="checkbox" id="guide" checked> お手本を出す</label>
+          </div>
+        </div>
+        <div class="opt-row"><span class="opt-label">問題数</span>
+          <div class="seg">
+            <label><input type="radio" name="count" value="10" checked> 10</label>
+            <label><input type="radio" name="count" value="20"> 20</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <p class="start-row"><button type="button" class="btn btn-big" id="start">スタート</button></p>
+      <p id="best-line" class="small best-line" aria-live="polite"></p>
+      <p class="small center"><a id="to-print" href="../">この言葉でローマ字の練習プリントを作る</a></p>
+
+      <details class="card opt" id="rec-box">
+        <summary>記録: <span class="opt-state" id="rec-state"></span></summary>
+        <table class="rec-table" id="rec-table"></table>
+        <p class="small">まちがえやすい字（多い順）</p>
+        <ul class="miss-list" id="weak-list"></ul>
+        <p class="small">記録はこの端末のブラウザ（localStorage、キー <code>gakushu-print_romaji</code>）にだけ保存され、外部には送信されません。書き出し・読み込み・消去はここのボタンから。</p>
+        <div class="btn-row">
+          <button type="button" class="btn btn-sub btn-sm" id="rec-export">ファイルに書き出す</button>
+          <button type="button" class="btn btn-sub btn-sm" id="rec-import">ファイルから読み込む</button>
+          <button type="button" class="btn btn-sub btn-sm" id="rec-reset">記録を消す</button>
+        </div>
+        <input type="file" id="rec-file" accept=".json,application/json" hidden>
+        <p id="rec-msg" class="small" aria-live="polite"></p>
+      </details>
+
+      <p class="small center"><a href="./guide.html">遊び方・ヘボン式と訓令式・よくある質問</a></p>
+    </section>
+
+    <section id="scr-play" class="screen" hidden aria-label="ローマ字の問題">
+      <div class="play-bar">
+        <span id="progress">1 / 10</span>
+        <span class="timer" id="timer" aria-hidden="true">0.0</span>
+        <button type="button" class="btn-ghost" id="quit">やめる</button>
+      </div>
+      <div class="word" aria-live="polite">
+        <div class="kanji" id="w-kanji"></div>
+        <div class="kana" id="w-kana"></div>
+      </div>
+      <p class="roma" id="roma" aria-hidden="true"></p>
+      <label for="type-box" class="visually-hidden">ローマ字を打つ</label>
+      <input type="text" id="type-box" class="type-box" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="url" enterkeyhint="next" placeholder="ここに打つ">
+      <p class="ime-warn" id="ime-warn" hidden>日本語入力がオンです。「半角英数」にしてください。</p>
+      <p class="small kb-hint" id="kb-hint">つぎのキー <span class="next-key" id="next-key"></span>　まちがい <span id="miss-count">0</span></p>
+    </section>
+
+    <section id="scr-result" class="screen" hidden aria-labelledby="r-time">
+      <div class="card result">
+        <h2 id="r-time" class="result-title"></h2>
+        <p id="r-new" class="new" hidden>新記録！</p>
+        <p id="r-sub" class="small"></p>
+        <ul class="miss-list" id="r-miss"></ul>
+      </div>
+      <div class="btn-col">
+        <button type="button" class="btn btn-big" id="again">もう一度（べつの言葉）</button>
+        <a class="btn btn-big btn-sub" id="r-print" href="../">この言葉の練習プリントを作る</a>
+        <button type="button" class="btn btn-big btn-sub" id="to-menu">メニューへ</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">学習プリントメーカー</a></li>
+        <li><a href="./" aria-current="page">ローマ字タイピング</a></li>
+        <li><a href="./guide.html">遊び方・よくある質問</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="../text.js"></script>
+  <script src="../romaji-words.js"></script>
+  <script src="../romaji.js"></script>
+  <script src="../calc.js"></script>
+  <script src="./game.js"></script>
+  <script src="./main.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
