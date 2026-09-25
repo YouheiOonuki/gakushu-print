@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>おでかけ冊子（迷路・点つなぎ・ビンゴ）電車・新幹線・待ち時間の暇つぶしを印刷｜無料・登録なし｜学習プリントメーカー</title>
+  <meta name="description" content="電車・新幹線・車・病院の待ち時間に、スマホ以外で遊べる冊子を印刷。迷路・点つなぎ・見つけたらビンゴ・ことばさがし・すうじパズル・まるばつ。A4 両面で A5 の冊子、A4 1 枚でミニブック。年齢で3段階、答えは巻末。無料・登録なし。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/gakushu-print/booklet/">
+
+  <meta property="og:title" content="おでかけ冊子（迷路・点つなぎ・ビンゴ）｜学習プリントメーカー">
+  <meta property="og:description" content="電車や待ち時間に、スマホ以外の遊びを冊子にして印刷。A4 両面で A5 の冊子、A4 1 枚でミニブック。毎回ちがう問題、答えは巻末。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/gakushu-print/booklet/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/gakushu-print/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "おでかけ冊子（迷路・点つなぎ・ビンゴ）",
+    "description": "電車・新幹線・車・病院の待ち時間に、スマホ以外で遊べる冊子を印刷。迷路・点つなぎ・見つけたらビンゴ・ことばさがし・すうじパズル。A4 両面で A5 の冊子、A4 1 枚でミニブック。無料・登録なし。",
+    "url": "https://yorozu-craft.com/gakushu-print/booklet/",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja",
+    "isPartOf": { "@type": "WebSite", "name": "学習プリントメーカー", "url": "https://yorozu-craft.com/gakushu-print/" }
+  }
+  </script>
+
+  <!-- Google AdSense（サイト所有確認 + 広告配信スクリプト）。親が作って印刷する画面なので本体と同じ扱い。広告は印刷に出さない（book.css の @media print） -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5375267956079717"
+     crossorigin="anonymous"></script>
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./book.css">
+</head>
+<body class="tool-page">
+
+  <header class="app-header">
+    <p class="crumb"><a href="../">学習プリントメーカー</a></p>
+    <h1>おでかけ冊子</h1>
+    <p class="subtitle">迷路・点つなぎ・ビンゴを 1 冊に。電車や待ち時間に、スマホ以外で。</p>
+  </header>
+
+  <!-- 固定バー（SCREEN.md 1.2）: 印刷ボタンが画面の外にあるときだけ上端に出す -->
+  <div class="fixbar" id="fixbar" role="status" hidden>
+    <span class="fixbar-type" id="fixbar-type"></span>
+    <button type="button" class="btn" id="fixbar-print">印刷する</button>
+  </div>
+
+  <main class="app-main">
+
+    <p class="badge">登録不要・印刷は無料・設定はこの端末のブラウザにだけ保存します</p>
+    <div id="shared-banner" class="notice" role="status" hidden>共有された冊子です（もんだい ばんごう <span id="shared-seed"></span>）。何か変えるまで、あなたの保存した設定は上書きしません。</div>
+    <p id="load-msg" class="notice" role="status" hidden></p>
+
+    <!-- 1. 作り方 -->
+    <section class="card" id="sec-type" aria-labelledby="h-type">
+      <h2 id="h-type">作り方</h2>
+      <div class="types">
+        <label class="tile"><input type="radio" name="layout" value="a5" checked><span class="t-ico" aria-hidden="true">📖</span><span class="t-name">A5 の冊子</span><span class="t-sub">A4 両面・折ってとじる</span></label>
+        <label class="tile"><input type="radio" name="layout" value="mini"><span class="t-ico" aria-hidden="true">✂</span><span class="t-name">ミニブック</span><span class="t-sub">A4 1 枚・8 ページ</span></label>
+        <label class="tile"><input type="radio" name="layout" value="cut"><span class="t-ico" aria-hidden="true">▯▯</span><span class="t-name">切ってとじる</span><span class="t-sub">両面印刷できないとき</span></label>
+      </div>
+    </section>
+
+    <!-- 2. 最小の設定 -->
+    <section class="card" id="sec-opts" aria-labelledby="h-opts">
+      <h2 id="h-opts">だれが・どこで</h2>
+      <fieldset class="field">
+        <legend>年齢</legend>
+        <div class="seg">
+          <label><input type="radio" name="age" value="y"> 4〜6さい</label>
+          <label><input type="radio" name="age" value="l" checked> 小学1〜2年</label>
+          <label><input type="radio" name="age" value="u"> 小学3年〜</label>
+        </div>
+      </fieldset>
+      <div class="field">
+        <label for="scene">場面（ビンゴの題と表紙）</label>
+        <select id="scene">
+          <option value="train">でんしゃ・しんかんせん</option>
+          <option value="car">くるま・バス</option>
+          <option value="wait">びょういん・まちじかん</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="name">名前（任意）</label>
+        <input type="text" id="name" maxlength="20" placeholder="例：はなこ">
+      </div>
+    </section>
+
+    <!-- 3. 印刷ボタンと見本 -->
+    <section class="card" id="sec-preview" aria-labelledby="h-preview">
+      <h2 id="h-preview" class="visually-hidden">印刷と見本</h2>
+      <div class="btn-row print-row" id="print-row">
+        <button type="button" id="print" class="btn">印刷する・PDF に保存</button>
+        <button type="button" id="reseed" class="btn btn-sub">べつの問題にする</button>
+      </div>
+      <p class="printer-set" id="printer-set"></p>
+      <p class="small" id="pv-info" aria-live="polite"></p>
+      <div id="pv-notes" class="warn-box" role="status" hidden></div>
+      <details class="custom" id="fold-box">
+        <summary>折り方・とじ方</summary>
+        <ol class="steps" id="fold-steps"></ol>
+      </details>
+      <div id="book-pv" class="book-pv" aria-label="冊子のページ（読む順）"></div>
+      <details class="custom" id="imposed-box">
+        <summary>印刷される紙の並びを見る</summary>
+        <p class="hint" id="imposed-hint"></p>
+        <div id="sheets-pv" class="sheets-pv"></div>
+      </details>
+    </section>
+
+    <!-- 4. くわしい設定 -->
+    <details class="card opt" id="sec-more">
+      <summary>くわしい設定: <span class="opt-state" id="more-state"></span></summary>
+      <div class="field">
+        <label for="title">表紙の題（任意）</label>
+        <input type="text" id="title" maxlength="24" placeholder="例：おばあちゃんちへ いく ブック">
+      </div>
+      <fieldset class="field" id="counts-box">
+        <legend>ページの数（A5・切ってとじる）</legend>
+        <p class="hint">4 の倍数にそろうよう、足りない分は「じゆうちょう」のページが入ります。</p>
+        <div class="grid2" id="counts"></div>
+        <button type="button" class="btn btn-sub btn-sm" id="counts-reset">年齢の標準にもどす</button>
+      </fieldset>
+      <div class="check-grid field">
+        <label class="inline"><input type="checkbox" id="answers" checked> 答えのページを入れる（うしろから 2 ページ目）</label>
+        <label class="inline"><input type="checkbox" id="flip-long"> プリンターが「長辺とじ」しか選べない（裏をさかさまに印刷する）</label>
+        <label class="inline"><input type="checkbox" id="credit" checked> うら表紙に「yorozu-craft.com/gakushu-print/print/ で作成」と入れる</label>
+      </div>
+    </details>
+
+    <!-- 5. 共有・バックアップ -->
+    <details class="card opt" id="sec-save">
+      <summary>共有・バックアップ</summary>
+      <div class="btn-row" id="shared-keep-row" hidden>
+        <button type="button" id="shared-keep" class="btn btn-sub">この設定を自分用に保存する</button>
+      </div>
+      <h3 class="sub-h">同じ冊子を共有する</h3>
+      <p class="hint">リンクを開いた人は、同じ問題の冊子を印刷できます。</p>
+      <label class="inline field"><input type="checkbox" id="share-name"> 名前もリンクに入れる</label>
+      <div class="btn-row"><button type="button" id="share" class="btn">共有リンクを作ってコピー</button></div>
+      <label for="share-url" class="visually-hidden">共有リンク</label>
+      <input type="text" id="share-url" class="share-url" readonly hidden>
+      <p id="share-msg" class="small" aria-live="polite"></p>
+      <h3 class="sub-h">バックアップ</h3>
+      <div class="btn-row">
+        <button type="button" id="backup-export" class="btn btn-sub">ファイルに書き出す</button>
+        <button type="button" id="backup-import" class="btn btn-sub">ファイルから読み込む</button>
+      </div>
+      <input type="file" id="backup-file" accept=".json,application/json" hidden>
+      <p id="backup-msg" class="small" aria-live="polite"></p>
+      <p class="small">設定はこの端末のブラウザ（localStorage、キー <code>gakushu-print_booklet</code>）にだけ保存され、外部には送信されません。</p>
+    </details>
+
+    <p class="small center"><a href="./guide.html">使い方・プリンターの設定・よくある質問</a></p>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">学習プリントメーカー</a></li>
+        <li><a href="./" aria-current="page">おでかけ冊子</a></li>
+        <li><a href="./guide.html">使い方・よくある質問</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <!-- 印刷するのはここだけ（A4 よこ。画面では隠す） -->
+  <div id="print-sheets" aria-hidden="true"></div>
+
+  <script src="../text.js"></script>
+  <script src="../calc.js"></script>
+  <script src="./book.js"></script>
+  <script src="./pages.js"></script>
+  <script src="./main.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

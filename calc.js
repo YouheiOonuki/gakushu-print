@@ -964,11 +964,11 @@
     hasCarry: hasCarry, hasBorrow: hasBorrow, answerOf: answerOf, arithPossible: arithPossible, genArith: genArith, genKuku: genKuku,
     parseArithLines: parseArithLines, arithRule: arithRule, kukuRule: kukuRule, withCustom: withCustom,
     genHyaku: genHyaku, genClock: genClock, clockFits: clockFits, clockText: clockText, funPun: funPun, handAngles: handAngles, parseClockLines: parseClockLines,
-    genMaze: genMaze, solveMaze: solveMaze, mazeStats: mazeStats,
+    genMaze: genMaze, carveMaze: carveMaze, solveMaze: solveMaze, mazeStats: mazeStats,
     toKata: toKata, romajiOf: romajiOf, genkoPage: genkoPage, parseKanaWords: parseKanaWords, kanjiGradeMap: kanjiGradeMap, parseKanjiInput: parseKanjiInput,
     traceRows: traceRows, traceRowsPerPage: traceRowsPerPage, paginate: paginate, paginateGroups: paginateGroups,
     defaults: defaults, normalizeState: normalizeState, normalizePresets: normalizePresets,
-    encodeShare: encodeShare, decodeShare: decodeShare, buildWorkbook: buildWorkbook, hasAnswersOf: hasAnswersOf, romajiPages: romajiPages, ROMAJI_PER_PAGE: ROMAJI_PER_PAGE,
+    b64uEncode: b64uEncode, b64uDecode: b64uDecode, encodeShare: encodeShare, decodeShare: decodeShare, buildWorkbook: buildWorkbook, hasAnswersOf: hasAnswersOf, romajiPages: romajiPages, ROMAJI_PER_PAGE: ROMAJI_PER_PAGE,
     backupFileName: backupFileName, buildBackup: buildBackup, parseBackup: parseBackup,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
