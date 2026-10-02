@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>時計の読み方 練習（針を動かす・読みをえらぶ・針をあわせる）｜こども向け・無料・登録なし｜学習プリントメーカー</title>
+  <meta name="description" content="アナログ時計の読み方を画面で練習。針を指で動かして読む、時計を見て読みをえらぶ、言われた時刻に針をあわせるの 3 つ。なんじ・なんじはん・5 ふん・1 ぷん きざみ。文字盤 12 こと答えのプリントも印刷できます。無料・登録なし。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/gakushu-print/tokei/">
+
+  <meta property="og:title" content="時計の読み方 練習（針を動かす・えらぶ・あわせる）｜学習プリントメーカー">
+  <meta property="og:description" content="針を指で動かして読む、読みをえらぶ、針をあわせる。なんじ〜1 ぷん きざみ。文字盤 12 こと答えのプリントも。無料・登録なし。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/gakushu-print/tokei/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/gakushu-print/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "時計の読み方 練習",
+    "description": "アナログ時計の読み方を画面で練習。針を動かして読む・読みをえらぶ・針をあわせるの 3 つ。文字盤 12 こと答えのプリントも印刷。無料・登録なし。",
+    "url": "https://yorozu-craft.com/gakushu-print/tokei/",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja",
+    "isPartOf": { "@type": "WebSite", "name": "学習プリントメーカー", "url": "https://yorozu-craft.com/gakushu-print/" }
+  }
+  </script>
+
+  <!-- Google AdSense: こどもが遊ぶ画面なので meta（サイト所有確認）だけ。広告は使い方ページ（guide.html）に出す（サイト README 5・D18、企画書 54） -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../play.css">
+  <link rel="stylesheet" href="./tokei.css">
+</head>
+<body class="play-page tokei-page">
+
+  <header class="app-header">
+    <p class="crumb"><a href="../">学習プリントメーカー</a></p>
+    <h1>時計の読み方 練習</h1>
+    <p class="subtitle">針を動かして読む・えらぶ・あわせる。記録はこの端末にだけ保存。</p>
+  </header>
+
+  <main class="app-main" id="app">
+
+    <!-- メニュー -->
+    <section id="scr-menu" class="screen" aria-labelledby="h-menu">
+      <h2 id="h-menu" class="visually-hidden">あそびかたをえらぶ</h2>
+      <fieldset class="card menu">
+        <legend>あそびかた</legend>
+        <div class="tk-modes">
+          <label class="tile"><input type="radio" name="mode" value="move" checked><span class="t-ico" aria-hidden="true">↻</span><span class="t-name">うごかして よむ</span><span class="t-sub">はりを ゆびで まわす</span></label>
+          <label class="tile"><input type="radio" name="mode" value="read"><span class="t-ico" aria-hidden="true">?</span><span class="t-name">よみを えらぶ</span><span class="t-sub">なんじ なんぷん？</span></label>
+          <label class="tile"><input type="radio" name="mode" value="set"><span class="t-ico" aria-hidden="true">◎</span><span class="t-name">はりを あわせる</span><span class="t-sub">いわれた じこくに</span></label>
+        </div>
+        <div class="opt-row"><span class="opt-label">きざみ</span>
+          <div class="seg">
+            <label><input type="radio" name="level" value="hour"> なんじ</label>
+            <label><input type="radio" name="level" value="half" checked> なんじはん</label>
+            <label><input type="radio" name="level" value="five"> 5ふん</label>
+            <label><input type="radio" name="level" value="min"> 1ぷん</label>
+          </div>
+        </div>
+        <label class="inline opt-row"><input type="checkbox" id="guide" checked> 外がわに ふんの すうじ（5・10・15 …）</label>
+      </fieldset>
+
+      <p class="start-row"><button type="button" class="btn btn-big" id="start">スタート</button></p>
+      <p id="best-line" class="small best-line" aria-live="polite"></p>
+
+      <details class="card opt" id="print-box">
+        <summary>プリントにする（文字盤 12 こ・こたえつき）</summary>
+        <fieldset class="field">
+          <legend class="visually-hidden">プリントの形</legend>
+          <div class="seg">
+            <label><input type="radio" name="pmode" value="read" checked> 時計を よむ</label>
+            <label><input type="radio" name="pmode" value="draw"> 針を かく</label>
+          </div>
+        </fieldset>
+        <div class="check-grid field">
+          <label class="inline"><input type="checkbox" id="p-guide" checked> ふんの すうじ</label>
+          <label class="inline"><input type="checkbox" id="p-answers" checked> 下に こたえ（きりとる）</label>
+          <label class="inline"><input type="checkbox" id="p-credit" checked> 紙の下に「yorozu-craft.com/gakushu-print/print/ で作成」</label>
+        </div>
+        <p class="small">きざみは上の「きざみ」と同じです。</p>
+        <div class="btn-row">
+          <button type="button" class="btn" id="p-print">印刷する・PDF に保存</button>
+          <button type="button" class="btn btn-sub" id="p-reseed">べつの もんだい</button>
+        </div>
+      </details>
+      <div id="sheets-wrap" class="tk-sheets-wrap">
+        <div id="sheets" class="sheets" aria-label="印刷の見本"></div>
+      </div>
+
+      <details class="card opt" id="rec-box">
+        <summary>記録: <span class="opt-state" id="rec-state"></span></summary>
+        <table class="rec-table" id="rec-table"></table>
+        <p class="small">記録と設定はこの端末のブラウザ（localStorage、キー <code>gakushu-print_tokei</code>）にだけ保存され、外部には送信されません。書き出し・読み込み・消去はここのボタンから。</p>
+        <div class="btn-row">
+          <button type="button" class="btn btn-sub btn-sm" id="rec-export">ファイルに書き出す</button>
+          <button type="button" class="btn btn-sub btn-sm" id="rec-import">ファイルから読み込む</button>
+          <button type="button" class="btn btn-sub btn-sm" data-reset-storage="gakushu-print_tokei" data-reset-hold>保存した内容をすべて消す（初期状態に戻す）</button>
+        </div>
+        <p class="small">消すボタンは 1 びょう ながおし してください。</p>
+        <input type="file" id="rec-file" accept=".json,application/json" hidden>
+        <p id="rec-msg" class="small" aria-live="polite"></p>
+      </details>
+
+      <p class="small center"><a href="./guide.html">遊び方・時計をおぼえるコツ・よくある質問</a></p>
+    </section>
+
+    <!-- 遊ぶ -->
+    <section id="scr-play" class="screen play tk-play" hidden aria-label="時計">
+      <div class="play-bar">
+        <span id="progress"></span>
+        <span class="tk-score" id="score" aria-hidden="true"></span>
+        <button type="button" class="btn-ghost" id="quit">やめる</button>
+      </div>
+      <p class="tk-prompt" id="prompt" aria-live="polite"></p>
+      <div class="tk-clock-wrap">
+        <svg class="tk-clock" id="clock" viewBox="-112 -112 224 224" role="img" aria-label="とけい">
+          <g id="face"></g>
+          <g id="ghost" hidden>
+            <line id="g-hour" x1="0" y1="0" x2="0" y2="-48" class="tk-gh"/>
+            <line id="g-min" x1="0" y1="0" x2="0" y2="-80" class="tk-gm"/>
+          </g>
+          <line id="h-hour" x1="0" y1="0" x2="0" y2="-48" class="tk-hh"/>
+          <line id="h-min" x1="0" y1="0" x2="0" y2="-80" class="tk-hm"/>
+          <circle id="k-min" cx="0" cy="-80" r="9" class="tk-knob"/>
+          <circle id="k-hour" cx="0" cy="-48" r="8" class="tk-knob tk-knob-h"/>
+          <circle r="5" class="tk-dot"/>
+        </svg>
+      </div>
+      <p class="tk-reading" id="reading" aria-live="polite"></p>
+      <p class="fb" id="fb" aria-live="assertive"></p>
+      <div class="tk-choices" id="choices" role="group" aria-label="こたえを えらぶ"></div>
+      <div class="tk-adj" id="adj" role="group" aria-label="はりを うごかす">
+        <button type="button" data-d="-60">−1じかん</button>
+        <button type="button" data-d="-5" id="adj-m">−5ふん</button>
+        <button type="button" data-d="5" id="adj-p">＋5ふん</button>
+        <button type="button" data-d="60">＋1じかん</button>
+      </div>
+      <div class="tk-row" id="move-row">
+        <label class="inline"><input type="checkbox" id="hide"> よみかたを かくす</label>
+      </div>
+      <p class="tk-ok-row" id="ok-row"><button type="button" class="btn btn-big" id="ok">できた</button></p>
+    </section>
+
+    <!-- 結果 -->
+    <section id="scr-result" class="screen" hidden aria-labelledby="r-score">
+      <div class="card result">
+        <h2 id="r-score" class="result-title"></h2>
+        <p id="r-new" class="new" hidden>新記録！</p>
+        <p id="r-sub" class="small"></p>
+        <ul class="miss-list" id="r-miss"></ul>
+      </div>
+      <div class="btn-col">
+        <button type="button" class="btn btn-big" id="again">もう一度</button>
+        <button type="button" class="btn btn-big btn-sub" id="to-menu">メニューへ</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">学習プリントメーカー</a></li>
+        <li><a href="./" aria-current="page">時計の読み方 練習</a></li>
+        <li><a href="./guide.html">遊び方・よくある質問</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="../text.js"></script>
+  <script src="../calc.js"></script>
+  <script src="../sheets.js"></script>
+  <script src="./tokei.js"></script>
+  <script src="../reset-storage.js"></script>
+  <script src="./main.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
