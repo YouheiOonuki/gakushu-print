@@ -28,6 +28,12 @@ const PAGE_PREFIXES = {
   ],
   "romaji/index.html": [
     "gakushu-print_romaji"
+  ],
+  "anki/index.html": [
+    "gakushu-print_anki"
+  ],
+  "tokei/index.html": [
+    "gakushu-print_tokei"
   ]
 };
 const PAGE_LEGACY = {};

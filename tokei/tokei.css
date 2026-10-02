@@ -1,0 +1,83 @@
+/* ===========================
+   時計の読み方 — ../style.css・../play.css の上に重ねる
+   時計の文字盤は紙と同じく白地（ダークモードでも）。短い針は黒、長い針は青（色だけに頼らず長さと太さもちがう）
+   =========================== */
+.tk-modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; margin: 0.3rem 0 0.4rem; }
+.tk-modes .tile { grid-template-columns: 1fr; text-align: center; justify-items: center; padding: 0.5rem 0.3rem; min-height: 5.2rem; }
+.tk-modes .t-ico { grid-row: auto; }
+.tk-modes .t-name { font-size: 0.88rem; font-weight: 700; line-height: 1.25; word-break: keep-all; }
+.tk-modes .t-sub { word-break: keep-all; }
+.tk-modes .t-sub { font-size: 0.68rem; }
+.tile input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.tile { position: relative; }
+.menu .opt-row .seg label { min-width: 0; }
+label.inline.opt-row { display: flex; gap: 0.4rem; font-size: 0.85rem; min-height: 40px; }
+
+/* 遊ぶ */
+.tk-play .play-bar .tk-score { font-weight: 700; color: var(--accent); }
+.tk-prompt { text-align: center; font-size: clamp(1.1rem, 5.4vw, 1.5rem); margin: 0.4rem 0 0.2rem; min-height: 1.6em; }
+.tk-prompt strong { font-size: 1.35em; color: var(--accent); }
+.tk-clock-wrap { display: flex; justify-content: center; }
+.tk-clock { width: min(88vw, 44dvh, 360px); height: auto; touch-action: none; user-select: none; -webkit-user-select: none; }
+.tk-clock.drag { cursor: grab; }
+.tk-clock:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 50%; }
+.tk-face { fill: #fff; stroke: #333; stroke-width: 3; }
+.tk-t { stroke: #777; stroke-width: 1; }
+.tk-tb { stroke: #222; stroke-width: 2.6; }
+.tk-num { font-size: 22px; font-weight: 700; text-anchor: middle; fill: #222; font-family: inherit; }
+.tk-gnum { font-size: 9.5px; text-anchor: middle; fill: var(--muted); font-family: inherit; }
+.tk-hh { stroke: #222; stroke-width: 9; stroke-linecap: round; }
+.tk-hm { stroke: #1d5fa8; stroke-width: 4.5; stroke-linecap: round; }
+.tk-gh, .tk-gm { stroke: #c0392b; stroke-linecap: round; opacity: 0.35; }
+.tk-gh { stroke-width: 9; } .tk-gm { stroke-width: 4.5; }
+.tk-knob { fill: transparent; }
+.tk-clock.drag .tk-knob { fill: rgba(29, 95, 168, 0.18); stroke: #1d5fa8; stroke-width: 1.5; }
+.tk-clock.drag .tk-knob-h { fill: rgba(34, 34, 34, 0.14); stroke: #222; }
+.tk-dot { fill: #222; }
+.tk-reading { text-align: center; font-size: clamp(1.5rem, 8vw, 2.2rem); font-weight: 700; min-height: 1.4em; margin: 0.2rem 0 0; font-variant-numeric: tabular-nums; }
+.tk-reading .tk-digital { font-size: 0.6em; color: var(--muted); font-weight: 400; margin-left: 0.3em; }
+.tk-reading .tk-hidden { color: var(--muted); }
+.tk-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.3rem; }
+.tk-choices[hidden] { display: none; }
+.tk-choices button, .tk-adj button {
+  min-height: 56px; font-size: 1.25rem; font-weight: 700; font-family: inherit; border: 1px solid var(--border); border-radius: 12px;
+  background: var(--card); color: var(--text); cursor: pointer; box-shadow: 0 2px 0 var(--border); touch-action: manipulation;
+}
+.tk-choices button.ok { background: #1b7a3a; color: #fff; border-color: #1b7a3a; }
+.tk-choices button.ng { opacity: 0.45; text-decoration: line-through; }
+.tk-adj { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; margin-top: 0.4rem; }
+.tk-adj[hidden] { display: none; }
+.tk-adj button { font-size: 0.9rem; min-height: 48px; padding: 0 0.2rem; }
+.tk-row { display: flex; justify-content: center; margin-top: 0.4rem; font-size: 0.9rem; }
+.tk-row[hidden], .tk-ok-row[hidden] { display: none; }
+.tk-ok-row { text-align: center; margin: 0.5rem 0 0; }
+.tk-play .fb { min-height: 1.4em; margin: 0.2rem 0; font-size: 1rem; }
+.tk-play .tk-prompt { margin-top: 0.4rem; }
+.tk-play .fb { margin-bottom: 0; }
+@media (prefers-color-scheme: dark) { .tk-choices button.ok { background: #2e8b4e; } }
+
+/* 印刷（文字盤 12 こ＋きりとる こたえ）。見本は「プリントにする」を開いたときだけ */
+.tk-sheets-wrap { display: none; }
+body.tk-print-open .tk-sheets-wrap { display: block; }
+.tk-sheet .tk-ck { gap: 0 6mm; }
+.tk-sheet .ck-c12 .clk { width: 38mm; height: 38mm; }
+.tk-sheet .sh-body { overflow: hidden; }
+.tk-sheet .ck-label { font-size: 11pt; }
+.tk-ans { border-top: 0.4mm dashed #888; margin-top: 2mm; padding-top: 1mm; }
+.tk-cut { font-size: 8.5pt; color: #666; }
+.tk-ans-list { list-style: none; display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.5mm 2mm; font-size: 10pt; margin-top: 0.5mm; }
+.tk-ans-list li { display: flex; align-items: center; gap: 1mm; white-space: nowrap; }
+.tk-ans-list .no { font-size: 8pt; color: #666; }
+.tk-ans-draw { grid-template-columns: repeat(12, 1fr); gap: 0 1mm; }
+.tk-ans-draw li { flex-direction: column; gap: 0; }
+.tk-ans-draw .clk { width: 12.5mm; height: 12.5mm; }
+
+@media print {
+  body.tokei-page > :not(main) { display: none !important; }
+  body.tokei-page main > :not(#scr-menu), #scr-menu > :not(#sheets-wrap) { display: none !important; }
+  body.tokei-page main, #scr-menu { max-width: none !important; margin: 0 !important; padding: 0 !important; }
+  body.tokei-page #scr-menu { display: block !important; }   /* 遊んでいる途中に Ctrl+P でも、プリントを出す */
+  .tk-sheets-wrap { display: block !important; }
+  .sheets { min-height: 0; margin: 0; overflow: visible; text-align: left; }
+  .sheets .sheet { display: flex; zoom: 1; margin: 0; box-shadow: none; height: 296.6mm; }
+}

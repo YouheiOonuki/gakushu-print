@@ -2,7 +2,7 @@
 
 公開 URL: **https://yorozu-craft.com/gakushu-print/**（英語版 **https://yorozu-craft.com/gakushu-print/en/**）
 
-ひらがな・カタカナ・漢字・ローマ字・計算・百ます・時計・迷路の学習プリントを無料で作成。九九ゲームとローマ字タイピングも。登録不要、毎回ちがう問題、答えつき。A4 で印刷・PDF 保存。
+ひらがな・カタカナ・漢字・ローマ字・計算・百ます・時計・迷路の学習プリントを無料で作成。九九ゲーム・ローマ字タイピング・時計の読み方 練習・暗記カードも。登録不要、毎回ちがう問題、答えつき。A4 で印刷・PDF 保存。
 yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github.io の README](https://github.com/YouheiOonuki/youheioonuki.github.io) を参照）。企画は yorozu-plans の `docs/10_学習プリント.md`。
 
 ## 機能
@@ -76,6 +76,14 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 - 保存 `gakushu-print_angou`、バックアップ `{ tool: 'gakushu-print', version: 1, data: { angou } }`・`gakushu-print-angou-backup-YYYYMMDD.json`
 - ひらがな・カタカナのパネルから 1 行リンク
 
+## 時計の読み方 練習（`tokei/`）と暗記カード作成（`anki/`）（2026-10-02。yorozu-plans の企画書 54・ROADMAP K35・K50）
+
+どちらも子どもが遊ぶ・覚える画面なので **AdSense は meta だけ**（広告は各 `guide.html`）。遊ぶ画面に外部リンクを置かない（サイト README 28）。サイト本体の `tools/check-site.mjs` の `META_ONLY_PAGES` に `/gakushu-print/tokei/`・`/gakushu-print/anki/` を足す必要がある。
+
+- **時計の読み方（`tokei/`）**: うごかして よむ（長い針を指でまわすと短い針もいっしょに動く。12 をこえると 1 時間すすむ／もどる。読み方の表示・かくす）／よみを えらぶ（4 択。短い針を次の数字で読む・1 時間もどす・長い針と短い針の取りちがえ・長い針の数字をそのまま分と読む、をまぜる）／はりを あわせる（2 回ちがうとうすい針で答え）。きざみは なんじ・なんじはん・5ふん・1ぷん（`calc.js` の `CLOCK_LEVELS`）。問題の時刻・読み方（ふん／ぷん）・針の角度は学習プリントの時計と同じ関数（`genClock`・`clockText`・`handAngles`）。ドラッグのきざみは 5 分（1 ぷん は 1 分）。記録（えらぶ・あわせるの いちばんよい点）と設定は `gakushu-print_tokei`。消すボタンは `data-reset-hold`（1 秒の長押し）
+- **時計のプリント（`tokei/` の「プリントにする」）**: A4 1 枚に文字盤 12 こ（`sheets.js` の `clockSvg`）、下に切り取れる答え（よむ: 読み、針をかく: 赤い針の小さな時計）。見本はメニューの下で、印刷は `tokei.css` の `@media print`
+- **暗記カード（`anki/`）**: 1 行 1 枚「表,裏」（カンマかタブ。RFC 4180 の引用符。1 行目が「表,裏」なら見出し）。500 枚まで・1 面 200 字まで。名刺サイズ 91×55mm（`constants.js` の `ankiCard`）を A4 のまん中に 2 列 5 段、または A4 を上下 2 面。**両面**は表・裏のページを交互に出し、裏のページは長辺とじなら左右、短辺とじなら上下を入れかえて並べる（`anki.js` の `layoutPages`・`backSlot`。`tests/anki.test.js` が紙を裏返した位置で全カードを確かめる）。表だけ／裏だけ（片面プリンター用）。**赤シート用**は片面に表（黒）と裏（赤 `#e60012`）。字の大きさは面に収まる最大（`fitSize`）。画面でめくる（タップでめくる・赤シート用は赤い板を `mix-blend-mode: darken` で重ねて答えをかくす。おぼえた／まだ、「まだ」だけもう一度）。保存 `gakushu-print_anki`、CSV の書き出し・読み込み（BOM つき）、バックアップ `{ tool: 'gakushu-print', version: 1, data: { anki } }`・`gakushu-print-anki-backup-YYYYMMDD.json`。共有リンクは作らない（カードの中身が URL に乗るため）
+
 ## 問題の作り方（仕様）
 
 - 乱数: mulberry32。用途（問題・ページ）ごとに種を混ぜて使う（`calc.js` の `makeRng`）
@@ -98,6 +106,7 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 |------|------------|---------|
 | 学習指導要領の改訂時（次は 2030 年ごろの見込み） | 学年別漢字配当表の変更 | `constants.js`、`tests/data.test.js` の字数、`guide.html` の出典と最終確認日 |
 | 確認日から 12 か月まで（ローマ字） | 「ローマ字のつづり方」の告示・学習指導要領解説の記述に変更がないか | `romaji.js`、`constants.js` の `romajiRule.checked`、`romaji/guide.html` の確認日。言葉を足したら `tests/romaji.test.js` が学年と打ち方を確かめる |
+| 学習指導要領の改訂時・確認日から 12 か月まで（時計・暗記カード） | 時計を習う学年の記述（`tokeiCurriculum`）、名刺サイズのカード用紙の寸法（`ankiCard`） | `constants.js` の `checked`、`tokei/guide.html`・`anki/guide.html` の確認日（`tests/tokei.test.js` が突き合わせる） |
 
 直したら、`guide.html` の「更新履歴」に日付と内容を 1 行足す。
 
@@ -112,12 +121,14 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 | `text.js` | 画面・読み取り・紙の文言（日本語・英語） |
 | `calc.js` | 問題づくり（乱数・計算・百ます・時計・迷路・なぞり書き・ローマ字・原稿用紙・読み取り・ページ分け・共有・正規化・バックアップ）。純粋関数 |
 | `sheets.js` | プリント 1 枚ずつの HTML（問題と答え） |
-| `constants.js` | 学年別漢字配当表（値・出典・確認日）、ローマ字のつづりの出典と確認日（`romajiRule`） |
+| `constants.js` | 学年別漢字配当表（値・出典・確認日）、ローマ字のつづりの出典と確認日（`romajiRule`）、名刺サイズ（`ankiCard`）、時計を習う学年（`tokeiCurriculum`） |
 | `romaji.js` / `romaji-words.js` | ローマ字のつづり（本表・第1表）とタイピングの判定 ／ 学年別の言葉（このツールで選んだもの） |
 | `kuku/` | 九九ゲーム（`index.html`・`main.js`・`game.js`・`guide.html`） |
 | `romaji/` | ローマ字タイピング（`index.html`・`main.js`・`game.js`・`guide.html`） |
 | `angou/` | 暗号メーカー（`index.html`・`guide.html`・`cipher.js` 暗号のロジック・`sheets.js` 紙と SVG・`main.js`・`angou.css`） |
 | `booklet/` | おでかけ冊子（`index.html`・`guide.html`・`book.js` 中身と面付け・`pages.js` ページの SVG と紙・`main.js`・`book.css`） |
+| `tokei/` | 時計の読み方 練習（`index.html`・`tokei.js` 針の動き・問題・えらぶ答え・紙・`main.js`・`tokei.css`・`guide.html`） |
+| `anki/` | 暗記カード作成（`index.html`・`anki.js` 読み取り・面付け・紙・`main.js`・`anki.css`・`guide.html`） |
 | `play.css` | 遊ぶ画面の見た目（`style.css` の上に重ねる） |
 | `main.js` | 画面の制御・保存・共有リンク・印刷 |
 | `style.css` | 見た目（和紙風の配色、ダークモード対応）とプリント（mm 単位）・印刷 |

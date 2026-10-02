@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>暗記カード作成の使い方｜単語カードの両面印刷・赤シート・Excel から貼る｜学習プリントメーカー</title>
+  <meta name="description" content="暗記カード作成ツールの使い方。表と裏の入れ方（Excel・スプレッドシートの 2 列を貼る）、名刺サイズ 10 面と A4 2 面の印刷、両面印刷で表と裏をそろえるコツ、赤シート用の赤字モード、保存の扱い。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/gakushu-print/anki/guide.html">
+
+  <meta property="og:title" content="暗記カード作成の使い方｜学習プリントメーカー">
+  <meta property="og:description" content="Excel の 2 列を貼って単語カードを印刷。名刺サイズ 10 面・A4 2 面、両面で表裏がそろう並び、赤シート用の赤字モード。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://yorozu-craft.com/gakushu-print/anki/guide.html">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/gakushu-print/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+
+  <!-- よくある質問（下の #faq と内容をそろえる） -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Excel の単語リストから暗記カードを作れますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "はい。表と裏の 2 列を選んでコピーし、入力欄に貼ります（タブ区切りのまま読みます）。CSV ファイルは「保存・書き出し」の「ファイルから読み込む」で開けます。" }
+      },
+      {
+        "@type": "Question",
+        "name": "単語カードを両面印刷すると裏がずれます。",
+        "acceptedAnswer": { "@type": "Answer", "text": "印刷の倍率を 100%（実際のサイズ）にし、プリンターの両面の設定（長辺とじ・短辺とじ）と「くわしい設定」のとじ方を同じにします。それでも数 mm ずれるときは、切る線の内側を少し大きめに切ります。" }
+      },
+      {
+        "@type": "Question",
+        "name": "赤シートで消える色で印刷できますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "「赤シート用」にすると、裏の字を赤（#e60012）、表の字を黒で 1 面に印刷します。赤の出方はプリンターとシートで変わるので、1 枚印刷してシートを重ねて確かめてください。" }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Google AdSense（サイト所有確認 + 広告配信スクリプト）。カードを作る・めくる画面（./）には入れない（meta だけ） -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5375267956079717"
+     crossorigin="anonymous"></script>
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>暗記カード作成の使い方</h1>
+    <p class="subtitle">入れ方・両面印刷・赤シート・よくある質問・データの扱い</p>
+  </header>
+
+  <main class="app-main">
+
+    <p class="card center"><a href="./">▶ 暗記カードを作る</a></p>
+
+    <article class="card content" id="howto">
+      <h2>暗記カード（単語カード）の作り方</h2>
+      <ol>
+        <li>入力欄に 1 行 1 枚で「表,裏」を入れます。</li>
+        <li>名刺サイズ 10 面か A4 2 面を選びます。</li>
+        <li>「印刷する・PDF に保存」で、倍率 100% で印刷します。</li>
+        <li>「画面でめくる」で、そのまま覚える練習もできます。</li>
+      </ol>
+      <p>Excel・Google スプレッドシートの 2 列はコピーしてそのまま貼れます。名刺サイズは 91×55mm で、A4 の紙のまん中に 2 列 5 段で並べます。</p>
+      <details>
+        <summary>入れ方のきまり</summary>
+        <ul>
+          <li>区切りはカンマかタブ。カンマを含む面は "a, b" のように "" で囲みます（CSV と同じ）。</li>
+          <li>1 行目が「表,裏」なら見出しとして使いません。3 列目から後は使いません。</li>
+          <li>カードは 500 枚まで、1 面は 200 字まで。字の大きさは面に収まるように自動で決めます。</li>
+        </ul>
+      </details>
+    </article>
+
+    <article class="card content" id="duplex">
+      <h2>両面印刷で表と裏をそろえる</h2>
+      <p>「両面」では、表のページと裏のページを交互に出します。裏のページは、紙を裏返したときに表の真うらに来るよう左右（短辺とじは上下）を入れかえて並べてあります。</p>
+      <ul>
+        <li>プリンターの両面の設定と、「くわしい設定」のとじ方を同じにします。</li>
+        <li>片面だけのプリンターは「表だけ」を印刷し、紙を裏返して入れなおして「裏だけ」を印刷します。</li>
+        <li>ミシン目つきのカード用紙を使うときは「切る線」を外します。用紙の余白との位置は、1 枚普通紙で試してから印刷してください。</li>
+      </ul>
+    </article>
+
+    <article class="card content" id="red">
+      <h2>赤シート用の赤字モード</h2>
+      <p>「赤シート用」にすると、1 枚のカードの上に表（黒）、下に裏（赤 #e60012）を片面で印刷します。赤い透明シートを重ねると赤い字が見えにくくなり、黒い字は残ります。画面でめくるときは、赤い板で答えをかくし、タップで外します。</p>
+    </article>
+
+    <article class="card content" id="faq">
+      <h2>よくある質問</h2>
+      <dl class="faq">
+        <dt>Excel の単語リストから暗記カードを作れますか？</dt>
+        <dd>はい。表と裏の 2 列を選んでコピーし、入力欄に貼ります（タブ区切りのまま読みます）。CSV ファイルは「保存・書き出し」の「ファイルから読み込む」で開けます。</dd>
+        <dt>単語カードを両面印刷すると裏がずれます。</dt>
+        <dd>印刷の倍率を 100%（実際のサイズ）にし、プリンターの両面の設定（長辺とじ・短辺とじ）と「くわしい設定」のとじ方を同じにします。それでも数 mm ずれるときは、切る線の内側を少し大きめに切ります。</dd>
+        <dt>赤シートで消える色で印刷できますか？</dt>
+        <dd>「赤シート用」にすると、裏の字を赤（#e60012）、表の字を黒で 1 面に印刷します。赤の出方はプリンターとシートで変わるので、1 枚印刷してシートを重ねて確かめてください。</dd>
+      </dl>
+    </article>
+
+    <!-- README「ツールを追加するとき」8: ツール固有の注意・データの扱いはここに書く -->
+    <article class="card content" id="notes">
+      <h2>ご利用上の注意・データの扱い</h2>
+      <ul>
+        <li>入力内容はこの端末のブラウザ（localStorage、キー <code>gakushu-print_anki</code>）にだけ保存され、外部には送信されません。書き出し・読み込み・消去はこの画面のボタンから。</li>
+        <li>印刷の位置はプリンターによって数 mm ずれることがあります。カードの中身の正しさは、入れた人が確かめてください。</li>
+        <li>カードを作る・めくる画面には広告を出していません。登録も要りません。</li>
+      </ul>
+      <p>根拠: 名刺サイズの寸法は、エーワン マルチカード 51002（A4 10 面・1 片 55×91mm）の販売ページ。最終確認日 2026-10-02。</p>
+      <details>
+        <summary>原文の URL</summary>
+        <p><a href="https://www.askul.co.jp/p/354133/" rel="noopener">アスクル「エーワン マルチカード 名刺 ミシン目 マット紙 標準 プリンタ兼用 A4 10面 10シート 51002」</a></p>
+      </details>
+      <p><a href="https://docs.google.com/forms/d/e/1FAIpQLSd8B90qh5lEIyr25iw1jOjdQjOyaPZ1_z2wMB4kH-EmEeJYWw/viewform?usp=pp_url&amp;entry.585564634=gakushu-print" target="_blank" rel="noopener">ご要望・不具合の報告（Google フォーム）</a>：いただいた内容をもとに直します。お返事はしていません。</p>
+      <p>サイト全体の運営者情報・免責事項は<a href="../../about.html">こちら</a>、プライバシーポリシーは<a href="../../privacy-policy.html">こちら</a>です（すべてのツールで共通）。</p>
+    </article>
+
+    <article class="card content" id="changelog">
+      <h2>更新履歴</h2>
+      <ul>
+        <li><time datetime="2026-10-02">2026年10月2日</time> 公開</li>
+      </ul>
+    </article>
+
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">学習プリントメーカー</a></li>
+        <li><a href="./">暗記カード作成</a></li>
+        <li><a href="./guide.html" aria-current="page">使い方・よくある質問</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

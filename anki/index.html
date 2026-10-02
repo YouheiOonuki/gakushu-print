@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>暗記カード作成（単語カードを印刷・赤シート対応・画面でめくる）CSV 貼り付け｜無料・登録なし｜学習プリントメーカー</title>
+  <meta name="description" content="表と裏を入れて暗記カード（単語カード）を作成。名刺サイズ 10 面と A4 2 面で印刷、両面印刷で表と裏がそろう並び。赤シートで答えが消える赤字モード、画面でめくって覚える。Excel・スプレッドシートの 2 列をそのまま貼れます。無料・登録なし・入力は端末の外に出ません。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/gakushu-print/anki/">
+
+  <meta property="og:title" content="暗記カード作成（印刷・赤シート・画面でめくる）｜学習プリントメーカー">
+  <meta property="og:description" content="表と裏を入れて、名刺サイズ 10 面・A4 2 面で印刷。両面で表裏がそろう。赤シート用の赤字モードと、画面でめくる練習も。無料・登録なし。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/gakushu-print/anki/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/gakushu-print/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "暗記カード作成",
+    "description": "表と裏を入れて暗記カード（単語カード）を作成。名刺サイズ 10 面と A4 2 面で印刷、両面印刷で表と裏がそろう並び。赤シート用の赤字モード、画面でめくる練習。無料・登録なし。",
+    "url": "https://yorozu-craft.com/gakushu-print/anki/",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja",
+    "isPartOf": { "@type": "WebSite", "name": "学習プリントメーカー", "url": "https://yorozu-craft.com/gakushu-print/" }
+  }
+  </script>
+
+  <!-- Google AdSense: 画面でめくる（こどもが遊ぶ・覚える）画面があるので meta（サイト所有確認）だけ。広告は使い方ページ（guide.html）に出す
+       （サイト README 5・D18、yorozu-plans ROADMAP 7.14 の 6「子どもの遊ぶ画面は広告なし」。企画書 54） -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../play.css">
+  <link rel="stylesheet" href="./anki.css">
+</head>
+<body class="tool-page">
+
+  <header class="app-header">
+    <p class="crumb"><a href="../">学習プリントメーカー</a></p>
+    <h1>暗記カード作成</h1>
+    <p class="subtitle">表と裏を入れて、印刷か画面でめくる。入力は端末の外に出ません。</p>
+  </header>
+
+  <!-- 固定バー（SCREEN.md 1.2）: 印刷ボタンが画面の外にあるときだけ上端に出す -->
+  <div class="fixbar" id="fixbar" role="status" hidden>
+    <span class="fixbar-type" id="fixbar-type"></span>
+    <button type="button" class="btn" id="fixbar-print">印刷する</button>
+  </div>
+
+  <main class="app-main" id="app">
+
+    <!-- 1. カードの中身 -->
+    <fieldset class="card ak-input" id="sec-input">
+      <legend>カード（1 行に 1 枚「表,裏」）</legend>
+      <label for="cards" class="visually-hidden">カードの表と裏</label>
+      <textarea id="cards" rows="6" spellcheck="false" placeholder="apple,りんご&#10;dog,犬&#10;日本の首都,東京"></textarea>
+      <p class="hint">Excel・スプレッドシートの 2 列をそのまま貼れます（タブ区切りも可）。</p>
+      <div class="ak-add" role="group" aria-label="1 枚ずつ足す">
+        <label for="add-f" class="visually-hidden">表</label>
+        <input type="text" id="add-f" maxlength="200" placeholder="表">
+        <label for="add-b" class="visually-hidden">裏</label>
+        <input type="text" id="add-b" maxlength="200" placeholder="裏">
+        <button type="button" class="btn btn-sub" id="add">足す</button>
+      </div>
+      <div class="report" id="report" aria-live="polite"></div>
+    </fieldset>
+
+    <!-- 2. 印刷の形と、印刷ボタン・見本 -->
+    <section class="card" id="sec-preview" aria-labelledby="h-preview">
+      <h2 id="h-preview" class="visually-hidden">印刷と見本</h2>
+      <fieldset class="field ak-shape">
+        <legend class="visually-hidden">印刷の形</legend>
+        <div class="seg">
+          <label><input type="radio" name="layout" value="meishi" checked> 名刺サイズ 10 面</label>
+          <label><input type="radio" name="layout" value="a4half"> A4 2 面</label>
+        </div>
+        <label class="inline ak-redopt"><input type="checkbox" id="red"> 赤シート用（片面に表と赤字の裏）</label>
+      </fieldset>
+      <div class="btn-row print-row" id="print-row">
+        <button type="button" id="print" class="btn">印刷する・PDF に保存</button>
+        <button type="button" id="flip" class="btn btn-sub">画面でめくる</button>
+      </div>
+      <p class="small" id="pv-info" aria-live="polite"></p>
+      <div id="sheets" class="sheets" aria-label="印刷の見本"></div>
+    </section>
+
+    <!-- 3. くわしい設定 -->
+    <details class="card opt" id="sec-more">
+      <summary>くわしい設定: <span class="opt-state" id="more-state"></span></summary>
+      <fieldset class="field" id="sides-box">
+        <legend>裏の印刷</legend>
+        <div class="seg">
+          <label><input type="radio" name="sides" value="both" checked> 両面（表と裏のページを交互に）</label>
+          <label><input type="radio" name="sides" value="front"> 表だけ</label>
+          <label><input type="radio" name="sides" value="back"> 裏だけ</label>
+        </div>
+        <p class="hint">片面プリンターは「表だけ」を印刷し、紙を裏返して入れなおして「裏だけ」を印刷します。</p>
+      </fieldset>
+      <fieldset class="field" id="binding-box">
+        <legend>両面印刷のとじ方</legend>
+        <div class="seg">
+          <label><input type="radio" name="binding" value="long" checked> 長辺とじ（ふつう）</label>
+          <label><input type="radio" name="binding" value="short"> 短辺とじ</label>
+        </div>
+        <p class="hint">プリンターの両面の設定と同じものを選びます。倍率は 100%（実際のサイズ）で。</p>
+      </fieldset>
+      <div class="check-grid field">
+        <label class="inline"><input type="checkbox" id="cut" checked> 切る線を入れる（ミシン目つきのカード用紙なら外す）</label>
+        <label class="inline"><input type="checkbox" id="num" checked> カードの角に番号を入れる</label>
+        <label class="inline"><input type="checkbox" id="credit" checked> 紙の下に「yorozu-craft.com/gakushu-print/print/ で作成」と入れる</label>
+      </div>
+      <div class="field">
+        <label for="title">題（任意。表のページの上に小さく）</label>
+        <input type="text" id="title" maxlength="40" placeholder="例：英単語 1 学期">
+      </div>
+    </details>
+
+    <!-- 4. 保存・書き出し -->
+    <details class="card opt" id="sec-save">
+      <summary>保存・書き出し</summary>
+      <div class="btn-row">
+        <button type="button" id="csv-export" class="btn btn-sub">CSV に書き出す</button>
+        <button type="button" id="backup-export" class="btn btn-sub">ファイルに書き出す</button>
+        <button type="button" id="backup-import" class="btn btn-sub">ファイルから読み込む</button>
+        <button type="button" class="btn btn-sub" data-reset-storage="gakushu-print_anki">保存した内容をすべて消す（初期状態に戻す）</button>
+      </div>
+      <input type="file" id="backup-file" accept=".json,application/json,.csv,text/csv" hidden>
+      <p id="backup-msg" class="small" aria-live="polite"></p>
+      <p class="small">入力内容はこの端末のブラウザ（localStorage、キー <code>gakushu-print_anki</code>）にだけ保存され、外部には送信されません。書き出し・読み込み・消去はこの画面のボタンから。</p>
+    </details>
+
+    <p class="small center"><a href="./guide.html">使い方・両面印刷のコツ・よくある質問</a></p>
+
+    <!-- 画面でめくる -->
+    <section id="scr-play" class="screen play ak-play" hidden aria-label="カードをめくる">
+      <div class="play-bar">
+        <span id="progress">1 / 10</span>
+        <span class="ak-opts">
+          <button type="button" class="btn-ghost" id="opt-order" aria-pressed="false">ばらばら</button>
+          <button type="button" class="btn-ghost" id="opt-start" aria-pressed="false">裏から</button>
+        </span>
+        <button type="button" class="btn-ghost" id="quit">やめる</button>
+      </div>
+      <button type="button" class="ak-big" id="card" aria-live="polite">
+        <span class="ak-face" id="face-label">表</span>
+        <span class="ak-big-text" id="card-text"></span>
+        <span class="ak-big-ans" id="card-ans" hidden></span>
+        <span class="ak-sheet" id="red-sheet" hidden aria-hidden="true"></span>
+      </button>
+      <p class="small center" id="tap-hint">タップでめくる</p>
+      <div class="ak-judge">
+        <button type="button" class="btn btn-big btn-sub" id="again">まだ</button>
+        <button type="button" class="btn btn-big" id="know">おぼえた</button>
+      </div>
+    </section>
+
+    <section id="scr-done" class="screen" hidden aria-labelledby="done-title">
+      <div class="card result">
+        <h2 id="done-title" class="result-title">おしまい</h2>
+        <p id="done-sub" class="small"></p>
+      </div>
+      <div class="btn-col">
+        <button type="button" class="btn btn-big" id="done-again">「まだ」のカードだけ もう一度</button>
+        <button type="button" class="btn btn-big btn-sub" id="done-all">ぜんぶ もう一度</button>
+        <button type="button" class="btn btn-big btn-sub" id="done-back">カードの入力にもどる</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">学習プリントメーカー</a></li>
+        <li><a href="./" aria-current="page">暗記カード作成</a></li>
+        <li><a href="./guide.html">使い方・よくある質問</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="../text.js"></script>
+  <script src="../calc.js"></script>
+  <script src="../constants.js"></script>
+  <script src="./anki.js"></script>
+  <script src="../reset-storage.js"></script>
+  <script src="./main.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
