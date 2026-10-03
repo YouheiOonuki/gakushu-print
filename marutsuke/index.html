@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>丸つけカメラ（学習プリントの計算を写真で丸つけ）｜写真は送らない・無料・登録なし｜学習プリントメーカー</title>
+  <meta name="description" content="学習プリントメーカーで「丸つけカメラ用の印」を入れて印刷した たし算・ひき算・九九のプリントを、スマホで撮って丸つけ。写真はこの端末の中だけで読み、送信しません。無料・登録なし・アプリのインストール不要。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/gakushu-print/marutsuke/">
+
+  <meta property="og:title" content="丸つけカメラ（学習プリントの計算を写真で丸つけ）｜学習プリントメーカー">
+  <meta property="og:description" content="印を入れて印刷した計算プリントを撮ると、この端末の中だけで丸つけ。写真は送りません。無料・登録なし。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/gakushu-print/marutsuke/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/gakushu-print/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "丸つけカメラ",
+    "description": "学習プリントメーカーで印を入れて印刷した計算プリントを、写真で丸つけ。写真は端末の中だけで読み、送信しない。無料・登録なし。",
+    "url": "https://yorozu-craft.com/gakushu-print/marutsuke/",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja",
+    "isPartOf": { "@type": "WebSite", "name": "学習プリントメーカー", "url": "https://yorozu-craft.com/gakushu-print/" }
+  }
+  </script>
+
+  <!-- Google AdSense: こどもも見る画面なので meta（サイト所有確認）だけ。広告は使い方ページ（guide.html）に出す（サイト README 5・D18、企画書 71） -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../play.css">
+  <link rel="stylesheet" href="./marutsuke.css">
+</head>
+<body class="play-page mt-page">
+
+  <header class="app-header">
+    <p class="crumb"><a href="../">学習プリントメーカー</a></p>
+    <h1>丸つけカメラ</h1>
+    <p class="subtitle">印を入れて印刷した計算プリントを撮ると、丸をつけます。写真はこの端末の外に出ません。</p>
+  </header>
+
+  <main class="app-main" id="app">
+
+    <section class="card" aria-labelledby="h-take">
+      <h2 id="h-take" class="mt-h">プリントを うつす</h2>
+      <div class="btn-col">
+        <button type="button" class="btn btn-big" id="cam-start">カメラで とる</button>
+        <label class="btn btn-big btn-sub mt-file" for="file">写真を えらぶ</label>
+        <input type="file" id="file" accept="image/*" class="visually-hidden">
+      </div>
+      <p id="cam-msg" class="small" aria-live="polite"></p>
+      <div id="cam-box" class="mt-cam" hidden>
+        <video id="video" playsinline muted aria-label="カメラの映像"></video>
+        <div class="mt-guide" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+        <div class="btn-row mt-cam-row">
+          <button type="button" class="btn btn-big" id="shoot">とる</button>
+          <button type="button" class="btn-ghost" id="cam-stop">やめる</button>
+        </div>
+      </div>
+      <p class="small">四すみの 黒い四角が 4 つとも うつるように、明るい所で 真上から とってください。</p>
+    </section>
+
+    <section id="busy" class="card center" hidden aria-live="polite"><p>よんでいます…</p></section>
+
+    <section id="err" class="card warn-box" role="alert" hidden></section>
+
+    <section id="result" class="card" hidden aria-labelledby="r-score">
+      <h2 id="r-score" class="result-title"></h2>
+      <p id="r-sub" class="small"></p>
+      <canvas id="r-canvas" class="mt-canvas" aria-label="丸をつけたプリント"></canvas>
+      <p class="small mt-note">機械の読みは まちがえることが あります。<span class="mt-q">？</span> の問題と、おかしい所は おとなが たしかめて、タップで ○ と レ を なおしてください。</p>
+      <ol id="r-list" class="mt-list"></ol>
+      <div class="btn-row">
+        <button type="button" class="btn" id="again">つぎの プリントを うつす</button>
+      </div>
+    </section>
+
+    <details class="card opt">
+      <summary>つかえる プリント・しくみ</summary>
+      <ul class="small mt-ul">
+        <li><a href="../">学習プリントメーカー</a>の「名前・答えのページ・用紙」で<strong>「丸つけカメラ用の印を入れる」</strong>にして印刷した、たし算・ひき算（よこの式）と九九のプリントだけ読めます。ほかのプリント・ドリル・手書きの式は読めません。</li>
+        <li>紙の下の帯に、問題の作り方（種類・設定・問題番号・ページ）が入っています。この画面はそこから同じ問題を作り直して答えを知り、ますの数字を読んで比べます。</li>
+        <li>写真はこの端末のブラウザの中だけで処理し、どこにも送りません。保存もしません（閉じると消えます）。</li>
+        <li>数字の読み取りには、手書き数字の公開データ（MNIST、CC BY-SA 3.0）で作った小さなモデル（約 23KB）を使っています。子どもの字や日本の書き方（1 のはね、7 の形など）では読みちがいが増えることがあります。</li>
+      </ul>
+    </details>
+
+    <p class="small center"><a href="./guide.html">使い方・うまく読めないとき・よくある質問</a></p>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">学習プリントメーカー</a></li>
+        <li><a href="./" aria-current="page">丸つけカメラ</a></li>
+        <li><a href="./guide.html">使い方・よくある質問</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="../text.js"></script>
+  <script src="../calc.js"></script>
+  <script src="../mark.js"></script>
+  <script src="./digits.js"></script>
+  <script src="./vision.js"></script>
+  <script src="./main.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

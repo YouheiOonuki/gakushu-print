@@ -46,6 +46,7 @@
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./apple-touch-icon.png">
   <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./mark.css">
 </head>
 <body class="tool-page">
 
@@ -462,6 +463,10 @@
         <p class="hint" id="answers-note">答えは問題のあとに別のページでまとめて出ます。丸つけ用に「答えだけ」をあとから印刷することもできます（問題番号が同じなら同じ答え）。</p>
       </fieldset>
       <label class="inline field"><input type="checkbox" data-k="common.credit" data-t="bool" checked> ページの下に「yorozu-craft.com/gakushu-print/print/ で作成」と小さく入れる</label>
+      <div class="field">
+        <label class="inline"><input type="checkbox" data-k="common.mark" data-t="bool"> 丸つけカメラ用の印を入れる（たし算・ひき算〈よこ〉と九九）</label>
+        <p class="hint">四すみの四角と下の帯を入れ、答えを 1 ますに 1 字ずつ書く形にします。書いたプリントを <a href="./marutsuke/">丸つけカメラ</a> で撮ると、この端末の中だけで丸をつけます（写真は送りません）。</p>
+      </div>
     </details>
 
     <!-- 5. 共有・よく使う設定・バックアップ -->
@@ -523,6 +528,7 @@
   <script src="./romaji-words.js"></script>
   <script src="./romaji.js"></script>
   <script src="./calc.js"></script>
+  <script src="./mark.js"></script>
   <script src="./sheets.js"></script>
   <script src="./reset-storage.js"></script>
   <script src="./main.js"></script>

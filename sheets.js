@@ -9,6 +9,8 @@
 
   var Calc = root.Calc || (typeof require !== 'undefined' ? require('./calc.js') : null);
   var TX = root.TEXT || (typeof require !== 'undefined' ? require('./text.js') : null);
+  // 丸つけカメラ用の印（企画書 71）。mark.js を読んでいないページ（英語版など）では使わない
+  var Mark = root.Mark || (typeof require !== 'undefined' ? require('./mark.js') : null);
   // 紙に入る文言。render の lang で選ぶ（省くと日本語。日本語ページの出力は前と同じ）
   var L = TX.sheet.ja, LANG = 'ja';
 
@@ -333,6 +335,34 @@
    * @param {string} [lang] 紙に入る文言の言語（'ja' 既定・'en'）
    * @returns {{html: string, questions: number, answers: number, total: number}}
    */
+  /**
+   * 丸つけカメラ用のページ（mark.js の寸法どおりに mm で置く）。問題のページには四すみの印と「しるしの帯」を入れ、
+   * 答えのページには入れない（答えのページを撮っても丸つけしない）
+   */
+  function markedSheet(page, state, answer, n, seeded) {
+    var digits = Mark.answerDigits(state);
+    var lay = Mark.layout(page.count, digits, page.items);
+    var mm = function (v) { return (Math.round(v * 100) / 100) + 'mm'; };
+    var html = '<div class="mk" aria-hidden="false">' + (answer ? '' : Mark.overlaySvg(Mark.encode(state, page.index)));
+    page.items.forEach(function (p, i) {
+      var it = lay.items[i], ans = String(Calc.answerOf(p));
+      html += '<div class="mk-row" style="left:' + mm(it.x) + ';top:' + mm(it.y) + ';width:' + mm(it.w) + ';height:' + mm(it.h) + ';font-size:' + lay.fontPt + 'pt">' +
+        '<span class="no" style="width:' + mm(lay.noW) + '">(' + (page.startNo + i) + ')</span>' +
+        '<span class="ex">' + p.a + '&thinsp;' + OP_SIGN[p.op] + '&thinsp;' + p.b + '&thinsp;＝</span></div>';
+      it.cells.forEach(function (c, d) {
+        var ch = answer ? ans[ans.length - (digits - d)] || '' : '';
+        html += '<span class="mk-cell" style="left:' + mm(c.x) + ';top:' + mm(c.y) + ';width:' + mm(c.s) + ';height:' + mm(c.s) + ';font-size:' + mm(c.s * 0.7) + '">' +
+          (ch ? '<span class="ans-fill">' + ch + '</span>' : '') + '</span>';
+      });
+    });
+    html += '</div>';
+    return '<section class="sheet sheet-' + page.kind + ' sheet-mark' + (answer ? ' sheet-answer' : '') + '" data-kind="' + page.kind + '" data-answer="' + (answer ? 1 : 0) + '" data-mark="1">' +
+      header(page, state, answer, page.index + 1, n) +
+      (answer ? '' : '<p class="sh-inst">' + esc(L.markInst) + '</p>') +
+      '<div class="sh-body"></div>' + html +
+      footer(state, seeded) + '</section>';
+  }
+
   function render(wb, state, lang) {
     LANG = lang === 'en' ? 'en' : 'ja';
     L = TX.sheet[LANG];
@@ -343,7 +373,9 @@
       (wb.type === 'kuku' && state.kuku.order !== 'random') || (wb.type === 'romaji' && !romajiSeeded));
     var out = [], q = 0, a = 0;
     var n = wb.pages.length;
+    var marked = !!(state.common.mark && Mark && LANG === 'ja' && paper === '' && Mark.applicable(state).ok);
     var one = function (page, answer) {
+      if (marked) { out.push(markedSheet(page, state, answer, n, seeded)); return; }
       out.push('<section class="sheet sheet-' + page.kind + paper + (answer ? ' sheet-answer' : '') + '" data-kind="' + page.kind + '" data-answer="' + (answer ? 1 : 0) + '">' +
         header(page, state, answer, page.index + 1, n) +
         '<div class="sh-body">' + body(page, answer) + '</div>' +
@@ -351,7 +383,7 @@
     };
     if (mode !== 'a') wb.pages.forEach(function (p) { one(p, false); q++; });
     if (mode !== 'q') wb.pages.forEach(function (p) { one(p, true); a++; });
-    return { html: out.join(''), questions: q, answers: a, total: q + a };
+    return { html: out.join(''), questions: q, answers: a, total: q + a, marked: marked };
   }
 
   var api = { render: render, clockSvg: clockSvg, esc: esc };

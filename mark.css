@@ -1,0 +1,11 @@
+/* 丸つけカメラ用のページ（mark.js・sheets.js の markedSheet。企画書 71）。寸法は mark.js が mm で決める */
+.sheet.sheet-mark { position: relative; padding: 12mm 22mm 8mm; }
+.sheet-mark .sh-inst { margin: 1.5mm 0 0; font-size: 11pt; }
+.sheet-mark .sh-inst + .sh-inst { margin-top: 0.5mm; }
+.mk { position: absolute; left: 0; top: 0; width: 210mm; height: 297mm; pointer-events: none; }
+.mk-svg { position: absolute; left: 0; top: 0; }
+.mk-row { position: absolute; display: flex; align-items: center; gap: 1mm; border-bottom: 0.2mm dashed #ccc; box-sizing: border-box; }
+.mk-row .no { flex: none; font-size: 9pt; color: #666; }
+.mk-row .ex { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mk-cell { position: absolute; box-sizing: border-box; border: 0.35mm solid #8c8c8c; display: flex; align-items: center; justify-content: center; line-height: 1; }
+.mk-cell + .mk-cell { border-left-width: 0.2mm; }

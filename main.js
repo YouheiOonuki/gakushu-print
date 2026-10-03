@@ -267,6 +267,10 @@
       (state.type === 'kuku' && state.kuku.order === 'random') || (state.type === 'kanji' && state.kanji.source === 'random'));
     var notes = wb.notes.slice();
     if (!r.total) notes.push(T.noPages);
+    if (state.common.mark && T.markNA && window.Mark) {
+      var mk = window.Mark.applicable(state);
+      notes.push(mk.ok ? T.markOn : T.markNA[mk.reason]);
+    }
     $('pv-notes').hidden = !notes.length;
     $('pv-notes').textContent = notes.join(' ');
     if (state.type === 'kanji' && state.kanji.source === 'order') {

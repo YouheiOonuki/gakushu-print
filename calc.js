@@ -643,7 +643,7 @@
     return {
       type: 'arith',
       seed: 1,
-      common: { name: '', nameTrace: true, showName: true, showDate: true, showScore: true, answers: 'qa', credit: true, paper: 'a4' },
+      common: { name: '', nameTrace: true, showName: true, showDate: true, showScore: true, answers: 'qa', credit: true, paper: 'a4', mark: false },
       arith: { op: 'add', level: 'd1', carry: 'any', count: 20, style: 'yoko', pages: 1, custom: '', customMode: 'mix' },
       kuku: { dans: [2], order: 'random', count: 20, pages: 1, custom: '', customMode: 'mix' },
       hyaku: { op: 'add', size: 10, hand: 'right', pages: 1 },
@@ -722,6 +722,7 @@
       name: str(o.name, 20).replace(/[\r\n\t]/g, ' '), nameTrace: b('nameTrace'),
       showName: b('showName'), showDate: b('showDate'), showScore: b('showScore'),
       answers: oneOf(o.answers, ['q', 'qa', 'a'], d.answers), credit: b('credit'), paper: oneOf(o.paper, Object.keys(PAPERS), d.paper),
+      mark: b('mark'),   // 丸つけカメラ用の印（mark.js。たし算・ひき算〈よこ〉と九九だけに効く）
     };
   }
 
