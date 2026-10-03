@@ -84,6 +84,17 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 - **時計のプリント（`tokei/` の「プリントにする」）**: A4 1 枚に文字盤 12 こ（`sheets.js` の `clockSvg`）、下に切り取れる答え（よむ: 読み、針をかく: 赤い針の小さな時計）。見本はメニューの下で、印刷は `tokei.css` の `@media print`
 - **暗記カード（`anki/`）**: 1 行 1 枚「表,裏」（カンマかタブ。RFC 4180 の引用符。1 行目が「表,裏」なら見出し）。500 枚まで・1 面 200 字まで。名刺サイズ 91×55mm（`constants.js` の `ankiCard`）を A4 のまん中に 2 列 5 段、または A4 を上下 2 面。**両面**は表・裏のページを交互に出し、裏のページは長辺とじなら左右、短辺とじなら上下を入れかえて並べる（`anki.js` の `layoutPages`・`backSlot`。`tests/anki.test.js` が紙を裏返した位置で全カードを確かめる）。表だけ／裏だけ（片面プリンター用）。**赤シート用**は片面に表（黒）と裏（赤 `#e60012`）。字の大きさは面に収まる最大（`fitSize`）。画面でめくる（タップでめくる・赤シート用は赤い板を `mix-blend-mode: darken` で重ねて答えをかくす。おぼえた／まだ、「まだ」だけもう一度）。保存 `gakushu-print_anki`、CSV の書き出し・読み込み（BOM つき）、バックアップ `{ tool: 'gakushu-print', version: 1, data: { anki } }`・`gakushu-print-anki-backup-YYYYMMDD.json`。共有リンクは作らない（カードの中身が URL に乗るため）
 
+## 丸つけカメラ（`marutsuke/`。2026-10-03。yorozu-plans の企画書 71・K86）
+
+本体で「丸つけカメラ用の印を入れる」（`common.mark`。既定は切）にして印刷した **たし算・ひき算（よこ）と九九** のプリントを、スマホで撮って丸つけする。**写真はブラウザの中だけで処理し、送信も保存もしない**（localStorage も使わない）。子どもも見る画面なので **AdSense は meta だけ**（広告は `marutsuke/guide.html`）・外へのリンクなし。サイト本体の `tools/check-site.mjs` の `META_ONLY_PAGES` に `/gakushu-print/marutsuke/` を足す必要がある。
+
+- **紙の印**（`mark.js`。印刷側と読む側の寸法・符号はここ 1 か所）: 四すみの位置合わせ印（10mm、QR の角と同じ 1:1:3:1:1 の入れ子）と、下の「しるしの帯」（2 段 × 34 ます＝68 bit: 版 2・種類 1・設定 13・ページ 4・種 32・CRC-16/CCITT 16）。答えのますは 1 ますに数字 1 つ、ますの数は設定でいちばん大きい答えの桁数（どの問題も同じ数）。並びは `layout()` が mm で決め、`mark.css` で置く。答えのページには印を入れない。筆算・入れたい問題があるとき・英語版・レターでは入れない（画面のお知らせで理由を出す）
+- **読み方**（`marutsuke/vision.js`。ライブラリなし）: 灰色 → 近くの平均と比べて黒を取る（影に強い）→ 入れ子の四角を探す → 4 つの組と向き 8 通りで射影変換を作り、帯の CRC が合うものを紙とする（逆さ・横向きも可）→ 帯から `calc.js` で同じ問題を作り直して答えを知る → ますを 48×48 点で取り、枠の残りとごみを除いて MNIST と同じ形（20×20 に収めて重心をまん中、28×28）にする
+- **数字**（`marutsuke/digits.js` と `digits-model.json` 約 23KB、最初の 1 枚のときに読む）: 畳み込み 3 層＋全結合（約 1.7 万の重み、int8）。`tools/marutsuke/train_digits.py` で MNIST の学習用 60,000 字から作った（回転・斜め・太さ・ぼかし・濃さをランダムに変えて学習）。MNIST のテスト用 10,000 字で 99.25%（int8 にした重み）。**`digits-model.json` は MNIST（Yann LeCun・Corinna Cortes、CC BY-SA 3.0）から作ったので、このファイルだけ CC BY-SA 3.0**
+- **判定**: 書いたますの数字をつなげて答えと比べる。空欄はまちがい。間にあいたますがある・自信（softmax）が 0.7 未満の字がある問題は「？」。結果の一覧の ○／レ を押すと入れかえられ、点数も変わる
+- **問題の作り方を変えるとき**: 印刷ずみの紙を後から読むため、`calc.js` の `genArith`・`genKuku`・`buildWorkbook` の並びを変えたら `mark.js` の `VERSION` を上げ、古い版の作り方も残す（`tests/marutsuke.test.js` の「問題の作り方が変わっていない」が止める）
+- **正答率の測り方**: `NODE_PATH=$(npm root -g) node tests/marutsuke/accuracy.mjs --sheets 8`（印つきの紙を Chromium で画像にし、`tests/marutsuke/synth.html` で MNIST のテスト用の字〈`tests/marutsuke/mnist-t10k-8000-9999.bin.gz`、学習に使っていない 2,000 字。CC BY-SA 3.0〉と Klee One の字を書きこみ、回転・逆さ・横・ゆがみ・ぼかし・影・遠い・全部 をかけた JPEG を「写真を えらぶ」に入れる）。画面の確かめは `tests/marutsuke/e2e.mjs`（カメラを拒否しても写真で動く・偽のカメラから撮る・印のない写真を断る・○／レ の直し・390px・ダークモード・外向きの要求なし・印つきの紙の印刷）。どちらも Chromium が要るので CI（`node --test`）では走らない
+
 ## 問題の作り方（仕様）
 
 - 乱数: mulberry32。用途（問題・ページ）ごとに種を混ぜて使う（`calc.js` の `makeRng`）
@@ -129,14 +140,16 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 | `booklet/` | おでかけ冊子（`index.html`・`guide.html`・`book.js` 中身と面付け・`pages.js` ページの SVG と紙・`main.js`・`book.css`） |
 | `tokei/` | 時計の読み方 練習（`index.html`・`tokei.js` 針の動き・問題・えらぶ答え・紙・`main.js`・`tokei.css`・`guide.html`） |
 | `anki/` | 暗記カード作成（`index.html`・`anki.js` 読み取り・面付け・紙・`main.js`・`anki.css`・`guide.html`） |
+| `mark.js` / `mark.css` | 丸つけカメラ用の印（位置合わせ印・しるしの帯の符号・答えのますの並び）と、その紙の見た目 |
+| `marutsuke/` | 丸つけカメラ（`index.html`・`main.js` 画面・`vision.js` 紙を見つけてますを読む・`digits.js` 数字のモデル・`digits-model.json` 重み〈CC BY-SA 3.0〉・`marutsuke.css`・`guide.html`）。重みの作り方は `tools/marutsuke/train_digits.py` |
 | `play.css` | 遊ぶ画面の見た目（`style.css` の上に重ねる） |
 | `main.js` | 画面の制御・保存・共有リンク・印刷 |
 | `style.css` | 見た目（和紙風の配色、ダークモード対応）とプリント（mm 単位）・印刷 |
 | `404.html` | ツール配下の存在しない URL で出るページ（サイト共通のもの） |
 | `favicon.svg` / `apple-touch-icon.png` / `og-image.png` | アイコン / ホーム画面用アイコン / SNS 共有用画像（1200×630） |
-| `sitemap.xml` | サイトマップ（`/`・`guide.html`・`en/`・`en/guide.html`・`kuku/`・`kuku/guide.html`・`romaji/`・`romaji/guide.html`・`booklet/`・`booklet/guide.html`・`angou/`・`angou/guide.html`。日英を hreflang で結ぶ。robots.txt はドメイン直下で管理） |
+| `sitemap.xml` | サイトマップ（`/`・`guide.html`・`en/`・`en/guide.html`・`kuku/`・`kuku/guide.html`・`romaji/`・`romaji/guide.html`・`booklet/`・`booklet/guide.html`・`angou/`・`angou/guide.html`・`marutsuke/`・`marutsuke/guide.html`。日英を hreflang で結ぶ。robots.txt はドメイン直下で管理） |
 | `tests/*.test.js` | テスト（`node --test tests/*.test.js`。`.github/workflows/test.yml` で push・PR のたびに自動実行） |
 
 ## ライセンス
 
-MIT License（`LICENSE`）。漢字の一覧は上の「データの出典」のとおり。`fonts/` のフォント（Klee One）は SIL Open Font License 1.1（`fonts/OFL.txt`）。
+MIT License（`LICENSE`）。ただし `marutsuke/digits-model.json` と `tests/marutsuke/mnist-t10k-8000-9999.bin.gz` は MNIST（Yann LeCun・Corinna Cortes）から作ったもので CC BY-SA 3.0。漢字の一覧は上の「データの出典」のとおり。`fonts/` のフォント（Klee One）は SIL Open Font License 1.1（`fonts/OFL.txt`）。
