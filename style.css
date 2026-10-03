@@ -4,21 +4,48 @@
    ダークモードは端末の設定に自動で合わせる（prefers-color-scheme。手動切替は付けない）
    プリント（.sheet）は紙なので、ダークモードでも白地・黒字のまま
    =========================== */
+/* yorozu-common:begin v1 — サイト共通の部品とトークン。正本は youheioonuki.github.io の tools/common/yorozu-common.css。
+   この begin〜end の間は手で直さない（tools/sync-common.mjs で全ツールに配る。ツール固有の上書きは end の後に書く）。
+   出どころ（2026-10-03 確認。yorozu-plans 企画書 59）:
+   - デジタル庁デザインシステム https://design.digital.go.jp/dads/ のコンテンツを加工して作成
+     （フォーカスの輪・リンクの下線・字の大きさの下限・行間・入力欄のエラー表示）。
+     トークンの値は @digital-go-jp/design-tokens 2.0.1（MIT, (c) 2023 デジタル庁）から
+   - GOV.UK Frontend 6.5.1（MIT, (c) Crown copyright）の考え方: visually-hidden、エラーの文の前に読み上げ用の語
+   - 色は和紙風のまま（値は 2026-09-23 からの共通の値）。Web フォントは読まない（ROADMAP 3.3・D2） */
 :root {
   color-scheme: light dark;
   --bg: #f0ebe0;
   --bg-2: #e6dfd0;
   --card: #faf6ee;
   --text: #3a3025;
-  --muted: #6e604f;
+  --muted: #6e604f;          /* 本文の補足。--bg の上で 5.1:1 */
   --accent: #8b4513;
   --accent-soft: #f3e6d8;
-  --border: #cfc0a0;
+  --border: #cfc0a0;         /* 飾りの線（区切り）だけ。操作できる物の枠には --input-border */
+  --input-border: #857561;   /* 入力欄の枠。WCAG 1.4.11 の 3:1（--bg で 3.7:1）。DADS の入力欄は gray-600 の 1px */
   --shadow: rgba(58, 48, 37, 0.12);
-  --warn: #9a3412;
-  --warn-bg: #fdf0e3;
+  --error: #ce0000;          /* DADS red-900（semantic error-2） */
+  --ok: #197a4b;             /* DADS green-800（semantic success-2） */
+  --focus: #ffd43d;          /* DADS yellow-300 */
+  --focus-ring: #000;        /* DADS: 黒 4px の輪＋黄 2px */
+  --font-ui: "Noto Sans JP", "Noto Sans CJK JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  /* 字の大きさ（DADS: 本文と操作は 16px 以上、補足は 14px まで、14px 未満は使わない） */
+  --fs-s: 0.875rem;
+  --fs-m: 1rem;
+  --fs-l: 1.25rem;           /* 見出し（隣の段との比 1.25 以上: impeccable typeset） */
+  --fs-xl: 1.625rem;         /* ページの題 */
+  --lh-body: 1.7;            /* DADS の本文の行間 170% */
+  --lh-tight: 1.4;           /* 見出し */
+  /* 余白（4px を基準。DADS の spacing） */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-6: 1.5rem;
+  --sp-8: 2rem;
+  --radius: 8px;
+  --tap: 44px;               /* 押せる物の高さの下限（DADS・SCREEN 5 章） */
 }
-
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #1c1814;
@@ -29,24 +56,45 @@
     --accent: #e0a066;
     --accent-soft: #3a2e22;
     --border: #4a3f33;
+    --input-border: #8c7d68;
     --shadow: rgba(0, 0, 0, 0.4);
-    --warn: #f4b98a;
-    --warn-bg: #3a2a1c;
+    --error: #ff8a7a;
+    --ok: #6fcf97;
+    --focus-ring: #ffd43d;   /* 暗い地では黄の輪＋黒の縁 */
+    --focus: #000;
   }
 }
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 [hidden] { display: none !important; }
-
-body {
-  /* README「ツールを追加するとき」9: 端末のフォント。Web フォントは読まない */
-  font-family: "Noto Sans JP", "Noto Sans CJK JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.7;
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body { font-family: var(--font-ui); background: var(--bg); color: var(--text); line-height: var(--lh-body); }
+/* リンクは色と下線の両方（DADS リンクテキスト）。ホバーで下線を太く */
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+@media (hover: hover) { a:hover { text-decoration-thickness: 3px; } }
+/* フォーカスの輪（DADS）。:where で詳しさを 0 にして、ツールの規則で上書きできるようにする */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 4px solid var(--focus-ring); outline-offset: 2px; box-shadow: 0 0 0 2px var(--focus);
 }
+:where(input, select, textarea, button) { font: inherit; color: inherit; }
+/* 入力欄の字は 16px 以上（iPhone で拡大されない・DADS） */
+:where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea) { font-size: max(1rem, 16px); }
+/* エラー（DADS: 枠を赤に、文の頭に「＊」。GOV.UK: 読み上げには「エラー:」を先に）。
+   使い方: <p class="field-error" id="x-err"><span class="visually-hidden">エラー:</span>＊ 0 以上の数を入れてください</p> と aria-describedby */
+[aria-invalid="true"] { border-color: var(--error) !important; }
+.field-error { color: var(--error); font-weight: 700; margin-top: var(--sp-1); }
+/* 画面には出さず、読み上げだけ（GOV.UK govuk-visually-hidden） */
+.visually-hidden {
+  position: absolute !important; width: 1px !important; height: 1px !important; margin: 0 !important; padding: 0 !important;
+  overflow: hidden !important; clip-path: inset(50%) !important; white-space: nowrap !important; border: 0 !important;
+}
+@media (forced-colors: active) { :where(a, button, input, select, textarea, summary):focus-visible { outline-color: Highlight; } }
+/* 印刷では広告を出さない（SCREEN 4 章。全ツール共通） */
+@media print { ins.adsbygoogle, .google-auto-placed, iframe[id^="aswift"], iframe[id^="google_ads"] { display: none !important; } }
+/* yorozu-common:end */
 
-a { color: var(--accent); }
+/* このツールだけの色（注意の囲み）。共通のトークンは上の yorozu-common */
+:root { --warn: #9a3412; --warn-bg: #fdf0e3; }
+@media (prefers-color-scheme: dark) { :root { --warn: #f4b98a; --warn-bg: #3a2a1c; } }
 
 /* ヘッダー */
 .app-header {
@@ -87,14 +135,14 @@ a { color: var(--accent); }
 /* 入力 */
 .field { margin-bottom: 1rem; border: none; min-width: 0; }
 .field > label, .field legend { display: block; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.3rem; }
-.field .hint, .hint { font-size: 0.8rem; color: var(--muted); margin: 0.2rem 0 0.4rem; }
+.field .hint, .hint { font-size: var(--fs-s); color: var(--muted); margin: 0.2rem 0 0.4rem; }
 .field input[type="number"], .field input[type="text"], .field select, .inline-row input[type="text"], textarea {
   width: 100%;
   max-width: 22rem;
   padding: 0.45rem 0.5rem;
   font-size: 1rem;
   font-family: inherit;
-  border: 1px solid var(--border);
+  border: 1px solid var(--input-border);
   border-radius: 6px;
   background: var(--card);
   color: var(--text);
@@ -129,7 +177,7 @@ textarea { max-width: 100%; display: block; margin-bottom: 0.4rem; line-height: 
 }
 .tile input { position: absolute; opacity: 0; width: 1px; height: 1px; }
 .tile:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
-.tile:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tile:has(input:focus-visible) { outline: 4px solid var(--focus-ring); outline-offset: 2px; box-shadow: 0 0 0 2px var(--focus); }   /* 共通の輪と同じ（DADS） */
 .t-ico { grid-row: 1 / span 2; font-size: 1.3rem; text-align: center; color: var(--accent); font-weight: 700; }
 .t-name { font-weight: 600; font-size: 0.9rem; line-height: 1.3; }
 .t-sub { font-size: 0.72rem; color: var(--muted); line-height: 1.3; }
@@ -139,7 +187,6 @@ textarea { max-width: 100%; display: block; margin-bottom: 0.4rem; line-height: 
 .hint-more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); min-height: 32px; display: inline-flex; align-items: center; }
 .hint-more > summary::before { content: '▸'; margin-right: 0.3rem; }
 .hint-more[open] > summary::before { content: '▾'; }
-.hint-more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* 入れたい問題 */
 .custom summary { cursor: pointer; font-weight: 600; font-size: 0.95rem; color: var(--accent); }
@@ -170,7 +217,6 @@ details.card.opt > summary::before { content: '▸'; margin-right: 0.4rem; }
 details.card.opt[open] > summary::before { content: '▾'; }
 details.card.opt[open] { padding-bottom: 1rem; }
 details.card.opt[open] > summary { border-bottom: 1px solid var(--border); margin-bottom: 0.9rem; }
-details.card.opt > summary:focus-visible, .custom > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .custom > summary { min-height: 44px; display: flex; align-items: center; }
 .panel > details.custom { margin-bottom: 0.2rem; }
 .custom > summary { list-style: none; }
@@ -205,9 +251,8 @@ details.card.opt > summary:focus-visible, .custom > summary:focus-visible { outl
 }
 .btn-sub { background: var(--card); color: var(--accent); }
 .btn-sm { padding: 0.25rem 0.7rem; font-size: 0.85rem; }
-.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.4rem 0; }
-.share-url { width: 100%; font-size: 0.8rem; padding: 0.4rem; margin-top: 0.4rem; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text); }
+.share-url { width: 100%; font-size: 0.8rem; padding: 0.4rem; margin-top: 0.4rem; border: 1px solid var(--input-border); border-radius: 6px; background: var(--bg); color: var(--text); }
 .preset-list { list-style: none; margin-top: 0.5rem; }
 .preset-list li { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; padding: 0.35rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
 .preset-list .p-name { flex: 1 1 10rem; font-weight: 600; overflow-wrap: anywhere; }
@@ -228,13 +273,13 @@ details.card.opt > summary:focus-visible, .custom > summary:focus-visible { outl
 .info-list { display: grid; grid-template-columns: max-content 1fr; gap: 0.4rem 1.2rem; font-size: 0.9rem; }
 .info-list dt { font-weight: 600; }
 .info-list dd { color: var(--muted); }
-.small { font-size: 0.8rem; color: var(--muted); margin-top: 0.4rem; }
+.small { font-size: var(--fs-s); color: var(--muted); margin-top: 0.4rem; }
 
 /* フッター */
 .app-footer {
   text-align: center;
   padding: 1rem;
-  font-size: 0.78rem;
+  font-size: var(--fs-s);
   color: var(--muted);
   border-top: 1px solid var(--border);
   margin-top: 0.5rem;
@@ -440,8 +485,6 @@ details.card.opt > summary:focus-visible, .custom > summary:focus-visible { outl
   .sheets .sheet:last-child { break-after: auto; page-break-after: auto; }
   .sheets .sheet.paper-letter { height: 279mm; }
   .fixbar { display: none !important; }
-  /* 使い方ページを印刷するときも、広告は出さない */
-  ins.adsbygoogle, .google-auto-placed, iframe[id^="aswift"], iframe[id^="google_ads"] { display: none !important; }
 }
 
 /* 使い方ページの折りたたみ（WRITING.md の基準で、補足・一覧はここに入れる） */
