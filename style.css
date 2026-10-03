@@ -76,6 +76,8 @@ a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset:
   outline: 4px solid var(--focus-ring); outline-offset: 2px; box-shadow: 0 0 0 2px var(--focus);
 }
 :where(input, select, textarea, button) { font: inherit; color: inherit; }
+/* 入力欄の例（placeholder）も 4.5:1。ブラウザ既定の灰色は和紙の地で 4.3:1 */
+:where(input, textarea)::placeholder { color: var(--muted); opacity: 1; }
 /* 入力欄の字は 16px 以上（iPhone で拡大されない・DADS） */
 :where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea) { font-size: max(1rem, 16px); }
 /* エラー（DADS: 枠を赤に、文の頭に「＊」。GOV.UK: 読み上げには「エラー:」を先に）。
@@ -88,6 +90,8 @@ a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset:
   overflow: hidden !important; clip-path: inset(50%) !important; white-space: nowrap !important; border: 0 !important;
 }
 @media (forced-colors: active) { :where(a, button, input, select, textarea, summary):focus-visible { outline-color: Highlight; } }
+/* 読む行の長さ: 1 行 40 字前後まで（REVIEW C9 line-length）。画面の幅いっぱいに伸びる見出し帯の説明文に */
+.app-header > p { max-width: 40em; margin-left: auto; margin-right: auto; }
 /* 印刷では広告を出さない（SCREEN 4 章。全ツール共通） */
 @media print { ins.adsbygoogle, .google-auto-placed, iframe[id^="aswift"], iframe[id^="google_ads"] { display: none !important; } }
 /* yorozu-common:end */
