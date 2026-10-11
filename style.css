@@ -496,3 +496,9 @@ details.card.opt[open] > summary { border-bottom: 1px solid var(--border); margi
 .content summary { cursor: pointer; color: var(--accent); font-size: 0.88rem; }
 .content details[open] summary { margin-bottom: 0.3rem; }
 .content h4 { font-size: 0.9rem; margin: 0.8rem 0 0.2rem; }
+
+/* この道具について（結果の後ろの折りたたみ。使い方ページの要約。AdSense 審査 2026-10-04） */
+details.card.opt.about-tool > summary { white-space: normal; }   /* 長い summary を折り返す */
+details.about-tool h3 { font-size: 0.95rem; margin: 0.9rem 0 0.3rem; }
+details.about-tool p, details.about-tool li { font-size: 0.9rem; line-height: 1.75; }
+details.about-tool ul { padding-left: 1.2rem; margin: 0.3rem 0 0.5rem; }
