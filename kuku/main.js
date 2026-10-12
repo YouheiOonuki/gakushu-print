@@ -56,8 +56,17 @@
     updateMenu();
     save();
   }
+  // 1 画面目に見せる問題は、スタートで最初に出る問題と同じ（同じ種で作る）
+  var nextSeed = newSeed();
+  function questionHtml(q) {
+    return q.p ? '<span class="slot">&nbsp;</span> × <span class="slot">&nbsp;</span> ＝ ' + q.p
+      : q.a + ' × ' + q.b + ' ＝ <span class="slot wide">&nbsp;</span>';
+  }
   function updateMenu() {
     var s = data.settings;
+    $('preview').innerHTML = questionHtml(G.makeQuestions(s, nextSeed)[0]);
+    $('ready-count').textContent = '1 / ' + G.totalOf(s);
+    $('set-state').textContent = settingsLabel(s);
     $('order-row').hidden = s.dir === 'rev';
     $('count-row').hidden = s.order === 'seq';
     var all = G.totalOf({ dir: s.dir, dans: s.dans, order: s.order, count: 0 });
@@ -94,7 +103,8 @@
 
   function start(settings, questions) {
     var s = settings;
-    var qs = questions || G.makeQuestions(s, newSeed());
+    var qs = questions || G.makeQuestions(s, nextSeed);
+    if (!questions) nextSeed = newSeed();
     play = { s: s, queue: qs.slice(), total: qs.length, done: 0, start: 0, digits: '', missed: [], locked: false, timerId: 0, onlyMissed: !!questions };
     show('scr-play');
     renderQuestion();

@@ -81,3 +81,23 @@ body.playing .app-header { display: none; }
 .card.result h2.result-title { font-size: 2.2rem; border: none; margin-bottom: 0.2rem; padding-bottom: 0; }
 .play .question { margin-top: auto; }
 .play .fb { margin-bottom: auto; }
+
+/* 1 画面目（メニュー）: スタートで最初に出る問題を、出題の画面と同じ形で見せる。飾り（aria-hidden） */
+.ready { border: 1px solid var(--border); border-radius: 12px; background: var(--card); padding: 0.5rem 0.9rem 0.7rem; margin-top: 0.2rem; }
+.ready-bar { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ready-bar .timer { font-weight: 700; color: var(--accent); font-size: 1.05rem; }
+.ready .question { margin: 0.4rem 0 0.1rem; font-size: clamp(2rem, 11vw, 3.2rem); }   /* 枠の内側に収める（逆の「□ × □ ＝ 72」が 390px で切れない） */
+#set-box .menu { border: 0; padding: 0; margin: 0; min-width: 0; }
+.ready .word { margin: 0.4rem 0 0; }
+.ready .roma { margin: 0.2rem 0 0; }
+
+/* 発表の演出（SCREEN 1.4 の 3）: 正解の数字・打ち終えた次の言葉が弾む、結果の時間がせり出す。点滅なし */
+@keyframes play-pop { 0% { transform: scale(1); } 40% { transform: scale(1.14); } 100% { transform: scale(1); } }
+@keyframes play-rise { 0% { transform: translateY(0.4em) scale(0.85); opacity: 0; } 100% { transform: none; opacity: 1; } }
+.question.ok .slot { animation: play-pop 0.18s ease-out; }
+.word.pop { animation: play-pop 0.2s ease-out; }
+.timeattack #scr-result:not([hidden]) .result-title { animation: play-rise 0.35s ease-out; }
+.timeattack #scr-result:not([hidden]) .result .new { animation: play-pop 0.4s ease-out 0.3s both; }
+@media (prefers-reduced-motion: reduce) {
+  .question.ok .slot, .word.pop, .timeattack #scr-result:not([hidden]) .result-title, .timeattack #scr-result:not([hidden]) .result .new { animation: none; }
+}

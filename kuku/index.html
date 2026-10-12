@@ -45,21 +45,30 @@
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="../play.css">
 </head>
-<body class="play-page">
+<body class="play-page timeattack">
 
   <header class="app-header">
     <p class="crumb"><a href="../">学習プリントメーカー</a></p>
     <h1>九九ゲーム（タイムアタック）</h1>
-    <p class="subtitle">ぜんぶ正解するまでの時間をはかります。記録はこの端末にだけ保存。</p>
   </header>
 
   <main class="app-main" id="app">
 
-    <!-- メニュー -->
+    <!-- メニュー: 1 画面目は最初の問題とスタート。出し方は下の折りたたみ（SCREEN 1.4 の 1・2） -->
     <section id="scr-menu" class="screen" aria-labelledby="h-menu">
-      <h2 id="h-menu" class="visually-hidden">出し方をえらぶ</h2>
-      <fieldset class="card menu">
-        <legend>出し方</legend>
+      <h2 id="h-menu" class="visually-hidden">九九のタイムアタック</h2>
+      <!-- 飾り: スタートで最初に出る問題（読み上げない） -->
+      <div class="ready" aria-hidden="true">
+        <span class="ready-bar"><span id="ready-count">1 / 10</span><span class="timer">0.0</span></span>
+        <p class="question" id="preview"></p>
+      </div>
+      <p class="start-row"><button type="button" class="btn btn-big" id="start">スタート</button></p>
+      <p id="best-line" class="small best-line" aria-live="polite"></p>
+
+      <details class="card opt" id="set-box">
+        <summary>出し方: <span class="opt-state" id="set-state"></span></summary>
+      <fieldset class="menu">
+        <legend class="visually-hidden">出し方</legend>
         <div class="opt-row"><span class="opt-label">向き</span>
           <div class="seg">
             <label><input type="radio" name="dir" value="fwd" checked> 6×7＝□</label>
@@ -94,9 +103,7 @@
           </div>
         </div>
       </fieldset>
-
-      <p class="start-row"><button type="button" class="btn btn-big" id="start">スタート</button></p>
-      <p id="best-line" class="small best-line" aria-live="polite"></p>
+      </details>
 
       <details class="card opt" id="rec-box">
         <summary>記録: <span class="opt-state" id="rec-state"></span></summary>
