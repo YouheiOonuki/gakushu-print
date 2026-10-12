@@ -50,8 +50,16 @@
     updateMenu();
     save();
   }
+  // 1 画面目に見せる言葉は、スタートで最初に出る言葉と同じ（同じ種で作る）
+  var nextSeed = newSeed();
   function updateMenu() {
     var s = data.settings;
+    var w = G.makeQuestions(s, nextSeed)[0];
+    $('pv-kanji').textContent = w.w;
+    $('pv-kana').textContent = w.w === w.k ? '' : w.k;
+    $('pv-roma').innerHTML = '<span class="rest' + (s.guide ? '' : ' hide') + '">' + esc(R.makeTyper(w.k, s.sys).guide().rest || '') + '</span>';
+    $('ready-count').textContent = '1 / ' + s.count;
+    $('set-state').textContent = (s.level === 'kana' ? '1 字ずつ' : s.level + ' 年生の言葉') + '・' + (s.sys === 'kun' ? '訓令式' : 'ヘボン式') + (s.guide ? '' : '・お手本なし') + '・' + s.count + '問';
     var b = data.records.best[G.bestKey(s)];
     $('best-line').textContent = b ? 'この言葉・問題数のいちばん速い記録: ' + sec(b.ms) + ' びょう（まちがい ' + b.miss + '・' + b.date + '）' : 'この言葉・問題数の記録はまだありません。';
     $('to-print').href = '../#' + G.printHash(s, newSeed());
@@ -77,7 +85,8 @@
   function start() {
     readMenu();
     var s = data.settings;
-    play = { s: s, words: G.makeQuestions(s, newSeed()), i: 0, typer: null, start: 0, keys: 0, miss: 0, missHere: 0, missed: [], timerId: 0 };
+    play = { s: s, words: G.makeQuestions(s, nextSeed), i: 0, typer: null, start: 0, keys: 0, miss: 0, missHere: 0, missed: [], timerId: 0 };
+    nextSeed = newSeed();
     show('scr-play');
     loadWord();
     play.start = performance.now();
@@ -94,6 +103,10 @@
     $('w-kanji').textContent = w.w;
     $('w-kana').textContent = w.w === w.k ? '' : w.k;
     $('progress').textContent = (play.i + 1) + ' / ' + play.words.length;
+    // 打ち終えた合図: 次の言葉が弾んで出る（動きを減らす設定では play.css が止める）
+    var wd = document.querySelector('#scr-play .word');
+    wd.classList.remove('pop');
+    if (play.i > 0) { void wd.offsetWidth; wd.classList.add('pop'); }
     renderRoma();
   }
   function renderRoma(missed) {

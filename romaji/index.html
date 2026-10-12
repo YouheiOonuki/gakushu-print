@@ -45,20 +45,31 @@
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="../play.css">
 </head>
-<body class="play-page">
+<body class="play-page timeattack">
 
   <header class="app-header">
     <p class="crumb"><a href="../">学習プリントメーカー</a></p>
     <h1>ローマ字タイピング</h1>
-    <p class="subtitle">学年の漢字の言葉をローマ字で打ちます。si でも shi でも正解。</p>
   </header>
 
   <main class="app-main" id="app">
 
+    <!-- メニュー: 1 画面目は最初の言葉とスタート。出し方は下の折りたたみ（SCREEN 1.4 の 1・2） -->
     <section id="scr-menu" class="screen" aria-labelledby="h-menu">
-      <h2 id="h-menu" class="visually-hidden">出し方をえらぶ</h2>
-      <fieldset class="card menu">
-        <legend>出し方</legend>
+      <h2 id="h-menu" class="visually-hidden">ローマ字のタイムアタック</h2>
+      <!-- 飾り: スタートで最初に出る言葉（読み上げない） -->
+      <div class="ready" aria-hidden="true">
+        <span class="ready-bar"><span id="ready-count">1 / 10</span><span class="timer">0.0</span></span>
+        <div class="word"><div class="kanji" id="pv-kanji"></div><div class="kana" id="pv-kana"></div></div>
+        <p class="roma" id="pv-roma"></p>
+      </div>
+      <p class="start-row"><button type="button" class="btn btn-big" id="start">スタート</button></p>
+      <p id="best-line" class="small best-line" aria-live="polite"></p>
+
+      <details class="card opt" id="set-box">
+        <summary>出し方: <span class="opt-state" id="set-state"></span></summary>
+      <fieldset class="menu">
+        <legend class="visually-hidden">出し方</legend>
         <div class="opt-row"><label class="opt-label" for="level">言葉</label>
           <select id="level">
             <option value="kana">1 字ずつ（ローマ字表）</option>
@@ -80,9 +91,8 @@
           </div>
         </div>
       </fieldset>
+      </details>
 
-      <p class="start-row"><button type="button" class="btn btn-big" id="start">スタート</button></p>
-      <p id="best-line" class="small best-line" aria-live="polite"></p>
       <p class="small center"><a id="to-print" href="../">この言葉でローマ字の練習プリントを作る</a></p>
 
       <details class="card opt" id="rec-box">
