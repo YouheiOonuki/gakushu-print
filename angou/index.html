@@ -61,7 +61,8 @@
 
   <main class="app-main">
 
-    <p class="badge">登録不要・印刷は無料・文はこの端末のブラウザにだけ保存します</p>
+    <!-- data-keep: A2 の定型（登録不要・無料・保存は端末の中だけ） -->
+    <p class="badge" data-keep>登録不要・印刷は無料・文はこの端末のブラウザにだけ保存します</p>
     <div id="shared-banner" class="notice" role="status" hidden></div>
     <p id="load-msg" class="notice" role="status" hidden></p>
 
@@ -82,9 +83,8 @@
     <section class="card" id="sec-opts" aria-labelledby="h-opts">
       <h2 id="h-opts">暗号にする文</h2>
       <div class="field msg-box" id="msg-field">
-        <label for="msg" class="visually-hidden">暗号にする文</label>
+        <label for="msg" class="hint">暗号にする文（ひらがな・カタカナ・英字。漢字はひらがなに）</label>
         <textarea id="msg" rows="3" maxlength="400" placeholder="例：たからは つくえの したに あるよ"></textarea>
-        <p class="hint">ひらがな・カタカナ・英字。漢字はひらがなにしてください。</p>
         <p class="count" id="msg-count"></p>
       </div>
       <div id="msg-hidden" class="notice" hidden>

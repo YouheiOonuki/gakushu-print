@@ -64,7 +64,8 @@
 
   <main class="app-main">
 
-    <p class="badge">Free, no sign-up. Settings are saved only in this browser.</p>
+    <!-- data-keep: A2 の定型（登録不要・無料・保存は端末の中だけ） -->
+    <p class="badge" data-keep>Free, no sign-up. Settings are saved only in this browser.</p>
 
     <div id="shared-banner" class="notice" role="status" hidden></div>
     <p id="load-msg" class="notice" role="status" hidden></p>
@@ -121,12 +122,11 @@
 
       <div class="panel" data-panel="kanji" hidden>
         <div class="field">
-          <label for="kanji-grade">Grade (Japanese elementary school)</label>
+          <label for="kanji-grade">Grade (Japanese elementary school). Characters only. Readings, meanings and stroke order are not included.</label>
           <select id="kanji-grade" data-k="kanji.grade" data-t="num">
             <option value="1">Grade 1 (80 kanji)</option><option value="2">Grade 2 (160 kanji)</option><option value="3">Grade 3 (200 kanji)</option>
             <option value="4">Grade 4 (202 kanji)</option><option value="5">Grade 5 (193 kanji)</option><option value="6">Grade 6 (191 kanji)</option>
           </select>
-          <p class="hint">Characters only. Readings, meanings and stroke order are not included.</p>
         </div>
         <fieldset class="field">
           <legend>Which kanji</legend>
@@ -142,8 +142,7 @@
           <p class="small" id="kanji-range" aria-live="polite"></p>
         </div>
         <div class="field" id="kanji-custom-box" hidden>
-          <label for="kanji-custom">Kanji to practice</label>
-          <p class="hint">Tap kanji in the list below, or paste them.</p>
+          <label for="kanji-custom">Kanji to practice. Tap kanji in the list below, or paste them.</label>
           <textarea id="kanji-custom" data-k="kanji.custom" rows="2" placeholder="花 空 森" lang="ja"></textarea>
           <div class="report" id="kanji-report" aria-live="polite"></div>
           <div class="kanji-pick" id="kanji-pick" role="group" aria-label="Kanji for this grade (tap to choose)" lang="ja"></div>

@@ -502,3 +502,6 @@ details.card.opt.about-tool > summary { white-space: normal; }   /* 長い summa
 details.about-tool h3 { font-size: 0.95rem; margin: 0.9rem 0 0.3rem; }
 details.about-tool p, details.about-tool li { font-size: 0.9rem; line-height: 1.75; }
 details.about-tool ul { padding-left: 1.2rem; margin: 0.3rem 0 0.5rem; }
+
+/* 欄の説明の label・状態の output（段 3 の 8） */
+label.hint, output#tap-hint { display: block; }
