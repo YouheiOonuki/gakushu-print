@@ -66,9 +66,8 @@
     <!-- 1. カードの中身 -->
     <fieldset class="card ak-input" id="sec-input">
       <legend>カード（1 行に 1 枚「表,裏」）</legend>
-      <label for="cards" class="visually-hidden">カードの表と裏</label>
+      <label for="cards" class="hint">カードの表と裏（Excel・スプレッドシートの 2 列をそのまま貼れる。タブ区切りも可）</label>
       <textarea id="cards" rows="6" spellcheck="false" placeholder="apple,りんご&#10;dog,犬&#10;日本の首都,東京"></textarea>
-      <p class="hint">Excel・スプレッドシートの 2 列をそのまま貼れます（タブ区切りも可）。</p>
       <div class="ak-add" role="group" aria-label="1 枚ずつ足す">
         <label for="add-f" class="visually-hidden">表</label>
         <input type="text" id="add-f" maxlength="200" placeholder="表">
@@ -161,7 +160,7 @@
         <span class="ak-big-ans" id="card-ans" hidden></span>
         <span class="ak-sheet" id="red-sheet" hidden aria-hidden="true"></span>
       </button>
-      <p class="small center" id="tap-hint">タップでめくる</p>
+      <output class="small center" id="tap-hint">タップでめくる</output>
       <div class="ak-judge">
         <button type="button" class="btn btn-big btn-sub" id="again">まだ</button>
         <button type="button" class="btn btn-big" id="know">おぼえた</button>

@@ -65,7 +65,8 @@
 
   <main class="app-main">
 
-    <p class="badge">登録不要・印刷は無料・設定はこの端末のブラウザにだけ保存します</p>
+    <!-- data-keep: A2 の定型（登録不要・無料・保存は端末の中だけ） -->
+    <p class="badge" data-keep>登録不要・印刷は無料・設定はこの端末のブラウザにだけ保存します</p>
 
     <!-- 共有リンクで開いたときだけ出す。文言は text.js（main.js が入れる） -->
     <div id="shared-banner" class="notice" role="status" hidden></div>
@@ -344,8 +345,7 @@
           <p class="small" id="kanji-range" aria-live="polite"></p>
         </div>
         <div class="field" id="kanji-custom-box" hidden>
-          <label for="kanji-custom">練習する漢字</label>
-          <p class="hint">下の一覧をタップするか、文字をはりつけてください。</p>
+          <label for="kanji-custom">練習する漢字（下の一覧をタップするか、はりつける）</label>
           <textarea id="kanji-custom" data-k="kanji.custom" rows="2" placeholder="例：花 空 森"></textarea>
           <div class="report" id="kanji-report" aria-live="polite"></div>
           <div class="kanji-pick" id="kanji-pick" role="group" aria-label="この学年の漢字（タップで選ぶ）"></div>
