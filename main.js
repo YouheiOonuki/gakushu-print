@@ -200,11 +200,11 @@
     $('fixbar').hidden = !show;
   }
   if ('IntersectionObserver' in window) {
-    // バーの高さ（44px）の分だけ上を狭めて、バーに隠れている印刷ボタンは「画面の外」とみなす
+    // バーの高さ（44px＋下の線 1px）の分だけ上を狭めて、バーに隠れている印刷ボタンは「画面の外」とみなす
     new IntersectionObserver(function (es) {
       printInView = es[es.length - 1].isIntersecting;
       updateBar();
-    }, { rootMargin: '-44px 0px 0px 0px' }).observe($('print-row'));
+    }, { rootMargin: '-45px 0px 0px 0px' }).observe($('print-row'));
   }
   on('fixbar-print', 'click', function () { $('print').click(); });
 
@@ -388,8 +388,8 @@
     var ul = $('presets');
     ul.innerHTML = presets.map(function (p) {
       return '<li><span class="p-name">' + S.esc(p.name) + ' <span class="p-type">' + TYPE_NAMES[p.state.type] + '</span></span>' +
-        '<button type="button" class="btn btn-sub btn-sm" data-act="load" data-id="' + p.id + '">' + T.presetLoad + '</button>' +
-        '<button type="button" class="btn btn-sub btn-sm" data-act="del" data-id="' + p.id + '">' + T.presetDelete + '</button></li>';
+        '<button type="button" class="btn btn-sm" data-act="load" data-id="' + p.id + '">' + T.presetLoad + '</button>' +
+        '<button type="button" class="btn btn-sm" data-act="del" data-id="' + p.id + '">' + T.presetDelete + '</button></li>';
     }).join('');
   }
   $('preset-save').addEventListener('click', function () {

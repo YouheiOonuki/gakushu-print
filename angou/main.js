@@ -133,7 +133,7 @@
   var barReady = false, printInView = true;
   function updateBar() { $('fixbar').hidden = !(barReady && !printInView); }
   if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (es) { printInView = es[es.length - 1].isIntersecting; updateBar(); }, { rootMargin: '-44px 0px 0px 0px' }).observe($('print-row'));
+    new IntersectionObserver(function (es) { printInView = es[es.length - 1].isIntersecting; updateBar(); }, { rootMargin: '-45px 0px 0px 0px' }).observe($('print-row'));
   }
   $('fixbar-print').addEventListener('click', function () { $('print').click(); });
 

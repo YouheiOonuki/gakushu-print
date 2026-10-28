@@ -18,8 +18,8 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#eef0f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15191d" media="(prefers-color-scheme: dark)">
 
   <script type="application/ld+json">
   {
@@ -58,7 +58,7 @@
   <!-- 固定バー（SCREEN.md 1.2）: 印刷ボタンが画面の外にあるときだけ上端に出す -->
   <div class="fixbar" id="fixbar" role="status" hidden>
     <span class="fixbar-type" id="fixbar-type"></span>
-    <button type="button" class="btn" id="fixbar-print">印刷する</button>
+    <button type="button" class="btn btn-primary" id="fixbar-print">印刷する</button>
   </div>
 
   <main class="app-main" id="app">
@@ -73,7 +73,7 @@
         <input type="text" id="add-f" maxlength="200" placeholder="表">
         <label for="add-b" class="visually-hidden">裏</label>
         <input type="text" id="add-b" maxlength="200" placeholder="裏">
-        <button type="button" class="btn btn-sub" id="add">足す</button>
+        <button type="button" class="btn" id="add">足す</button>
       </div>
       <div class="report" id="report" aria-live="polite"></div>
     </fieldset>
@@ -90,8 +90,8 @@
         <label class="inline ak-redopt"><input type="checkbox" id="red"> 赤シート用（片面に表と赤字の裏）</label>
       </fieldset>
       <div class="btn-row print-row" id="print-row">
-        <button type="button" id="print" class="btn">印刷する・PDF に保存</button>
-        <button type="button" id="flip" class="btn btn-sub">画面でめくる</button>
+        <button type="button" id="print" class="btn btn-primary">印刷する・PDF に保存</button>
+        <button type="button" id="flip" class="btn">画面でめくる</button>
       </div>
       <p class="small" id="pv-info" aria-live="polite"></p>
       <div id="sheets" class="sheets" aria-label="印刷の見本"></div>
@@ -132,10 +132,10 @@
     <details class="card opt" id="sec-save">
       <summary>保存・書き出し</summary>
       <div class="btn-row">
-        <button type="button" id="csv-export" class="btn btn-sub">CSV に書き出す</button>
-        <button type="button" id="backup-export" class="btn btn-sub">ファイルに書き出す</button>
-        <button type="button" id="backup-import" class="btn btn-sub">ファイルから読み込む</button>
-        <button type="button" class="btn btn-sub" data-reset-storage="gakushu-print_anki">保存した内容をすべて消す（初期状態に戻す）</button>
+        <button type="button" id="csv-export" class="btn">CSV に書き出す</button>
+        <button type="button" id="backup-export" class="btn">ファイルに書き出す</button>
+        <button type="button" id="backup-import" class="btn">ファイルから読み込む</button>
+        <button type="button" class="btn" data-reset-storage="gakushu-print_anki">保存した内容をすべて消す（初期状態に戻す）</button>
       </div>
       <input type="file" id="backup-file" accept=".json,application/json,.csv,text/csv" hidden>
       <p id="backup-msg" class="small" aria-live="polite"></p>
@@ -149,10 +149,10 @@
       <div class="play-bar">
         <span id="progress">1 / 10</span>
         <span class="ak-opts">
-          <button type="button" class="btn-ghost" id="opt-order" aria-pressed="false">ばらばら</button>
-          <button type="button" class="btn-ghost" id="opt-start" aria-pressed="false">裏から</button>
+          <button type="button" class="btn btn-sm" id="opt-order" aria-pressed="false">ばらばら</button>
+          <button type="button" class="btn btn-sm" id="opt-start" aria-pressed="false">裏から</button>
         </span>
-        <button type="button" class="btn-ghost" id="quit">やめる</button>
+        <button type="button" class="btn btn-sm" id="quit">やめる</button>
       </div>
       <button type="button" class="ak-big" id="card" aria-live="polite">
         <span class="ak-face" id="face-label">表</span>
@@ -162,8 +162,8 @@
       </button>
       <output class="small center" id="tap-hint">タップでめくる</output>
       <div class="ak-judge">
-        <button type="button" class="btn btn-big btn-sub" id="again">まだ</button>
-        <button type="button" class="btn btn-big" id="know">おぼえた</button>
+        <button type="button" class="btn btn-big" id="again">まだ</button>
+        <button type="button" class="btn btn-primary btn-big" id="know">おぼえた</button>
       </div>
     </section>
 
@@ -173,9 +173,9 @@
         <p id="done-sub" class="small"></p>
       </div>
       <div class="btn-col">
-        <button type="button" class="btn btn-big" id="done-again">「まだ」のカードだけ もう一度</button>
-        <button type="button" class="btn btn-big btn-sub" id="done-all">ぜんぶ もう一度</button>
-        <button type="button" class="btn btn-big btn-sub" id="done-back">カードの入力にもどる</button>
+        <button type="button" class="btn btn-primary btn-big" id="done-again">「まだ」のカードだけ もう一度</button>
+        <button type="button" class="btn btn-big" id="done-all">ぜんぶ もう一度</button>
+        <button type="button" class="btn btn-big" id="done-back">カードの入力にもどる</button>
       </div>
     </section>
   </main>

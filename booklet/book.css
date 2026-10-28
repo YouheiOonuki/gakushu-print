@@ -7,23 +7,22 @@
 /* 見本: 読む順のページ（本の形） */
 .book-pv { display: grid; grid-template-columns: repeat(auto-fill, minmax(6.2rem, 1fr)); gap: 0.5rem; margin-top: 0.6rem; }
 .book-pv figure { margin: 0; }
-.book-pv svg { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: 2px; box-shadow: 0 1px 3px var(--shadow); background: #fff; }
-.book-pv figcaption { font-size: 0.72rem; color: var(--muted); text-align: center; margin-top: 0.15rem; }
+.book-pv svg { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: 2px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18); background: #fff; }   /* 紙の影（皮に --shadow は無いので値で。main と同じ形） */
+.book-pv figcaption { font-size: var(--fs-s); color: var(--muted); text-align: center; margin-top: 0.15rem; }
 .book-pv.mini { grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr)); }
 
 /* 印刷のしかた（主なボタンの直下の 1 行） */
-.printer-set { font-size: 0.85rem; background: var(--accent-soft); border: 1px solid var(--border); border-radius: 6px; padding: 0.45rem 0.7rem; margin: 0.3rem 0 0.5rem; }
+.printer-set { font-size: var(--fs-s); background: var(--accent-soft); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--sp-2) var(--sp-3); margin: var(--sp-1) 0 var(--sp-2); }
 .printer-set b { color: var(--accent); }
-.steps { padding-left: 1.3rem; font-size: 0.88rem; }
+.steps { padding-left: 1.3rem; }
 .steps li { margin: 0.15rem 0; }
-.fold-fig { display: block; width: 100%; max-width: 420px; height: auto; margin: 0.4rem 0; color: var(--text); }
 
 /* 印刷の並び（面付け）の見本 */
 .sheets-pv { display: grid; gap: 0.6rem; margin-top: 0.6rem; }
 .sheets-pv .bsheet { width: 100%; aspect-ratio: 297 / 210; height: auto; }
-.sheets-pv .face-cap { font-size: 0.75rem; color: var(--muted); }
+.sheets-pv .face-cap { font-size: var(--fs-s); color: var(--muted); }
 
-.bsheet { position: relative; background: #fff; overflow: hidden; box-shadow: 0 1px 4px var(--shadow); }
+.bsheet { position: relative; background: #fff; overflow: hidden; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18); }
 .bsheet-in { position: absolute; left: 0; top: 0; width: 297mm; height: 210mm; transform-origin: 0 0; }
 .bsheet-face { position: absolute; left: 0; top: 0; width: 297mm; height: 210mm; }
 .bsheet.rot180 .bsheet-face { transform: rotate(180deg); transform-origin: 148.5mm 105mm; }
@@ -53,5 +52,5 @@
   #print-sheets .bsheet:last-child { break-after: auto; page-break-after: auto; }
   ins.adsbygoogle, .google-auto-placed, iframe[id^="aswift"], iframe[id^="google_ads"] { display: none !important; }
 }
-.crumb { font-size: 0.78rem; }
-.crumb a { color: var(--accent); }
+.crumb { font-size: var(--fs-s); }
+.crumb a { display: inline-flex; align-items: center; min-height: var(--tap); }

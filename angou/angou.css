@@ -1,16 +1,16 @@
 /* ===========================
    暗号メーカー — ../style.css の上に重ねる（紙は style.css の .sheet: A4 縦 210×297mm）
    =========================== */
-.crumb { font-size: 0.78rem; }
-.crumb a { color: var(--accent); }
+.crumb { font-size: var(--fs-s); }
+.crumb a { display: inline-flex; align-items: center; min-height: var(--tap); }
 .msg-box textarea { font-size: 1.1rem; min-height: 5.5rem; }
-.count { font-size: 0.78rem; color: var(--muted); text-align: right; max-width: 100%; }
-.cipher-line { font-size: 1.05rem; background: var(--bg); border: 1px dashed var(--border); border-radius: 6px; padding: 0.5rem 0.7rem; margin: 0.4rem 0; white-space: pre-wrap; overflow-wrap: anywhere; min-height: 2.4rem; }
-.cipher-line .lbl { display: block; font-size: 0.72rem; color: var(--muted); }
-.key-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.count { font-size: var(--fs-s); color: var(--muted); text-align: right; max-width: 100%; }
+.cipher-line { font-size: var(--fs-m); background: var(--bg); border: 1px dashed var(--border); border-radius: var(--radius); padding: var(--sp-2) var(--sp-3); margin: var(--sp-2) 0; white-space: pre-wrap; overflow-wrap: anywhere; min-height: 2.4rem; }
+.cipher-line .lbl { display: block; font-size: var(--fs-s); color: var(--muted); }
+.key-row { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; }
 .key-row select { max-width: 9rem; }
-.key-row .key-ex { font-size: 0.85rem; color: var(--muted); }
-.decode-out { font-size: 1.1rem; font-weight: 600; min-height: 1.6rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+.key-row .key-ex { font-size: var(--fs-s); color: var(--muted); }
+.decode-out { font-size: var(--fs-m); font-weight: 700; min-height: 1.6rem; white-space: pre-wrap; overflow-wrap: anywhere; }
 .types.six { grid-template-columns: repeat(auto-fill, minmax(9.6rem, 1fr)); }
 
 /* ---------- 紙 ---------- */

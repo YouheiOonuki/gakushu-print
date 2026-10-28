@@ -1,103 +1,129 @@
 /* ===========================
-   遊ぶ画面（九九ゲーム・ローマ字タイピング）。style.css のトークンと部品の上に重ねる
+   遊ぶ画面（九九ゲーム・ローマ字タイピング・暗記カード・丸つけカメラ・時計の読み方）。style.css のトークンと部品の上に重ねる
    スマホ縦で、問題とボタンが 1 画面に収まるようにする（SCREEN.md 1.3）
    =========================== */
-.play-page .app-header { padding: 0.7rem 1rem 0.6rem; }
-.play-page .app-header h1 { font-size: 1.2rem; }
-.play-page .app-header .subtitle { font-size: 0.8rem; margin-top: 0.1rem; }
-.crumb { font-size: 0.78rem; }
-.play-page .app-main { max-width: 560px; padding: 0.8rem 1rem; }
 
-.menu legend { font-weight: 700; color: var(--accent); font-size: 0.95rem; margin-bottom: 0.2rem; }
-.opt-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.6rem; margin: 0.45rem 0; }
-.opt-label { font-size: 0.85rem; color: var(--muted); min-width: 4.2em; }
-.menu .seg label, .menu .chips label { min-height: 40px; }
-.dan-chips label { min-width: 44px; justify-content: center; }
-.start-row { text-align: center; margin: 0.9rem 0 0.2rem; }
-.btn-big { font-size: 1.15rem; padding: 0.7rem 2.2rem; min-height: 52px; border-radius: 10px; }
-.best-line { text-align: center; min-height: 1.2em; }
-.btn-col { display: grid; gap: 0.6rem; margin: 0.8rem 0; }
-.btn-col .btn { width: 100%; }
-
-/* 出題 */
-/* 出題中は見出しを隠して、問題とテンキーを 1 画面に収める */
-body.playing .app-header { display: none; }
-.play { display: flex; flex-direction: column; min-height: calc(100dvh - 1.6rem); }
-.play-bar { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; font-size: 0.95rem; font-variant-numeric: tabular-nums; }
-.play-bar .timer { font-weight: 700; color: var(--accent); font-size: 1.1rem; }
-.btn-ghost { background: none; border: 1px solid var(--border); color: var(--muted); border-radius: 6px; padding: 0.3rem 0.8rem; font-family: inherit; font-size: 0.85rem; min-height: 36px; cursor: pointer; }
-.question {
+/* ===========================
+   土台のページ（九九ゲーム・ローマ字タイピング）の見た目。共通の皮のページには効かない
+   =========================== */
+:where(html[data-skin="base"]) .play-page .app-header { padding: 0.7rem 1rem 0.6rem; }
+:where(html[data-skin="base"]) .play-page .app-header h1 { font-size: 1.2rem; }
+:where(html[data-skin="base"]) .play-page .app-header .subtitle { font-size: 0.8rem; margin-top: 0.1rem; }
+:where(html[data-skin="base"]) .crumb { font-size: 0.78rem; }
+:where(html[data-skin="base"]) .play-page .app-main { max-width: 560px; padding: 0.8rem 1rem; }
+:where(html[data-skin="base"]) .menu legend { font-weight: 700; color: var(--accent); font-size: 0.95rem; margin-bottom: 0.2rem; }
+:where(html[data-skin="base"]) .opt-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.6rem; margin: 0.45rem 0; }
+:where(html[data-skin="base"]) .opt-label { font-size: 0.85rem; color: var(--muted); min-width: 4.2em; }
+:where(html[data-skin="base"]) .menu .seg label, :where(html[data-skin="base"]) .menu .chips label { min-height: 40px; }
+:where(html[data-skin="base"]) .dan-chips label { min-width: 44px; justify-content: center; }
+:where(html[data-skin="base"]) .start-row { text-align: center; margin: 0.9rem 0 0.2rem; }
+:where(html[data-skin="base"]) .btn-big { font-size: 1.15rem; padding: 0.7rem 2.2rem; min-height: 52px; border-radius: 10px; }
+:where(html[data-skin="base"]) .best-line { text-align: center; min-height: 1.2em; }
+:where(html[data-skin="base"]) .btn-col { display: grid; gap: 0.6rem; margin: 0.8rem 0; }
+:where(html[data-skin="base"]) .btn-col .btn { width: 100%; }
+:where(html[data-skin="base"]) body.playing .app-header { display: none; }
+:where(html[data-skin="base"]) .play { display: flex; flex-direction: column; min-height: calc(100dvh - 1.6rem); }
+:where(html[data-skin="base"]) .play-bar { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+:where(html[data-skin="base"]) .play-bar .timer { font-weight: 700; color: var(--accent); font-size: 1.1rem; }
+:where(html[data-skin="base"]) .btn-ghost { background: none; border: 1px solid var(--border); color: var(--muted); border-radius: 6px; padding: 0.3rem 0.8rem; font-family: inherit; font-size: 0.85rem; min-height: 36px; cursor: pointer; }
+:where(html[data-skin="base"]) .question {
   text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: 0.04em;
   font-size: clamp(2.4rem, 13vw, 3.6rem); line-height: 1.2; margin: 0.6rem 0 0.2rem; white-space: nowrap;
 }
-.question .slot {
+:where(html[data-skin="base"]) .question .slot {
   display: inline-block; min-width: 1.25em; padding: 0 0.12em; border-bottom: 0.08em solid var(--accent); color: var(--accent);
 }
-.question .slot.wide { min-width: 1.9em; }
-.question.ok .slot { color: #1b7a3a; border-color: #1b7a3a; }
-.question.ng .slot { color: var(--warn); border-color: var(--warn); }
-.fb { text-align: center; min-height: 1.6em; font-size: 1.05rem; font-weight: 700; }
-.fb.ok { color: #1b7a3a; }
-.fb.ng { color: var(--warn); }
+:where(html[data-skin="base"]) .question .slot.wide { min-width: 1.9em; }
+:where(html[data-skin="base"]) .question.ok .slot { color: #1b7a3a; border-color: #1b7a3a; }
+:where(html[data-skin="base"]) .question.ng .slot { color: var(--warn); border-color: var(--warn); }
+:where(html[data-skin="base"]) .fb { text-align: center; min-height: 1.6em; font-size: 1.05rem; font-weight: 700; }
+:where(html[data-skin="base"]) .fb.ok { color: #1b7a3a; }
+:where(html[data-skin="base"]) .fb.ng { color: var(--warn); }
 @media (prefers-color-scheme: dark) {
-  .question.ok .slot, .fb.ok { color: #7fd69a; border-color: #7fd69a; }
+  :where(html[data-skin="base"]) .question.ok .slot, :where(html[data-skin="base"]) .fb.ok { color: #7fd69a; border-color: #7fd69a; }
 }
-
-/* 大きなテンキー（電話と同じ並び: 1 2 3 が上） */
-.pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: auto; padding-top: 0.6rem; }
-.pad button {
+:where(html[data-skin="base"]) .pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: auto; padding-top: 0.6rem; }
+:where(html[data-skin="base"]) .pad button {
   min-height: 64px; height: clamp(64px, 10dvh, 84px); font-size: 1.9rem; font-weight: 700; font-family: inherit;
   border: 1px solid var(--border); border-radius: 12px; background: var(--card); color: var(--text); cursor: pointer;
   box-shadow: 0 2px 0 var(--border); touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none;
 }
-.pad button:active { transform: translateY(2px); box-shadow: none; background: var(--accent-soft); }
-.pad button.fn { font-size: 1rem; color: var(--muted); }
-.pad button:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; }
-
-/* 結果 */
-.result { text-align: center; }
-.result-title { font-size: 1.6rem; color: var(--accent); font-variant-numeric: tabular-nums; }
-.result .new { display: inline-block; background: var(--accent); color: var(--card); border-radius: 999px; padding: 0.1rem 0.8rem; font-size: 0.85rem; margin-top: 0.3rem; }
-.miss-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.3rem; margin-top: 0.5rem; list-style: none; }
-.miss-list li { border: 1px solid var(--border); border-radius: 6px; padding: 0.1rem 0.5rem; font-variant-numeric: tabular-nums; font-size: 0.95rem; }
-.rec-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 0.4rem 0; }
-.rec-table th, .rec-table td { border-bottom: 1px solid var(--border); padding: 0.25rem 0.3rem; text-align: left; }
-.rec-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
-
-/* ローマ字タイピング */
-.word { text-align: center; margin: 0.8rem 0 0.2rem; }
-.word .kanji { font-size: clamp(2rem, 11vw, 3rem); font-weight: 700; line-height: 1.25; }
-.word .kana { font-size: 1.1rem; color: var(--muted); }
-.roma { text-align: center; font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: clamp(1.5rem, 8vw, 2.1rem); letter-spacing: 0.06em; min-height: 1.4em; margin: 0.3rem 0; overflow-wrap: anywhere; }
-.roma .done { color: var(--accent); }
-.roma .rest { color: var(--muted); opacity: 0.7; }
-.roma .rest.hide { opacity: 0; }
-.roma .miss { color: var(--warn); }
-.type-box { display: block; width: 100%; max-width: 22rem; margin: 0.5rem auto; padding: 0.55rem; font-size: 1.1rem; text-align: center; border: 2px solid var(--accent); border-radius: 8px; background: var(--card); color: var(--text); ime-mode: disabled; }
-.ime-warn { text-align: center; color: var(--warn); font-weight: 700; font-size: 0.9rem; }
-.kb-hint { text-align: center; }
-.next-key { display: inline-block; min-width: 2.2rem; border: 2px solid var(--accent); border-radius: 6px; padding: 0 0.4rem; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 1.3rem; font-weight: 700; color: var(--accent); }
-.menu select { padding: 0.45rem 0.5rem; font-size: 1rem; font-family: inherit; border: 1px solid var(--border); border-radius: 6px; background: var(--card); color: var(--text); min-height: 40px; max-width: 100%; }
-.card.result h2.result-title { font-size: 2.2rem; border: none; margin-bottom: 0.2rem; padding-bottom: 0; }
-.play .question { margin-top: auto; }
-.play .fb { margin-bottom: auto; }
-
-/* 1 画面目（メニュー）: スタートで最初に出る問題を、出題の画面と同じ形で見せる。飾り（aria-hidden） */
-.ready { border: 1px solid var(--border); border-radius: 12px; background: var(--card); padding: 0.5rem 0.9rem 0.7rem; margin-top: 0.2rem; }
-.ready-bar { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
-.ready-bar .timer { font-weight: 700; color: var(--accent); font-size: 1.05rem; }
-.ready .question { margin: 0.4rem 0 0.1rem; font-size: clamp(2rem, 11vw, 3.2rem); }   /* 枠の内側に収める（逆の「□ × □ ＝ 72」が 390px で切れない） */
-#set-box .menu { border: 0; padding: 0; margin: 0; min-width: 0; }
-.ready .word { margin: 0.4rem 0 0; }
-.ready .roma { margin: 0.2rem 0 0; }
-
-/* 発表の演出（SCREEN 1.4 の 3）: 正解の数字・打ち終えた次の言葉が弾む、結果の時間がせり出す。点滅なし */
-@keyframes play-pop { 0% { transform: scale(1); } 40% { transform: scale(1.14); } 100% { transform: scale(1); } }
-@keyframes play-rise { 0% { transform: translateY(0.4em) scale(0.85); opacity: 0; } 100% { transform: none; opacity: 1; } }
-.question.ok .slot { animation: play-pop 0.18s ease-out; }
-.word.pop { animation: play-pop 0.2s ease-out; }
-.timeattack #scr-result:not([hidden]) .result-title { animation: play-rise 0.35s ease-out; }
-.timeattack #scr-result:not([hidden]) .result .new { animation: play-pop 0.4s ease-out 0.3s both; }
+:where(html[data-skin="base"]) .pad button:active { transform: translateY(2px); box-shadow: none; background: var(--accent-soft); }
+:where(html[data-skin="base"]) .pad button.fn { font-size: 1rem; color: var(--muted); }
+:where(html[data-skin="base"]) .pad button:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; }
+:where(html[data-skin="base"]) .result { text-align: center; }
+:where(html[data-skin="base"]) .result-title { font-size: 1.6rem; color: var(--accent); font-variant-numeric: tabular-nums; }
+:where(html[data-skin="base"]) .result .new { display: inline-block; background: var(--accent); color: var(--card); border-radius: 999px; padding: 0.1rem 0.8rem; font-size: 0.85rem; margin-top: 0.3rem; }
+:where(html[data-skin="base"]) .miss-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.3rem; margin-top: 0.5rem; list-style: none; }
+:where(html[data-skin="base"]) .miss-list li { border: 1px solid var(--border); border-radius: 6px; padding: 0.1rem 0.5rem; font-variant-numeric: tabular-nums; font-size: 0.95rem; }
+:where(html[data-skin="base"]) .rec-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 0.4rem 0; }
+:where(html[data-skin="base"]) .rec-table th, :where(html[data-skin="base"]) .rec-table td { border-bottom: 1px solid var(--border); padding: 0.25rem 0.3rem; text-align: left; }
+:where(html[data-skin="base"]) .rec-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+:where(html[data-skin="base"]) .word { text-align: center; margin: 0.8rem 0 0.2rem; }
+:where(html[data-skin="base"]) .word .kanji { font-size: clamp(2rem, 11vw, 3rem); font-weight: 700; line-height: 1.25; }
+:where(html[data-skin="base"]) .word .kana { font-size: 1.1rem; color: var(--muted); }
+:where(html[data-skin="base"]) .roma { text-align: center; font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: clamp(1.5rem, 8vw, 2.1rem); letter-spacing: 0.06em; min-height: 1.4em; margin: 0.3rem 0; overflow-wrap: anywhere; }
+:where(html[data-skin="base"]) .roma .done { color: var(--accent); }
+:where(html[data-skin="base"]) .roma .rest { color: var(--muted); opacity: 0.7; }
+:where(html[data-skin="base"]) .roma .rest.hide { opacity: 0; }
+:where(html[data-skin="base"]) .roma .miss { color: var(--warn); }
+:where(html[data-skin="base"]) .type-box { display: block; width: 100%; max-width: 22rem; margin: 0.5rem auto; padding: 0.55rem; font-size: 1.1rem; text-align: center; border: 2px solid var(--accent); border-radius: 8px; background: var(--card); color: var(--text); ime-mode: disabled; }
+:where(html[data-skin="base"]) .ime-warn { text-align: center; color: var(--warn); font-weight: 700; font-size: 0.9rem; }
+:where(html[data-skin="base"]) .kb-hint { text-align: center; }
+:where(html[data-skin="base"]) .next-key { display: inline-block; min-width: 2.2rem; border: 2px solid var(--accent); border-radius: 6px; padding: 0 0.4rem; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 1.3rem; font-weight: 700; color: var(--accent); }
+:where(html[data-skin="base"]) .menu select { padding: 0.45rem 0.5rem; font-size: 1rem; font-family: inherit; border: 1px solid var(--border); border-radius: 6px; background: var(--card); color: var(--text); min-height: 40px; max-width: 100%; }
+:where(html[data-skin="base"]) .card.result h2.result-title { font-size: 2.2rem; border: none; margin-bottom: 0.2rem; padding-bottom: 0; }
+:where(html[data-skin="base"]) .play .question { margin-top: auto; }
+:where(html[data-skin="base"]) .play .fb { margin-bottom: auto; }
+:where(html[data-skin="base"]) .ready { border: 1px solid var(--border); border-radius: 12px; background: var(--card); padding: 0.5rem 0.9rem 0.7rem; margin-top: 0.2rem; }
+:where(html[data-skin="base"]) .ready-bar { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+:where(html[data-skin="base"]) .ready-bar .timer { font-weight: 700; color: var(--accent); font-size: 1.05rem; }
+:where(html[data-skin="base"]) .ready .question { margin: 0.4rem 0 0.1rem; font-size: clamp(2rem, 11vw, 3.2rem); }
+:where(html[data-skin="base"]) #set-box .menu { border: 0; padding: 0; margin: 0; min-width: 0; }
+:where(html[data-skin="base"]) .ready .word { margin: 0.4rem 0 0; }
+:where(html[data-skin="base"]) .ready .roma { margin: 0.2rem 0 0; }
+:where(html[data-skin="base"]) .question.ok .slot { animation: play-pop 0.18s ease-out; }
+:where(html[data-skin="base"]) .word.pop { animation: play-pop 0.2s ease-out; }
+:where(html[data-skin="base"]) .timeattack #scr-result:not([hidden]) .result-title { animation: play-rise 0.35s ease-out; }
+:where(html[data-skin="base"]) .timeattack #scr-result:not([hidden]) .result .new { animation: play-pop 0.4s ease-out 0.3s both; }
 @media (prefers-reduced-motion: reduce) {
-  .question.ok .slot, .word.pop, .timeattack #scr-result:not([hidden]) .result-title, .timeattack #scr-result:not([hidden]) .result .new { animation: none; }
+  :where(html[data-skin="base"]) .question.ok .slot, :where(html[data-skin="base"]) .word.pop, :where(html[data-skin="base"]) .timeattack #scr-result:not([hidden]) .result-title, :where(html[data-skin="base"]) .timeattack #scr-result:not([hidden]) .result .new { animation: none; }
 }
+
+/* ===========================
+   共通の皮のページ（暗記カード・丸つけカメラ・時計の読み方）
+   =========================== */
+:where(html:not([data-skin="base"])) .play-page .app-header { padding: var(--sp-2) var(--sp-4); }
+:where(html:not([data-skin="base"])) .play-page .app-header h1 { font-size: var(--fs-l); }
+:where(html:not([data-skin="base"])) .play-page .app-header .subtitle { margin-top: 0; }
+:where(html:not([data-skin="base"])) .crumb { font-size: var(--fs-s); }
+:where(html:not([data-skin="base"])) .crumb a { display: inline-flex; align-items: center; min-height: var(--tap); }
+:where(html:not([data-skin="base"])) .play-page .app-main { max-width: 560px; padding: var(--sp-3) var(--sp-4); }
+:where(html:not([data-skin="base"])) .menu legend { font-weight: 700; margin-bottom: var(--sp-1); }
+:where(html:not([data-skin="base"])) .opt-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-1) var(--sp-3); margin: var(--sp-2) 0; }
+:where(html:not([data-skin="base"])) .opt-label { font-size: var(--fs-s); color: var(--muted); min-width: 4.2em; }
+:where(html:not([data-skin="base"])) .start-row { text-align: center; margin: var(--sp-4) 0 var(--sp-1); }
+:where(html:not([data-skin="base"])) .btn-big { font-size: var(--fs-l); padding: 0 var(--sp-8); min-height: 52px; }
+:where(html:not([data-skin="base"])) .best-line { text-align: center; min-height: 1.2em; }
+:where(html:not([data-skin="base"])) .btn-col { display: grid; gap: var(--sp-3); margin: var(--sp-3) 0; }
+:where(html:not([data-skin="base"])) .btn-col .btn { width: 100%; }
+/* 出題 */
+/* 出題中は見出しを隠して、問題とボタンを 1 画面に収める */
+:where(html:not([data-skin="base"])) body.playing .app-header { display: none; }
+:where(html:not([data-skin="base"])) .play { display: flex; flex-direction: column; min-height: calc(100dvh - 1.6rem); }
+:where(html:not([data-skin="base"])) .play-bar { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); font-variant-numeric: tabular-nums; }
+:where(html:not([data-skin="base"])) .fb { text-align: center; min-height: 1.6em; font-size: var(--fs-m); font-weight: 700; }
+:where(html:not([data-skin="base"])) .fb.ok { color: var(--ok); }
+:where(html:not([data-skin="base"])) .fb.ng { color: var(--warn); }
+:where(html:not([data-skin="base"])) .play .fb { margin-bottom: auto; }
+/* 結果 */
+:where(html:not([data-skin="base"])) .result { text-align: center; }
+:where(html:not([data-skin="base"])) .result-title { font-variant-numeric: tabular-nums; }
+:where(html:not([data-skin="base"])) .result .new { display: inline-block; background: var(--accent); color: var(--on-accent); border-radius: var(--radius); padding: 0 var(--sp-3); font-size: var(--fs-m); font-weight: 700; margin-top: var(--sp-1); }
+:where(html:not([data-skin="base"])) .miss-list { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-1); margin-top: var(--sp-2); list-style: none; }
+:where(html:not([data-skin="base"])) .miss-list li { border: 1px solid var(--border); border-radius: var(--radius); padding: 0 var(--sp-2); font-variant-numeric: tabular-nums; }
+:where(html:not([data-skin="base"])) .rec-table { width: 100%; border-collapse: collapse; font-size: var(--fs-s); margin: var(--sp-1) 0; }
+:where(html:not([data-skin="base"])) .rec-table th, :where(html:not([data-skin="base"])) .rec-table td { border-bottom: 1px solid var(--border); padding: var(--sp-1); text-align: left; }
+:where(html:not([data-skin="base"])) .rec-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+:where(html:not([data-skin="base"])) .menu select { max-width: 100%; }
+:where(html:not([data-skin="base"])) .card.result h2.result-title { font-size: var(--fs-xl); margin-bottom: var(--sp-1); }

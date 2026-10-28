@@ -18,8 +18,8 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#eef0f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15191d" media="(prefers-color-scheme: dark)">
 
   <script type="application/ld+json">
   {
@@ -59,8 +59,8 @@
     <section class="card" aria-labelledby="h-take">
       <h2 id="h-take" class="mt-h">プリントを うつす</h2>
       <div class="btn-col">
-        <button type="button" class="btn btn-big" id="cam-start">カメラで とる</button>
-        <label class="btn btn-big btn-sub mt-file" for="file">写真を えらぶ</label>
+        <button type="button" class="btn btn-primary btn-big" id="cam-start">カメラで とる</button>
+        <label class="btn btn-big mt-file" for="file">写真を えらぶ</label>
         <input type="file" id="file" accept="image/*" class="visually-hidden">
       </div>
       <p id="cam-msg" class="small" aria-live="polite"></p>
@@ -68,8 +68,8 @@
         <video id="video" playsinline muted aria-label="カメラの映像"></video>
         <div class="mt-guide" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
         <div class="btn-row mt-cam-row">
-          <button type="button" class="btn btn-big" id="shoot">とる</button>
-          <button type="button" class="btn-ghost" id="cam-stop">やめる</button>
+          <button type="button" class="btn btn-primary btn-big" id="shoot">とる</button>
+          <button type="button" class="btn btn-sm" id="cam-stop">やめる</button>
         </div>
       </div>
       <p class="small">四すみの 黒い四角が 4 つとも うつるように、明るい所で 真上から とってください。</p>
@@ -86,7 +86,7 @@
       <p class="small mt-note">機械の読みは まちがえることが あります。<span class="mt-q">？</span> の問題と、おかしい所は おとなが たしかめて、タップで ○ と レ を なおしてください。</p>
       <ol id="r-list" class="mt-list"></ol>
       <div class="btn-row">
-        <button type="button" class="btn" id="again">つぎの プリントを うつす</button>
+        <button type="button" class="btn btn-primary" id="again">つぎの プリントを うつす</button>
       </div>
     </section>
 
