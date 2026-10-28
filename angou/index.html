@@ -18,8 +18,8 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#eef0f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15191d" media="(prefers-color-scheme: dark)">
 
   <script type="application/ld+json">
   {
@@ -56,7 +56,7 @@
   <!-- 固定バー（SCREEN.md 1.2）: 印刷ボタンが画面の外にあるときだけ上端に出す -->
   <div class="fixbar" id="fixbar" role="status" hidden>
     <span class="fixbar-type" id="fixbar-type"></span>
-    <button type="button" class="btn" id="fixbar-print">印刷する</button>
+    <button type="button" class="btn btn-primary" id="fixbar-print">印刷する</button>
   </div>
 
   <main class="app-main">
@@ -89,7 +89,7 @@
       </div>
       <div id="msg-hidden" class="notice" hidden>
         共有された暗号です。もとの文は かくしています。
-        <button type="button" class="btn btn-sub btn-sm" id="msg-show">もとの文を見る・かえる</button>
+        <button type="button" class="btn btn-sm" id="msg-show">もとの文を見る・かえる</button>
       </div>
       <div class="field" id="key-field">
         <div class="key-row">
@@ -104,8 +104,8 @@
     <section class="card" id="sec-preview" aria-labelledby="h-preview">
       <h2 id="h-preview" class="visually-hidden">印刷と見本</h2>
       <div class="btn-row print-row" id="print-row">
-        <button type="button" id="print" class="btn">印刷する・PDF に保存</button>
-        <button type="button" id="reseed" class="btn btn-sub">べつの暗号にする</button>
+        <button type="button" id="print" class="btn btn-primary">印刷する・PDF に保存</button>
+        <button type="button" id="reseed" class="btn">べつの暗号にする</button>
       </div>
       <p class="cipher-line" id="cipher-line" aria-live="polite"></p>
       <div id="pv-notes" class="warn-box" role="status" hidden></div>
@@ -152,7 +152,7 @@
     <details class="card opt" id="sec-save">
       <summary>共有・バックアップ</summary>
       <div class="btn-row" id="shared-keep-row" hidden>
-        <button type="button" id="shared-keep" class="btn btn-sub">この設定を自分用に保存する</button>
+        <button type="button" id="shared-keep" class="btn">この設定を自分用に保存する</button>
       </div>
       <h3 class="sub-h">かぎを共有する</h3>
       <p class="hint">リンクを開いた人は、同じ解読シートを印刷して暗号をとけます。文はリンクに入りません。</p>
@@ -163,9 +163,9 @@
       <p id="share-msg-out" class="small" aria-live="polite"></p>
       <h3 class="sub-h">バックアップ</h3>
       <div class="btn-row">
-        <button type="button" id="backup-export" class="btn btn-sub">ファイルに書き出す</button>
-        <button type="button" id="backup-import" class="btn btn-sub">ファイルから読み込む</button>
-        <button type="button" class="btn btn-sub" data-reset-storage="gakushu-print_angou">保存した内容をすべて消す（初期状態に戻す）</button>
+        <button type="button" id="backup-export" class="btn">ファイルに書き出す</button>
+        <button type="button" id="backup-import" class="btn">ファイルから読み込む</button>
+        <button type="button" class="btn" data-reset-storage="gakushu-print_angou">保存した内容をすべて消す（初期状態に戻す）</button>
       </div>
       <input type="file" id="backup-file" accept=".json,application/json" hidden>
       <p id="backup-msg" class="small" aria-live="polite"></p>

@@ -21,8 +21,8 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#eef0f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15191d" media="(prefers-color-scheme: dark)">
 
   <script type="application/ld+json">
   {
@@ -60,7 +60,7 @@
   <!-- 固定バー（SCREEN.md 1.2・D59）: 種類や設定を選んだあと、印刷ボタンが画面の外にあるときだけ上端に出す。読み込み時は無い -->
   <div class="fixbar" id="fixbar" role="status" hidden>
     <span class="fixbar-type" id="fixbar-type"></span>
-    <button type="button" class="btn" id="fixbar-print">印刷する</button>
+    <button type="button" class="btn btn-primary" id="fixbar-print">印刷する</button>
   </div>
 
   <main class="app-main">
@@ -167,7 +167,7 @@
             <label><input type="checkbox" data-k="kuku.dans" data-t="arr-num" value="8"> 8</label>
             <label><input type="checkbox" data-k="kuku.dans" data-t="arr-num" value="9"> 9</label>
           </div>
-          <div class="btn-row"><button type="button" class="btn btn-sub btn-sm" id="kuku-all">全部の段をえらぶ</button></div>
+          <div class="btn-row"><button type="button" class="btn btn-sm" id="kuku-all">全部の段をえらぶ</button></div>
         </fieldset>
         <p class="small"><a href="./kuku/">画面で遊ぶ（九九ゲーム・タイムアタック）→</a></p>
         <fieldset class="field">
@@ -431,8 +431,8 @@
     <section class="card" id="sec-preview" aria-labelledby="h-preview">
       <h2 id="h-preview" class="visually-hidden">印刷の見本</h2>
       <div class="btn-row print-row" id="print-row">
-        <button type="button" id="print" class="btn">印刷する・PDF に保存</button>
-        <button type="button" id="reseed" class="btn btn-sub">べつの問題にする</button>
+        <button type="button" id="print" class="btn btn-primary">印刷する・PDF に保存</button>
+        <button type="button" id="reseed" class="btn">べつの問題にする</button>
       </div>
       <p class="small" id="pv-info" aria-live="polite"></p>
       <div id="pv-notes" class="warn-box" role="status" hidden></div>
@@ -474,7 +474,7 @@
     <details class="card opt" id="sec-save">
       <summary>共有・よく使う設定・バックアップ</summary>
       <div class="btn-row" id="shared-keep-row" hidden>
-        <button type="button" id="shared-keep" class="btn btn-sub">この設定を自分用に保存する</button>
+        <button type="button" id="shared-keep" class="btn">この設定を自分用に保存する</button>
       </div>
       <h3 class="sub-h">同じプリントを共有する</h3>
       <p class="hint">リンクを開いた人は、同じ問題のプリントを印刷できます。</p>
@@ -491,16 +491,16 @@
       <div class="inline-row">
         <label for="preset-name" class="visually-hidden">設定の名前</label>
         <input type="text" id="preset-name" maxlength="30" placeholder="例：はなこ ひらがな">
-        <button type="button" id="preset-save" class="btn btn-sub">いまの設定を保存</button>
+        <button type="button" id="preset-save" class="btn">いまの設定を保存</button>
       </div>
       <ul id="presets" class="preset-list"></ul>
       <p id="preset-msg" class="small" aria-live="polite"></p>
 
       <h3 class="sub-h">バックアップ</h3>
       <div class="btn-row">
-        <button type="button" id="backup-export" class="btn btn-sub">ファイルに書き出す</button>
-        <button type="button" id="backup-import" class="btn btn-sub">ファイルから読み込む</button>
-        <button type="button" class="btn btn-sub" data-reset-storage="gakushu-print_settings gakushu-print_presets">保存した内容をすべて消す（初期状態に戻す）</button>
+        <button type="button" id="backup-export" class="btn">ファイルに書き出す</button>
+        <button type="button" id="backup-import" class="btn">ファイルから読み込む</button>
+        <button type="button" class="btn" data-reset-storage="gakushu-print_settings gakushu-print_presets">保存した内容をすべて消す（初期状態に戻す）</button>
       </div>
       <input type="file" id="backup-file" accept=".json,application/json" hidden>
       <p id="backup-msg" class="small" aria-live="polite"></p>

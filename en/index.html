@@ -22,8 +22,8 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#eef0f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15191d" media="(prefers-color-scheme: dark)">
 
   <script type="application/ld+json">
   {
@@ -59,7 +59,7 @@
 
   <div class="fixbar" id="fixbar" role="status" hidden>
     <span class="fixbar-type" id="fixbar-type"></span>
-    <button type="button" class="btn" id="fixbar-print">Print</button>
+    <button type="button" class="btn btn-primary" id="fixbar-print">Print</button>
   </div>
 
   <main class="app-main">
@@ -190,8 +190,8 @@
     <section class="card" id="sec-preview" aria-labelledby="h-preview">
       <h2 id="h-preview" class="visually-hidden">Print preview</h2>
       <div class="btn-row print-row" id="print-row">
-        <button type="button" id="print" class="btn">Print / Save as PDF</button>
-        <button type="button" id="reseed" class="btn btn-sub" hidden>Shuffle again</button>
+        <button type="button" id="print" class="btn btn-primary">Print / Save as PDF</button>
+        <button type="button" id="reseed" class="btn" hidden>Shuffle again</button>
       </div>
       <p class="small" id="pv-info" aria-live="polite"></p>
       <div id="pv-notes" class="warn-box" role="status" hidden></div>
@@ -223,7 +223,7 @@
     <details class="card opt" id="sec-save">
       <summary>Share, saved settings and backup</summary>
       <div class="btn-row" id="shared-keep-row" hidden>
-        <button type="button" id="shared-keep" class="btn btn-sub">Keep these settings</button>
+        <button type="button" id="shared-keep" class="btn">Keep these settings</button>
       </div>
       <h3 class="sub-h">Share the same sheets</h3>
       <p class="hint">Anyone who opens the link can print the same sheets.</p>
@@ -239,16 +239,16 @@
       <div class="inline-row">
         <label for="preset-name" class="visually-hidden">Name for these settings</label>
         <input type="text" id="preset-name" maxlength="30" placeholder="e.g. Katakana, small">
-        <button type="button" id="preset-save" class="btn btn-sub">Save current settings</button>
+        <button type="button" id="preset-save" class="btn">Save current settings</button>
       </div>
       <ul id="presets" class="preset-list"></ul>
       <p id="preset-msg" class="small" aria-live="polite"></p>
 
       <h3 class="sub-h">Backup</h3>
       <div class="btn-row">
-        <button type="button" id="backup-export" class="btn btn-sub">Save to a file</button>
-        <button type="button" id="backup-import" class="btn btn-sub">Load from a file</button>
-        <button type="button" class="btn btn-sub" data-reset-storage="gakushu-print_en_">Delete everything saved (reset)</button>
+        <button type="button" id="backup-export" class="btn">Save to a file</button>
+        <button type="button" id="backup-import" class="btn">Load from a file</button>
+        <button type="button" class="btn" data-reset-storage="gakushu-print_en_">Delete everything saved (reset)</button>
       </div>
       <input type="file" id="backup-file" accept=".json,application/json" hidden>
       <p id="backup-msg" class="small" aria-live="polite"></p>

@@ -49,7 +49,7 @@
       markNA: { type: '丸つけカメラ用の印は、たし算・ひき算と九九のプリントだけに入ります。', tate: '丸つけカメラ用の印は「よこ」の式だけに入ります（筆算には入りません）。', custom: '入れたい問題があるときは、丸つけカメラ用の印は入りません（カメラの側で同じ問題を作り直せないため）。' },
       markOn: '丸つけカメラ用の印が入っています。印刷して答えを書いたら、丸つけカメラで撮ってください。',
       sharedBanner: '<p><strong>共有されたプリントです</strong>（問題番号 <span id="shared-seed"></span>）。このまま印刷すると、送った人と同じ問題になります。</p>' +
-        '<div class="btn-row"><a href="./" id="shared-new" class="btn btn-sub">自分のプリントを作る</a></div>' +
+        '<div class="btn-row"><a href="./" id="shared-new" class="chip">自分のプリントを作る</a></div>' +
         '<p class="small">ひらがな・漢字・計算・時計・迷路のプリントを、登録なしで作れます。</p>',
       shareTooLong: 'リンクが長くなりすぎました（入れた問題や言葉が多いため）。「ファイルに書き出す」で作ったファイルを渡してください。',
       shareCopied: 'リンクをコピーしました。開いた人は同じ問題のプリントを印刷できます。',
@@ -108,7 +108,7 @@
       markNA: { type: 'Grading-camera marks are added only to addition, subtraction and times-table sheets.', tate: 'Grading-camera marks are added only to horizontal problems (not column arithmetic).', custom: 'Grading-camera marks are not added when you enter your own problems.' },
       markOn: 'Grading-camera marks are on. Print, answer, then photograph the sheet with the grading camera.',
       sharedBanner: '<p><strong>Someone shared these sheets with you.</strong> Print them as they are, or change anything to make your own.</p>' +
-        '<div class="btn-row"><a href="./" id="shared-new" class="btn btn-sub">Make my own sheets</a></div><span id="shared-seed" hidden></span>',
+        '<div class="btn-row"><a href="./" id="shared-new" class="chip">Make my own sheets</a></div><span id="shared-seed" hidden></span>',
       shareTooLong: 'The link is too long (too many words). Use "Save to a file" and send the file instead.',
       shareCopied: 'Link copied. Anyone who opens it can print the same sheets.',
       shareSelected: 'Link selected. Copy it and send it.',
