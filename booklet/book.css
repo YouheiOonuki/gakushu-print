@@ -7,7 +7,7 @@
 /* 見本: 読む順のページ（本の形） */
 .book-pv { display: grid; grid-template-columns: repeat(auto-fill, minmax(6.2rem, 1fr)); gap: 0.5rem; margin-top: 0.6rem; }
 .book-pv figure { margin: 0; }
-.book-pv svg { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: 2px; background: #fff; }
+.book-pv svg { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: 2px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18); background: #fff; }   /* 紙の影（皮に --shadow は無いので値で。main と同じ形） */
 .book-pv figcaption { font-size: var(--fs-s); color: var(--muted); text-align: center; margin-top: 0.15rem; }
 .book-pv.mini { grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr)); }
 
@@ -22,7 +22,7 @@
 .sheets-pv .bsheet { width: 100%; aspect-ratio: 297 / 210; height: auto; }
 .sheets-pv .face-cap { font-size: var(--fs-s); color: var(--muted); }
 
-.bsheet { position: relative; background: #fff; overflow: hidden; border: 1px solid var(--border); }
+.bsheet { position: relative; background: #fff; overflow: hidden; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18); }
 .bsheet-in { position: absolute; left: 0; top: 0; width: 297mm; height: 210mm; transform-origin: 0 0; }
 .bsheet-face { position: absolute; left: 0; top: 0; width: 297mm; height: 210mm; }
 .bsheet.rot180 .bsheet-face { transform: rotate(180deg); transform-origin: 148.5mm 105mm; }
@@ -48,7 +48,7 @@
   html, body { background: #fff !important; margin: 0; padding: 0; }
   body.tool-page > :not(#print-sheets) { display: none !important; }
   #print-sheets { display: block !important; }
-  #print-sheets .bsheet { width: 297mm; height: 209.6mm; border: 0; break-after: page; page-break-after: always; }
+  #print-sheets .bsheet { width: 297mm; height: 209.6mm; box-shadow: none; break-after: page; page-break-after: always; }
   #print-sheets .bsheet:last-child { break-after: auto; page-break-after: auto; }
   ins.adsbygoogle, .google-auto-placed, iframe[id^="aswift"], iframe[id^="google_ads"] { display: none !important; }
 }

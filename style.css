@@ -333,13 +333,13 @@ details.about-tool ul { padding-left: 1.2rem; margin: var(--sp-1) 0 var(--sp-2);
 label.hint, output#tap-hint { display: block; }
 output#tap-hint { font-size: var(--fs-m); font-weight: 400; }
 /* 段落がリンク 1 つだけの行（使い方への案内・「▶ …」）は押せる高さにする */
-:where(html:not([data-skin="base"])) p.small:not([lang]) > a:only-child, :where(html:not([data-skin="base"])) p.card.center > a { display: inline-flex; align-items: center; min-height: var(--tap); }
+:where(html:not([data-skin="base"])) p.small:not([lang]) > a:only-child, :where(html:not([data-skin="base"])) p.card.center > a, :where(html:not([data-skin="base"])) .content li > a:only-child { display: inline-flex; align-items: center; min-height: var(--tap); }
 
 /* ===========================
    プリント（A4 縦 210×297mm）。画面では縮小して見本に、印刷では原寸で 1 枚ずつ
    =========================== */
 .sheets { --z: 0.4; min-height: 12rem; margin: 0.6rem 0; overflow-x: auto; }   /* zoom の無い古いブラウザでもページを横にはみ出させない */
-.sheets .sheet { zoom: var(--z); margin: 0 auto 24px; border: 1px solid var(--border); }
+.sheets .sheet { zoom: var(--z); margin: 0 auto 24px; box-shadow: 0 1px 6px rgba(0, 0, 0, 0.25); }   /* 見本の紙の影は紙の見た目なので残す */
 /* 見本は 1 枚目を縮小で、2 枚目からはさらに小さく横に並べる（SCREEN.md 1.2 の 5「縮小 1 枚」。全部のページは見えるまま） */
 .sheets { text-align: center; }
 .sheets .sheet + .sheet { display: inline-flex; vertical-align: top; zoom: var(--zs, 0.12); margin: 0 12px 12px; text-align: left; }
@@ -522,7 +522,7 @@ output#tap-hint { font-size: var(--fs-m); font-weight: 400; }
   #sheets > :not(.sheet) { display: none !important; }
   .sheets { min-height: 0; margin: 0; overflow: visible; }
   .sheets { text-align: left; }
-  .sheets .sheet, .sheets .sheet + .sheet { display: flex; zoom: 1; margin: 0; border: 0; break-after: page; page-break-after: always; height: 296.6mm; }
+  .sheets .sheet, .sheets .sheet + .sheet { display: flex; zoom: 1; margin: 0; box-shadow: none; break-after: page; page-break-after: always; height: 296.6mm; }
   .sheets .sheet:last-child { break-after: auto; page-break-after: auto; }
   .sheets .sheet.paper-letter { height: 279mm; }
   .fixbar { display: none !important; }
