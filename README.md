@@ -144,7 +144,7 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 | `marutsuke/` | 丸つけカメラ（`index.html`・`main.js` 画面・`vision.js` 紙を見つけてますを読む・`digits.js` 数字のモデル・`digits-model.json` 重み〈CC BY-SA 3.0〉・`marutsuke.css`・`guide.html`）。重みの作り方は `tools/marutsuke/train_digits.py` |
 | `play.css` | 遊ぶ画面の見た目（`style.css` の上に重ねる） |
 | `main.js` | 画面の制御・保存・共有リンク・印刷 |
-| `style.css` | 見た目（和紙風の配色、ダークモード対応）とプリント（mm 単位）・印刷 |
+| `style.css` | 見た目（サイト共通の皮。遊ぶ画面〈data-skin="base"〉は前からの配色）、ダークモード対応とプリント（mm 単位）・印刷 |
 | `404.html` | ツール配下の存在しない URL で出るページ（サイト共通のもの） |
 | `favicon.svg` / `apple-touch-icon.png` / `og-image.png` | アイコン / ホーム画面用アイコン / SNS 共有用画像（1200×630） |
 | `sitemap.xml` | サイトマップ（`/`・`guide.html`・`en/`・`en/guide.html`・`kuku/`・`kuku/guide.html`・`romaji/`・`romaji/guide.html`・`booklet/`・`booklet/guide.html`・`angou/`・`angou/guide.html`・`marutsuke/`・`marutsuke/guide.html`。日英を hreflang で結ぶ。robots.txt はドメイン直下で管理） |
