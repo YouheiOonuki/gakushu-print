@@ -27,7 +27,19 @@
     ['scr-menu', 'scr-play', 'scr-result'].forEach(function (s) { $(s).hidden = s !== id; });
     document.body.classList.toggle('playing', id === 'scr-play');
     window.scrollTo(0, 0);
+    if (id === 'scr-menu') startInView = true;   // 先頭へ戻したので、観測の結果が来るまではバーを出さない
+    updateBar();
   }
+
+  // --- 固定バー（SCREEN.md 1.2）: メニューで「スタート」が画面の外にあるときだけ上端に出す ---
+  var startInView = true, barReady = false;   // 読み込み時は出さない（CLS を出さない）。最初のスクロールか操作のあとから出す
+  function updateBar() { $('fixbar').hidden = !barReady || $('scr-menu').hidden || startInView !== false; }
+  if ('IntersectionObserver' in window) {
+    // バーの高さ（44px＋下の線 1px）の分だけ上を狭める
+    new IntersectionObserver(function (es) { startInView = es[es.length - 1].isIntersecting; updateBar(); }, { rootMargin: '-45px 0px 0px 0px' }).observe($('start'));
+  }
+  ['scroll', 'change', 'pointerdown'].forEach(function (ev) { addEventListener(ev, function () { if (!barReady) { barReady = true; updateBar(); } }, { passive: true, capture: true }); });
+  $('fixbar-start').addEventListener('click', function () { $('start').click(); });
 
   // --- メニュー ---
   function radio(name) { var r = document.querySelector('input[name="' + name + '"]:checked'); return r ? r.value : null; }
