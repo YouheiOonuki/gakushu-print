@@ -343,8 +343,8 @@ output#tap-hint { font-size: var(--fs-m); font-weight: 400; }
 /* ===========================
    プリント（A4 縦 210×297mm）。画面では縮小して見本に、印刷では原寸で 1 枚ずつ
    =========================== */
-.sheets { --z: 0.4; min-height: 12rem; margin: 0.6rem 0; overflow-x: auto; }   /* zoom の無い古いブラウザでもページを横にはみ出させない */
-.sheets .sheet { zoom: var(--z); margin: 0 auto 24px; box-shadow: 0 1px 6px rgba(0, 0, 0, 0.25); }   /* 見本の紙の影は紙の見た目なので残す */
+.sheets { --z: 0.4; min-height: 12rem; margin: 0.2rem 0; overflow-x: auto; }   /* zoom の無い古いブラウザでもページを横にはみ出させない */
+.sheets .sheet { zoom: var(--z); margin: 0 auto 12px; box-shadow: 0 1px 6px rgba(0, 0, 0, 0.25); }   /* 見本の紙の影は紙の見た目なので残す */
 /* 見本は 1 枚目を縮小で、2 枚目からはさらに小さく横に並べる（SCREEN.md 1.2 の 5「縮小 1 枚」。全部のページは見えるまま） */
 .sheets { text-align: center; }
 .sheets .sheet + .sheet { display: inline-flex; vertical-align: top; zoom: var(--zs, 0.12); margin: 0 12px 12px; text-align: left; }
@@ -533,3 +533,6 @@ output#tap-hint { font-size: var(--fs-m); font-weight: 400; }
   .fixbar { display: none !important; }
 }
 
+
+/* かなの行の選択肢: 横の余白を詰めて 1 行に 4 つ並べる（スマホで行数を減らす。高さ 44px は変えない） */
+#kana-rows label { padding: 0 var(--sp-2); }

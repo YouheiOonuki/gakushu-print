@@ -80,7 +80,7 @@
     </section>
 
     <section class="card" id="sec-opts" aria-labelledby="h-opts">
-      <h2 id="h-opts">Options</h2>
+      <h2 id="h-opts" class="visually-hidden">Options</h2>
 
       <div class="panel" data-panel="kana">
         <fieldset class="field">
@@ -100,7 +100,6 @@
         <fieldset class="field" id="kana-rows-box">
           <legend>Rows</legend>
           <div class="chips" id="kana-rows"></div>
-          <label class="inline" id="kana-romaji-box"><input type="checkbox" data-k="kana.romaji" data-t="bool" checked> Romaji on the model character</label>
         </fieldset>
         <div class="field" id="kana-words-box" hidden>
           <label for="kana-words">Words to trace, in kana</label>
@@ -109,6 +108,7 @@
         </div>
         <details class="field custom more" data-more="kana">
           <summary>More settings<span class="more-state" id="more-kana"></span></summary>
+          <label class="inline field" id="kana-romaji-box"><input type="checkbox" data-k="kana.romaji" data-t="bool" checked> Romaji on the model character</label>
           <fieldset class="field">
             <legend>Square size</legend>
             <div class="seg">

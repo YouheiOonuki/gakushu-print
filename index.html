@@ -89,7 +89,7 @@
 
     <!-- 2. 内容（種類ごと） -->
     <section class="card" id="sec-opts" aria-labelledby="h-opts">
-      <h2 id="h-opts">内容</h2>
+      <h2 id="h-opts" class="visually-hidden">内容</h2>
 
       <!-- たし算・ひき算 -->
       <div class="panel" data-panel="arith">
@@ -121,12 +121,12 @@
           </div>
           <details class="hint-more"><summary>「なし」「あり」とは</summary><p class="hint" id="arith-carry-note">「なし」はどの位でもくり上がり・くり下がりが起きない問題だけ、「あり」は必ずどこかで起きる問題だけです（5+5 のように答えが 10 になるものは「あり」）。</p></details>
         </fieldset>
-        <div class="field">
-          <label for="arith-count">1 枚の問題数</label>
-          <select id="arith-count" data-k="arith.count" data-t="num"><option value="10">10 問</option><option value="20" selected>20 問</option><option value="30">30 問</option></select>
-        </div>
         <details class="field custom more" data-more="arith">
           <summary>くわしい設定<span class="more-state" id="more-arith"></span></summary>
+          <div class="field">
+            <label for="arith-count">1 枚の問題数</label>
+            <select id="arith-count" data-k="arith.count" data-t="num"><option value="10">10 問</option><option value="20" selected>20 問</option><option value="30">30 問</option></select>
+          </div>
           <fieldset class="field">
             <legend>書き方</legend>
             <div class="seg">

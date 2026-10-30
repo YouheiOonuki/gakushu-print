@@ -178,10 +178,10 @@
   document.head.appendChild(pageStyle);
   function setText(id, t) { var e = $(id); if (e && e.textContent !== t) e.textContent = t; }
   function updateSummaries(hasAns) {
-    setText('more-arith', T.moreArith(state.arith.style === 'tate', state.arith.pages));
+    setText('more-arith', T.moreArith(state.arith.style === 'tate', state.arith.pages, state.arith.count));
     setText('more-clock', T.moreClock(state.clock.guide));
     setText('more-kanji', T.moreSize(state.kanji.size));
-    setText('more-kana', T.moreKana(state.kana.size));
+    setText('more-kana', T.moreKana(state.kana.size, state.kana.romaji));
     setText('more-hyaku', T.moreHand(state.hyaku.hand));
     setText('more-romaji', ': ' + T.pages(state.romaji.pages));
     setText('common-state', T.commonState(state.common, hasAns, T.paperNames[state.common.paper]));
@@ -290,8 +290,10 @@
     var w = box.clientWidth;
     if (!w) return;
     var pw = state.common.paper === 'letter' ? 816 : 794;
-    box.style.setProperty('--z', String(Math.min(1, (w - 4) / pw)));
-    box.style.setProperty('--zs', String(Math.min(1, (w - 4) / pw) * 0.3));   // 2 枚目からの小さい見本
+    // スマホ（幅 480px 以下）は縮尺の上限を 0.26 にして、見本の縦を詰める（SCREEN.md 2 章。印刷の大きさは変えない）
+    var z = Math.min(innerWidth <= 480 ? 0.26 : 1, (w - 4) / pw);
+    box.style.setProperty('--z', String(z));
+    box.style.setProperty('--zs', String(z * 0.3));   // 2 枚目からの小さい見本
   }
   addEventListener('resize', fitPreview);
 
