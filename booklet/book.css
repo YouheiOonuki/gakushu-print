@@ -5,7 +5,7 @@
 @page { size: A4 landscape; margin: 0; }
 
 /* 見本: 読む順のページ（本の形） */
-.book-pv { display: grid; grid-template-columns: repeat(auto-fill, minmax(6.2rem, 1fr)); gap: 0.5rem; margin-top: 0.6rem; }
+.book-pv { display: grid; grid-template-columns: repeat(auto-fill, minmax(4.6rem, 1fr)); gap: 0.5rem; margin-top: 0.6rem; }
 .book-pv figure { margin: 0; }
 .book-pv svg { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: 2px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18); background: #fff; }   /* 紙の影（皮に --shadow は無いので値で。main と同じ形） */
 .book-pv figcaption { font-size: var(--fs-s); color: var(--muted); text-align: center; margin-top: 0.15rem; }
