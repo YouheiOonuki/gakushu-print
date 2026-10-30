@@ -18,7 +18,7 @@
       count: function (n) { return n + ' 問'; },
       sizeNames: { L: '大', M: '中', S: '小' },
       answerNames: { q: '問題だけ', qa: '問題と答え', a: '答えだけ' },
-      moreArith: function (tate, pages) { return ': ' + (tate ? 'たて（筆算）' : 'よこ') + '・' + pages + ' 枚'; },
+      moreArith: function (tate, pages, count) { return ': ' + (tate ? 'たて（筆算）' : 'よこ') + '・' + count + ' 問・' + pages + ' 枚'; },
       moreClock: function (guide) { return ': 分の数字' + (guide ? 'あり' : 'なし'); },
       moreSize: function (size) { return ': ますの大きさ ' + ui.ja.sizeNames[size]; },
       moreKana: function (size) { return ': ますの大きさ ' + ui.ja.sizeNames[size]; },
@@ -77,10 +77,10 @@
       count: function (n) { return n + ' problems'; },
       sizeNames: { L: 'large', M: 'medium', S: 'small' },
       answerNames: { q: 'questions only', qa: 'questions and answers', a: 'answers only' },
-      moreArith: function (tate, pages) { return ': ' + (tate ? 'vertical' : 'horizontal') + ', ' + ui.en.pages(pages); },
+      moreArith: function (tate, pages, count) { return ': ' + (tate ? 'vertical' : 'horizontal') + ', ' + ui.en.count(count) + ', ' + ui.en.pages(pages); },
       moreClock: function (guide) { return ': minute numbers ' + (guide ? 'on' : 'off'); },
       moreSize: function (size) { return ': ' + ui.en.sizeNames[size] + ' squares'; },
-      moreKana: function (size) { return ': ' + ui.en.sizeNames[size] + ' squares'; },
+      moreKana: function (size, romaji) { return ': ' + ui.en.sizeNames[size] + ' squares, romaji ' + (romaji ? 'on' : 'off'); },
       moreHand: function (hand) { return ': ' + (hand === 'left' ? 'left-handed' : 'right-handed'); },
       commonState: function (c, hasAns, paperName) {
         return (c.showName ? 'name line' : 'no name line') + ', ' + (hasAns ? ui.en.answerNames[c.answers] : 'no answer pages') + ', ' + paperName;
