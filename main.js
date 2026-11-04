@@ -282,6 +282,7 @@
     }
     showReports(wb);
     renderKanjiPicker();
+    window.yzUsed?.();
   }
 
   /** 見本の縮小率（用紙の幅 A4 210mm ≒ 794px・レター 215.9mm ≒ 816px を、見本の枠の幅に合わせる） */
