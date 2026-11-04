@@ -84,6 +84,7 @@
     $('decode-in').disabled = s.method === 'pict';
     runDecode();
     fitPreview();
+    window.yzUsed?.();
   }
   function moreState() {
     var s = state, bits = [];

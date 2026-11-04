@@ -98,6 +98,7 @@
     else $('sheets-pv').innerHTML = '';
     $('more-state').textContent = moreState();
     $('fixbar-type').textContent = B.LAYOUTS[s.layout].label + '・' + n + ' ページ';
+    window.yzUsed?.();
   }
   function renderImposed(html) {
     var box = $('sheets-pv');
