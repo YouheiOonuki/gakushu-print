@@ -81,6 +81,7 @@
     var s = S();
     $('sheets').innerHTML = K.printSheet({ level: s.level, mode: s.print.mode, guide: s.print.guide, answers: s.print.answers, credit: s.print.credit, seed: printSeed });
     fitPreview();
+    window.yzUsed?.();
   }
   function fitPreview() {
     var box = $('sheets'), w = box.clientWidth;
@@ -184,6 +185,7 @@
     ghost(null);
     $('fb').textContent = ''; $('fb').className = 'fb';
     show('scr-play');
+    window.yzUsed?.();
     if (mode === 'move') {
       var now = new Date();
       T = K.toMin({ h: now.getHours() % 12 || 12, m: Math.floor(now.getMinutes() / step) * step });

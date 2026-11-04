@@ -75,6 +75,7 @@
     $('more-state').textContent = moreState();
     $('fixbar-type').textContent = n ? n + ' 枚・紙 ' + r.sheets + ' 枚' : '';
     fitPreview();
+    window.yzUsed?.();
   }
 
   function fitPreview() {
@@ -161,6 +162,7 @@
     flipped = false; sheetOn = true;
     $('progress').textContent = (pos + 1) + ' / ' + deck.length;
     paint(c);
+    window.yzUsed?.();
   }
   function paint(c) {
     var first = state.start === 'b' ? c.b : c.f, second = state.start === 'b' ? c.f : c.b;
